@@ -1,0 +1,63 @@
+{
+  "entity.dimi.ambient1": {
+    "category": "entity",
+    "subtitle": "entity.dimi.ambient1.sub",
+    "sounds": [
+      {
+        "name": "re8joymod:entity/dimi/ambient1",
+        "stream": true
+      }
+    ]
+  },
+  "entity.dimi.ambient2": {
+    "category": "entity",
+    "subtitle": "entity.dimi.ambient2.sub",
+    "sounds": [
+      {
+        "name": "re8joymod:entity/dimi/ambient2",
+        "stream": true
+      }
+    ]
+  },
+  "entity.dimi.death2": {
+    "category": "entity",
+    "subtitle": "entity.dimi.death2.sub",
+    "sounds": [
+      {
+        "name": "re8joymod:entity/dimi/death2",
+        "stream": true
+      }
+    ]
+  },
+  "entity.dimi.hurt1": {
+    "category": "entity",
+    "subtitle": "entity.dimi.hurt1.sub",
+    "sounds": [
+      {
+        "name": "re8joymod:entity/dimi/hurt1",
+        "stream": true
+      }
+    ]
+  },
+  "entity.dimi.hurt2": {
+    "category": "entity",
+    "subtitle": "entity.dimi.hurt2.sub",
+    "sounds": [
+      {
+        "name": "re8joymod:entity/dimi/hurt2",
+        "stream": true
+      }
+    ]
+  },
+  "entity.dimi.death1": {
+    "category": "entity",
+    "subtitle": "entity.dimi.death1.sub",
+    "sounds": [
+      {
+        "name": "re8joymod:entity/dimi/death1",
+        "stream": true
+      }
+    ]
+  }
+
+}
