@@ -36,6 +36,7 @@ public class Main {
 		ItemInit.ITEMS.register(bus);
 		BlockInit.BLOCKS.register(bus);
 		EntityInit.ENTITY_TYPES.register(bus);
+		SoundInit.SOUNDS.register(bus);
 		MinecraftForge.EVENT_BUS.register(this);
 	}
 	
