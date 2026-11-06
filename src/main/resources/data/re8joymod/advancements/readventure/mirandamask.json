@@ -1,0 +1,29 @@
+{
+  "display": {
+    "icon": {
+      "item": "re8joymod:mirandamask"
+    },
+    "title": "Mask Off",
+    "description": "Get the Miranda Mask."
+  },
+  "parent": "re8joymod:readventure/miranda4",
+  "criteria": {
+    "mirandamask": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+                         "items": [
+              				"re8joymod:mirandamask"
+            			]
+          }
+        ]
+      }
+    }
+  },
+    "requirements": [
+    [
+      "mirandamask"
+    ]
+   ]
+}

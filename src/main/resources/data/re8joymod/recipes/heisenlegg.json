@@ -1,0 +1,28 @@
+{
+    "type": "minecraft:crafting_shaped",
+    
+    "pattern":
+    [
+        "ZBZ",
+        "Z Z",
+        "Z Z"
+    ],
+    
+    "key":
+    {
+        "Z":
+        {
+            "item": "re8joymod:machineheartb"
+        },
+        "B":
+        {
+            "item": "re8joymod:blackfeather"
+        }
+    },
+    
+    "result":
+    {
+        "item": "re8joymod:heisenlegg",
+        "count": 1
+    }
+}

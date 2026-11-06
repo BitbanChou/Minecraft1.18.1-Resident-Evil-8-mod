@@ -1,0 +1,15 @@
+{
+  "type": "forge:add_spawns",
+  "biomes": [
+    "re8joymod:re8_eforest_biome",
+    "minecraft:deep_dark",
+    "minecraft:snowy_taiga",
+    "minecraft:the_end"
+  ],
+  "spawners": {
+    "type": "re8joymod:plagasc",
+    "weight": 5,
+    "minCount": 1,
+    "maxCount": 1
+  }
+}

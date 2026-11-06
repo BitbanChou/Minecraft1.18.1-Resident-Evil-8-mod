@@ -1,0 +1,30 @@
+{
+    "display": {
+        "icon": {
+            "item": "re8joymod:bottle1"
+        },
+        "title":
+            "Rose Torso.",
+        "description": "Get the torso flask."
+    },
+    "parent": "re8joymod:readventure/muheisen",
+    "criteria": {
+        "bottle1": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "items": [
+              				"re8joymod:bottle1"
+            			]
+                    }
+                ]
+            }
+        }
+    },
+    "requirements": [
+    [
+      "bottle1"
+    ]
+  ]
+}

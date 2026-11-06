@@ -1,0 +1,29 @@
+{
+    "display": {
+        "icon": {
+            "item": "re8joymod:xishouye"
+        },
+        "title": "Master Survivalist",
+        "description": "craft a Strong First Aid Med"
+    },
+    "parent": "re8joymod:readventure/herbglass",
+    "criteria": {
+        "xishouye": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                         "items": [
+              				"re8joymod:xishouye"
+            			]
+                    }
+                ]
+            }
+        }
+    },
+    "requirements": [
+    [
+      "xishouye"
+    ]
+   ]
+}

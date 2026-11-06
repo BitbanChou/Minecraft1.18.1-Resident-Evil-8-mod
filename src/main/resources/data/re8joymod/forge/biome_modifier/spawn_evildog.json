@@ -1,0 +1,17 @@
+{
+  "type": "forge:add_spawns",
+  "biomes": [
+    "minecraft:dark_forest",
+    "minecraft:wooded_badlands",
+    "minecraft:old_growth_pine_taiga",
+    "minecraft:snowy_slopes"
+  ],
+  "spawners":[
+    {
+      "type": "re8joymod:evildog",
+      "weight": 5,
+      "minCount": 1,
+      "maxCount": 1
+    }
+  ]
+}

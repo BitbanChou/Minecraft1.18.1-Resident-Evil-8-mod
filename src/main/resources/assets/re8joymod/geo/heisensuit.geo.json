@@ -1,0 +1,109 @@
+{
+	"format_version": "1.12.0",
+	"minecraft:geometry": [
+		{
+			"description": {
+				"identifier": "geometry.ethan",
+				"texture_width": 64,
+				"texture_height": 64,
+				"visible_bounds_width": 3,
+				"visible_bounds_height": 3.5,
+				"visible_bounds_offset": [0, 1.25, 0]
+			},
+			"bones": [
+				{
+					"name": "heisensuit",
+					"pivot": [0, 0, 0]
+				},
+				{
+					"name": "chestplate",
+					"parent": "heisensuit",
+					"pivot": [0, 17, 0],
+					"cubes": [
+						{"origin": [-4, 12, -3], "size": [8, 12, 6], "uv": [14, 30]}
+					]
+				},
+				{
+					"name": "blade",
+					"parent": "chestplate",
+					"pivot": [0, 17, 0],
+					"cubes": [
+						{"origin": [-2, 16, 1], "size": [2, 7, 1], "uv": [39, 0]}
+					]
+				},
+				{
+					"name": "blade2",
+					"parent": "chestplate",
+					"pivot": [2, 17, 0],
+					"cubes": [
+						{"origin": [0, 16, 1], "size": [2, 7, 1], "uv": [39, 0]}
+					]
+				},
+				{
+					"name": "Head",
+					"parent": "heisensuit",
+					"pivot": [0, 24, 0],
+					"rotation": [-6, 5, 0],
+					"cubes": [
+						{"origin": [0, 30, -1], "size": [5, 2, 6], "uv": [30, 0]},
+						{"origin": [-5, 30, -1], "size": [5, 2, 6], "uv": [33, 2]},
+						{"origin": [-5, 30, -6], "size": [5, 2, 5], "uv": [33, 2]},
+						{"origin": [0, 30, -6], "size": [5, 2, 5], "uv": [33, 2]},
+						{"origin": [-3, 32, -4], "size": [6, 2, 7], "uv": [32, 0]}
+					]
+				},
+				{
+					"name": "rightBoot",
+					"parent": "heisensuit",
+					"pivot": [-1.9, 9.72022, -0.1],
+					"rotation": [20, 0, 0],
+					"cubes": [
+						{"origin": [-5.2, 0.90426, -2.67939], "size": [5, 2, 6], "pivot": [-1.9, 10.40426, -1.97938], "rotation": [-20, 0, 0], "uv": [0, 23]}
+					]
+				},
+				{
+					"name": "leftBoot",
+					"parent": "heisensuit",
+					"pivot": [3.1, 10.72022, -1.1],
+					"cubes": [
+						{"origin": [0.1, 0.22022, -3.1], "size": [5, 2, 6], "uv": [0, 23]}
+					]
+				},
+				{
+					"name": "rightArm",
+					"parent": "heisensuit",
+					"pivot": [-6, 22.1, 0],
+					"cubes": [
+						{"origin": [-9, 18, -2.5], "size": [5, 6, 5], "uv": [39, 32]},
+						{"origin": [-9, 12, -2.5], "size": [5, 6, 5], "uv": [39, 32]}
+					]
+				},
+				{
+					"name": "leftArm",
+					"parent": "heisensuit",
+					"pivot": [6, 22.1, 0],
+					"cubes": [
+						{"origin": [4, 18, -2.5], "size": [5, 6, 5], "uv": [36, 35]},
+						{"origin": [4, 12, -2.5], "size": [5, 6, 5], "uv": [36, 35]}
+					]
+				},
+				{
+					"name": "rightLeg",
+					"parent": "heisensuit",
+					"pivot": [-2, 12, 0],
+					"cubes": [
+						{"origin": [-5, 0, -2.5], "size": [5, 13, 5], "uv": [17, 46]}
+					]
+				},
+				{
+					"name": "leftLeg",
+					"parent": "heisensuit",
+					"pivot": [2, 12, 0],
+					"cubes": [
+						{"origin": [0, 0, -2.5], "size": [5, 13, 5], "uv": [16, 46]}
+					]
+				}
+			]
+		}
+	]
+}

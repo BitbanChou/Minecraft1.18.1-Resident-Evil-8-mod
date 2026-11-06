@@ -1,0 +1,40 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"animation.hammer.idle": {
+			"animation_length": 2,
+			"bones": {
+				"hammer": {
+					"rotation": {
+						"vector": [0, "math.sin(query.anim_time*180)*-1.5", 0]}
+				}
+			}
+		},
+		"animation.hammer.hit": {
+			"animation_length": 0.83333,
+			"bones": {
+				"hammer": {
+					"rotation": {
+						"0.0": {
+						"vector": [0, 0, 0]},
+						"0.25": {
+						"vector": [-72.25303, -21.81078, 1.14234]},
+						"0.5": {
+						"vector": [12.30998, -25.71543, -10.09541]},
+						"0.8333": {
+						"vector": [0, 0, 0]}					},
+					"position": {
+						"0.0": {
+						"vector": [0, 0, 0]},
+						"0.25": {
+						"vector": [1, 0, 0]},
+						"0.5": {
+						"vector": [4, 0, -4]},
+						"0.8333": {
+						"vector": [0, 0, 0]}					}
+				}
+			}
+		}
+	},
+	"geckolib_format_version": 2
+}

@@ -1,0 +1,54 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"animation.duke.walk": {
+			"loop": true,
+			"animation_length": 2,
+			"bones": {
+				"upbody": {
+					"rotation": {
+						"vector": ["math.sin(query.anim_time*200)*3", "math.sin(query.anim_time*200)*-5", 0]}				},
+				"rightlib": {
+					"rotation": {
+						"vector": [0, 0, "math.sin(query.anim_time*200)*7"]}				},
+				"leftlib": {
+					"rotation": {
+						"vector": [0, "math.sin(query.anim_time*200)*3", 0]}				},
+				"body": {
+					"rotation": {
+						"vector": [0, "math.sin(query.anim_time*200)*5", 0]}				},
+				"leftl": {
+					"rotation": {
+						"vector": [0, 0, "math.sin(query.anim_time*180)*35"]}				},
+				"rightl": {
+					"rotation": {
+						"vector": [0, 0, "math.sin(query.anim_time*200)*-30"]}				}
+			}
+		},
+		"animation.duke.idle": {
+			"loop": true,
+			"animation_length": 2,
+			"bones": {
+				"upbody": {
+					"rotation": {
+						"vector": ["math.sin(query.anim_time*200)", "math.sin(query.anim_time*200)*-0.5", 0]}				},
+				"rightlib": {
+					"rotation": {
+						"vector": [0, 0, "math.sin(query.anim_time*200)*0.5"]}				},
+				"leftlib": {
+					"rotation": {
+						"vector": [0, 0, "math.sin(query.anim_time*200)*-2"]}				},
+				"body": {
+					"rotation": {
+						"vector": [0, "math.sin(query.anim_time*200)*0.5", 0]}				},
+				"leftl": {
+					"rotation": {
+						"vector": [0, 0, 0]}				},
+				"rightl": {
+					"rotation": {
+						"vector": [0, 0, 0]}				}
+			}
+		}
+	},
+	"geckolib_format_version": 2
+}

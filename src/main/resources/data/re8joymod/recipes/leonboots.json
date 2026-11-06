@@ -1,0 +1,28 @@
+{
+    "type": "minecraft:crafting_shaped",
+    
+    "pattern":
+    [
+        "   ",
+        "B B",
+        "S S"
+    ],
+    
+    "key":
+    {
+        "B":
+        {
+            "item": "re8joymod:blackfeather"
+        },
+        "S":
+        {
+            "item": "re8joymod:sleather"
+        }
+    },
+    
+    "result":
+    {
+        "item": "re8joymod:leonboots",
+        "count": 1
+    }
+}

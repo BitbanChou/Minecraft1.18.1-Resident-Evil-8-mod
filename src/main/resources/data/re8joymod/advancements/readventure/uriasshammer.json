@@ -1,0 +1,29 @@
+{
+  "display": {
+    "icon": {
+      "item": "re8joymod:uriasshammer"
+    },
+    "title": "Executioner",
+    "description": "Get the Urias Strajer's Hammer."
+  },
+  "parent": "re8joymod:readventure/uriass",
+  "criteria": {
+    "uriasshammer": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+                         "items": [
+              				"re8joymod:uriasshammer"
+            			]
+          }
+        ]
+      }
+    }
+  },
+    "requirements": [
+    [
+      "uriasshammer"
+    ]
+   ]
+}

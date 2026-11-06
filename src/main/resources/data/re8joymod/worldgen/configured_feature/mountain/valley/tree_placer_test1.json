@@ -1,0 +1,21 @@
+{
+    "type": "minecraft:random_selector",
+    "config": {
+      "features": [
+        {
+          "feature": "re8joymod:mountain/valley/weird_root",
+          "chance": 0.4
+        },
+        {
+            "feature": "re8joymod:mountain/valley/weird_root2",
+            "chance": 0.4
+          },
+          {
+            "feature": "re8joymod:mountain/valley/weird_root3",
+            "chance": 0.2
+          }
+      ],
+      "default": "re8joymod:na"
+    }
+  }
+  

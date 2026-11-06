@@ -1,0 +1,76 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"animation.fly.fly": {
+			"animation_length": 6.75,
+			"bones": {
+				"warlock": {
+					"position": {
+						"vector": ["math.sin(query.anim_time*200)*5", "math.cos(query.anim_time*200)", "math.sin(query.anim_time*100)*2"]
+					}
+				},
+				"wing": {
+					"rotation": {
+						"vector": [0, "math.sin(query.anim_time*120)*5", "math.cos(query.anim_time*120)*5"]
+					},
+					"position": {
+						"vector": ["math.sin(query.anim_time*120)*5", "math.cos(query.anim_time*120)*5", "math.sin(query.anim_time*120)*5"]
+					}
+				},
+				"wing3": {
+					"rotation": {
+						"vector": [0, "math.cos(query.anim_time*135)*5", 0]
+					},
+					"position": {
+						"vector": ["math.cos(query.anim_time*135)*5", "math.sin(query.anim_time*135)*5", "math.cos(query.anim_time*135)*5"]
+					}
+				},
+				"w1": {
+					"rotation": {
+						"vector": [0, 0, 0]
+					},
+					"position": {
+						"vector": ["math.cos(query.anim_time*120)*5", "math.sin(query.anim_time*120)*5", "math.cos(query.anim_time*240)*5"]
+					}
+				},
+				"w2": {
+					"position": {
+						"vector": [0, 0, "math.sin(query.anim_time*100)*5"]
+					}
+				},
+				"w3": {
+					"rotation": {
+						"vector": ["math.sin(query.anim_time*100)*5", "math.sin(query.anim_time*100)*25", "math.sin(query.anim_time*100)*5"]
+					},
+					"position": {
+						"vector": ["math.sin(query.anim_time*100)*5", "math.cos(query.anim_time*100)*4+5", "math.cos(query.anim_time*200)*15"]
+					}
+				},
+				"w4": {
+					"position": {
+						"vector": ["math.cos(query.anim_time*135)*5", "math.cos(query.anim_time*240)*5+4.5", "math.sin(query.anim_time*240)*5"]
+					}
+				},
+				"bone": {
+					"position": {
+						"vector": [0, 0, "math.sin(query.anim_time*100)*5"]
+					}
+				},
+				"bone2": {
+					"rotation": {
+						"vector": ["math.cos(query.anim_time*135)*5", 0, 0]
+					},
+					"position": {
+						"vector": [0, "math.cos(query.anim_time*135)*5", 0]
+					}
+				},
+				"wing4": {
+					"position": {
+						"vector": ["math.sin(query.anim_time*135)*5", "math.cos(query.anim_time*100)*5", "math.random(-5,5)"]
+					}
+				}
+			}
+		}
+	},
+	"geckolib_format_version": 2
+}

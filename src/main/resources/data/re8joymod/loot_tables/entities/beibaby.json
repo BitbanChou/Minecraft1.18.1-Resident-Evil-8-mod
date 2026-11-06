@@ -1,0 +1,73 @@
+{
+    "pools": [
+        {
+            "rolls": 1.0,
+            "bonus_rolls": 0.0,
+            "entries": [
+                {
+                    "type": "item",
+                    "name": "re8joymod:lei",
+                    "weight": 5,
+                    "functions": [
+                        {
+                            "function": "set_count",
+                            "count": {
+                                "min": 1,
+                                "max": 3
+                            }
+                        },
+                        {
+                            "function": "looting_enchant",
+                            "count": {
+                                "min": 0,
+                                "max": 1
+                            }
+                        }
+                    ]
+                },
+                {
+                    "type": "item",
+                    "weight": 2,
+                    "name": "re8joymod:preciseattack",
+					"functions": [
+                       {
+                            "function": "set_count",
+                            "count": {
+                                "min": 1,
+                                "max": 1
+                            }
+                       }
+                   ]
+                },
+                {
+                  "type": "item",
+                  "weight": 10,
+                  "name": "minecraft:rotten_flesh",
+                  "functions": [
+                    {
+                      "function": "set_count",
+                      "count": {
+                        "min": 1,
+                        "max": 2
+                      }
+                    }
+                  ]
+                },
+                {
+                    "type": "item",
+                    "weight": 5,
+                    "name": "minecraft:slime_ball",
+					"functions": [
+                       {
+                            "function": "set_count",
+                            "count": {
+                                "min": 3,
+                                "max": 6
+                            }
+                       }
+                   ]
+                }
+             ]
+        }
+    ]
+}

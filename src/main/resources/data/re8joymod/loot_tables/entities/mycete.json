@@ -1,0 +1,129 @@
+{
+    "pools": [
+        {
+            "rolls": 1.0,
+            "bonus_rolls": 0.0,
+            "entries": [
+                {
+                    "type": "item",
+                    "name": "re8joymod:silverren",
+                    "weight": 6,
+                    "functions": [
+                        {
+                            "function": "set_count",
+                            "count": {
+                                "min": 1,
+                                "max": 1
+                            }
+                        },
+                        {
+                            "function": "looting_enchant",
+                            "count": {
+                                "min": 1,
+                                "max": 1
+                            }
+                        }
+                    ]
+                },
+                {
+                  "type": "item",
+                  "weight": 7,
+                  "name": "re8joymod:rosegene",
+                  "functions": [
+                    {
+                      "function": "set_count",
+                      "count": {
+                        "min": 1,
+                        "max": 1
+                      }
+                    }
+                  ]
+                },
+                {
+                    "type": "item",
+                    "weight": 5,
+                    "name": "re8joymod:hammer",
+					"functions": [
+                       {
+                            "function": "set_count",
+                            "count": {
+                                "min": 1,
+                                "max": 1
+                            }
+                       }
+                   ]
+                },
+                {
+                  "type": "item",
+                  "weight": 7,
+                  "name": "minecraft:netherite_block",
+                  "functions": [
+                    {
+                      "function": "set_count",
+                      "count": {
+                        "min": 3,
+                        "max": 5
+                      }
+                    }
+                  ]
+                },
+                {
+                    "type": "item",
+                    "weight": 5,
+                    "name": "re8joymod:blackball",
+					"functions": [
+                       {
+                            "function": "set_count",
+                            "count": {
+                                "min": 1,
+                                "max": 1
+                            }
+                       }
+                   ]
+                },
+                {
+                  "type": "item",
+                  "weight": 8,
+                  "name": "re8joymod:preciseattack",
+                  "functions": [
+                    {
+                      "function": "set_count",
+                      "count": {
+                        "min": 1,
+                        "max": 2
+                      }
+                    }
+                  ]
+                },
+                {
+                    "type": "item",
+                    "weight": 5,
+                    "name": "minecraft:heart_of_the_sea",
+					"functions": [
+                       {
+                            "function": "set_count",
+                            "count": {
+                                "min": 1,
+                                "max": 2
+                            }
+                       }
+                   ]
+                },
+                {
+                    "type": "item",
+                    "weight": 10,
+                    "name": "minecraft:elytra",
+					"functions": [
+                       {
+                            "function": "set_count",
+                            "count": {
+                                "min": 1,
+                                "max": 1
+                            }
+                       }
+                   ]
+                }
+             ]
+        }
+    ]
+}

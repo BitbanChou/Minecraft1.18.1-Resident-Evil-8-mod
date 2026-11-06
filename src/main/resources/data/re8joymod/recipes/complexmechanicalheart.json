@@ -1,0 +1,23 @@
+{
+	"type" : "minecraft:crafting_shapeless",
+	
+	"ingredients":
+	[
+
+	{
+		"item" : "re8joymod:machinehearts"
+	},
+	{
+		"item" : "re8joymod:machinehearts"
+	},
+	{
+		"item" : "re8joymod:machineheartb"
+	}
+	
+	],
+	"result":
+	{
+		"item" :"re8joymod:complexmechanicalheart",
+		"count": 1
+	}
+}

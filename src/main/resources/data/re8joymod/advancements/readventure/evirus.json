@@ -1,0 +1,30 @@
+{
+    "display": {
+        "icon": {
+            "item": "re8joymod:evirus"
+        },
+        "title": "The Root of Evil",
+        "description": "Create the E Virus"
+
+    },
+    "parent": "re8joymod:readventure/humus",
+    "criteria": {
+        "evirus": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "items": [
+			              "re8joymod:evirus"
+			            ]
+                    }
+                ]
+            }
+        }
+    },
+  	"requirements": [
+    [
+      "evirus"
+    ]
+  ]
+}

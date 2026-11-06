@@ -1,0 +1,32 @@
+{
+  // The base structure class to use for the behavior of the structure. (Like extra terrain checks and such)
+  "type": "minecraft:village",
+
+  "config": {
+    // the path to the template pool json file to use
+    "start_pool": "re8joymod:gravey/start_pool",
+
+    // This is how many pieces away from the starting piece a piece of the structure can spawn
+    // Think of it like the length of the branch of the structure
+    "size": 2
+  },
+
+  // The biome tag to use for what biomes that this structure can spawn in"
+  "biomes": "#re8joymod:has_structure/gravey",
+
+  "adapt_noise": true,
+
+  "spawn_overrides": {
+    "creature": {
+      "bounding_box": "piece",
+      "spawns": [
+        {
+          "type": "minecraft:pig",
+          "weight": 1,
+          "minCount": 1,
+          "maxCount": 1
+        }
+      ]
+    }
+  }
+}

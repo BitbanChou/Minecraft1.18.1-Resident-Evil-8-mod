@@ -1,0 +1,133 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"animation.salazar.idle": {
+			"loop": true,
+			"animation_length": 1.5,
+			"bones": {
+				"Head": {
+					"rotation": {
+						"vector": [0, "math.sin(query.anim_time*120)*15", 0]
+					},
+					"position": {
+						"vector": [0, 0, 0]
+					}
+				},
+				"Body": {
+					"rotation": {
+						"vector": ["math.sin(query.anim_time*120)*2.5", 0, 0]
+					},
+					"position": {
+						"vector": [0, 0, 0]
+					}
+				},
+				"RightArm": {
+					"rotation": {
+						"vector": ["math.sin(query.anim_time*120)*5", "math.sin(query.anim_time*120)*5", 0]
+					},
+					"position": {
+						"vector": [0, 0, 0]
+					}
+				},
+				"LeftArm": {
+					"rotation": {
+						"vector": [0, "math.sin(query.anim_time*120)*5", 0]
+					}
+				},
+				"LeftLeg": {
+					"rotation": {
+						"vector": [0, "math.sin(query.anim_time*120)*1.5", 0]
+					}
+				},
+				"rightfront": {
+					"position": {
+						"vector": [0, 0, 0]
+					}
+				}
+			}
+		},
+		"animation.salazar.walk": {
+			"loop": true,
+			"animation_length": 1.5,
+			"bones": {
+				"Body": {
+					"position": {
+						"vector": [0, 0, 0]
+					}
+				},
+				"LeftLeg": {
+					"rotation": {
+						"vector": ["math.sin(query.anim_time*240)*-15", 0, 0]
+					}
+				},
+				"leftfront2": {
+					"rotation": {
+						"vector": [0, "math.sin(query.anim_time*240)*3", 0]
+					}
+				},
+				"RightLeg": {
+					"rotation": {
+						"vector": ["math.sin(query.anim_time*240)*10", 0, 0]
+					}
+				},
+				"rightfront": {
+					"rotation": {
+						"vector": [0, "math.sin(query.anim_time*240)*3", 0]
+					},
+					"position": {
+						"vector": [0, 0, 0]
+					}
+				},
+				"Head": {
+					"rotation": {
+						"vector": ["math.sin(query.anim_time*240)*3", "math.sin(query.anim_time*240)*2.5", 0]
+					}
+				},
+				"RightArm": {
+					"rotation": {
+						"vector": ["math.sin(query.anim_time*240)*-5", "math.sin(query.anim_time*240)*4", 0]
+					}
+				},
+				"LeftArm": {
+					"rotation": {
+						"vector": ["math.sin(query.anim_time*240)*4", 0, 0]
+					}
+				}
+			}
+		},
+		"animation.salazar.attack": {
+			"animation_length": 1.16667,
+			"bones": {
+				"LeftArm": {
+					"rotation": {
+						"0.0": [0, 0, 0],
+						"0.1667": [-122.5, 0, 0],
+						"0.3333": [-82.55557, 28.5648, 9.58126],
+						"0.5": [-105.05557, 28.5648, 9.58126],
+						"0.6667": [-82.55557, 28.5648, 9.58126],
+						"0.8333": [-105.05557, 28.5648, 9.58126],
+						"0.9583": [0, 0, 0]
+					}
+				},
+				"RightArm": {
+					"rotation": {
+						"0.0": [0, 0, 0],
+						"0.1667": [-128.18385, 8.40819, -9.28293],
+						"0.3333": [-92.66927, -23.69142, 4.99283],
+						"0.5": [-115.16927, -23.69142, 4.99283],
+						"0.6667": [-90.16927, -23.69142, 4.99283],
+						"0.8333": [-112.66927, -23.69142, 4.99283],
+						"1.0": [0, 0, 0]
+					}
+				},
+				"Head": {
+					"rotation": {
+						"0.0": [0, 0, 0],
+						"0.1667": [0, 0, 0]
+					}
+				}
+			}
+		}
+	},
+	"geckolib_format_version": 2
+}

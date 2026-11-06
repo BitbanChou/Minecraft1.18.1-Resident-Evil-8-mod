@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:random_selector",
+  "config": {
+    "features": [
+      {
+        "chance": 0.25,
+        "feature": "re8joymod:forest/fruit"
+      },
+      {
+        "chance": 0.75,
+        "feature": "re8joymod:forest/lantern_wip"
+      }
+    ],
+    "default": "re8joymod:forest/fruit"
+  }
+}

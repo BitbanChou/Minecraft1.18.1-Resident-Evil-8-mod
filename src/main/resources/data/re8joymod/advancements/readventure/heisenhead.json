@@ -1,0 +1,33 @@
+{
+  "display": {
+    "icon": {
+      "item": "re8joymod:heisenhead"
+    },
+    "title": {
+      "translate": "Gentle Monster"
+    },
+    "description": {
+      "translate": "Get the Heisenberg's Cap."
+    }
+  },
+  "parent": "re8joymod:readventure/muheisen",
+  "criteria": {
+    "heisenhead": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+                         "items": [
+              				"re8joymod:heisenhead"
+            			]
+          }
+        ]
+      }
+    }
+  },
+    "requirements": [
+    [
+      "heisenhead"
+    ]
+   ]
+}

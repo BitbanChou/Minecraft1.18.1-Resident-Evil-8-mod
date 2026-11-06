@@ -1,0 +1,32 @@
+{
+	"type": "minecraft:crafting_shaped",
+
+	"pattern":
+	[
+		" B ",
+		"FLF",
+		" B "
+	],
+
+	"key":
+	{
+		"L":
+		{
+			"item": "re8joymod:labor_shovel2"
+		},
+		"B":
+		{
+			"item": "re8joymod:machinehearts"
+		},
+		"F":
+		{
+			"item": "re8joymod:blackfeather"
+		}
+	},
+
+	"result":
+	{
+		"item": "re8joymod:labor_shovel3",
+		"count": 1
+	}
+}

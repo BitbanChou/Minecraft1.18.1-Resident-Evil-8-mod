@@ -1,0 +1,157 @@
+{
+    "pools": [
+        {
+            "rolls": 1.0,
+            "bonus_rolls": 0.0,
+            "entries": [
+                {
+                    "type": "item",
+                    "name": "re8joymod:bottle1",
+                    "weight": 6,
+                    "functions": [
+                        {
+                            "function": "set_count",
+                            "count": {
+                                "min": 1,
+                                "max": 1
+                            }
+                        },
+                        {
+                            "function": "looting_enchant",
+                            "count": {
+                                "min": 1,
+                                "max": 1
+                            }
+                        }
+                    ]
+                },
+                {
+                  "type": "item",
+                  "weight": 7,
+                  "name": "re8joymod:heisentorso",
+                  "functions": [
+                    {
+                      "function": "set_count",
+                      "count": {
+                        "min": 1,
+                        "max": 1
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "item",
+                  "weight": 3,
+                  "name": "re8joymod:vehicle_core",
+                  "functions": [
+                    {
+                      "function": "set_count",
+                      "count": {
+                        "min": 1,
+                        "max": 1
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "item",
+                  "weight": 6,
+                  "name": "re8joymod:heisenhead",
+                  "functions": [
+                    {
+                      "function": "set_count",
+                      "count": {
+                        "min": 1,
+                        "max": 1
+                      }
+                    }
+                  ]
+                },
+                {
+                    "type": "item",
+                    "weight": 7,
+                    "name": "re8joymod:hammer",
+					"functions": [
+                       {
+                            "function": "set_count",
+                            "count": {
+                                "min": 1,
+                                "max": 1
+                            }
+                       }
+                   ]
+                },
+                {
+                  "type": "item",
+                  "weight": 7,
+                  "name": "re8joymod:cigar",
+                  "functions": [
+                    {
+                      "function": "set_count",
+                      "count": {
+                        "min": 1,
+                        "max": 1
+                      }
+                    }
+                  ]
+                },
+                {
+                    "type": "item",
+                    "weight": 8,
+                    "name": "re8joymod:muhesenweap",
+					"functions": [
+                       {
+                            "function": "set_count",
+                            "count": {
+                                "min": 1,
+                                "max": 1
+                            }
+                       }
+                   ]
+                },
+                {
+                    "type": "item",
+                    "weight": 5,
+                    "name": "minecraft:diamond",
+					"functions": [
+                       {
+                            "function": "set_count",
+                            "count": {
+                                "min": 5,
+                                "max": 7
+                            }
+                       }
+                   ]
+                },
+                {
+                    "type": "item",
+                    "weight": 10,
+                    "name": "re8joymod:rustedpart",
+					"functions": [
+                       {
+                            "function": "set_count",
+                            "count": {
+                                "min": 3,
+                                "max": 7
+                            }
+                       }
+                   ]
+                },
+                {
+                    "type": "item",
+                    "weight": 5,
+                    "name": "re8joymod:complexmechanicalheart",
+					"functions": [
+                       {
+                            "function": "set_count",
+                            "count": {
+                                "min": 1,
+                                "max": 1
+                            }
+                       }
+                   ]
+                }
+             ]
+        }
+    ]
+}

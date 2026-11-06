@@ -1,0 +1,28 @@
+{
+  "type": "forge:add_spawns",
+  "biomes": [
+    "minecraft:windswept_hills",
+    "minecraft:ice_spikes",
+    "minecraft:jagged_peaks"
+  ],
+  "spawners":[
+    {
+      "type": "re8joymod:ethan",
+      "weight": 5,
+      "minCount": 1,
+      "maxCount": 1
+    },
+    {
+      "type": "re8joymod:mia",
+      "weight": 5,
+      "minCount": 1,
+      "maxCount": 1
+    },
+    {
+      "type": "re8joymod:ada",
+      "weight": 5,
+      "minCount": 1,
+      "maxCount": 1
+    }
+  ]
+}

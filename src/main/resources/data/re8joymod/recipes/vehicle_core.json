@@ -1,0 +1,36 @@
+{
+    "type": "minecraft:crafting_shaped",
+    
+    "pattern":
+    [
+        "FDF",
+        "DCD",
+        "BDB"
+    ],
+    
+    "key":
+    {
+        "B":
+        {
+            "item": "minecraft:coal_block"
+        },
+        "F":
+        {
+            "item": "re8joymod:machineheartb"
+        },
+        "D":
+        {
+            "item": "re8joymod:dense_wasteland_rock"
+        },
+        "C":
+        {
+        	"item": "re8joymod:complexmechanicalheart"
+        }
+    },
+    
+    "result":
+    {
+        "item": "re8joymod:vehicle_core",
+        "count": 1
+    }
+}

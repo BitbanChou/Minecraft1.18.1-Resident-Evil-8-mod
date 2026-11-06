@@ -1,0 +1,33 @@
+{
+  "display": {
+    "icon": {
+      "item": "re8joymod:dimihat"
+    },
+    "title": "Hooligan",
+    "description": "Get the Lady Hat.",
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "parent": "re8joymod:readventure/dimi2",
+  "criteria": {
+    "bottle2": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+             "items": [
+              "re8joymod:dimihat"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "bottle2"
+    ]
+  ]
+}

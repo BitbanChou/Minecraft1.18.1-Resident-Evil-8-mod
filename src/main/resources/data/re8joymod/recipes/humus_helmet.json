@@ -1,0 +1,24 @@
+{
+    "type": "minecraft:crafting_shaped",
+    
+    "pattern":
+    [
+        "ZZZ",
+        "Z Z",
+        "   "
+    ],
+    
+    "key":
+    {
+        "Z":
+        {
+            "item": "re8joymod:humus_ingot"
+        }
+    },
+    
+    "result":
+    {
+        "item": "re8joymod:humus_helmet",
+        "count": 1
+    }
+}

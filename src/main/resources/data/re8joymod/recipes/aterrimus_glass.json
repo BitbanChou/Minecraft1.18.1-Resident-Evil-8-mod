@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smelting",
+  "ingredient": {
+    "tag": "re8joymod:humus_sand"
+  },
+  "result": "re8joymod:aterrimus_glass",
+  "experience": 0.2,
+  "cookingtime": 200
+}

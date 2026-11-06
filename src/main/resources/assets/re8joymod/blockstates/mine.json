@@ -1,0 +1,8 @@
+{
+"variants":{
+"facing=north":{"model":"re8joymod:block/mine"},
+"facing=east":{"model":"re8joymod:block/mine","y":90},
+"facing=south":{"model":"re8joymod:block/mine","y":180},
+"facing=west":{"model":"re8joymod:block/mine","y":270}
+}
+}

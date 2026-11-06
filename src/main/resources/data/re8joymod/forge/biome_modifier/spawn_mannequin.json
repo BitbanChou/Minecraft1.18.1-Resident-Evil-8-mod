@@ -1,0 +1,22 @@
+{
+  "type": "forge:add_spawns",
+  "biomes": [
+    "re8joymod:re8_eforest_biome",
+    "minecraft:lush_caves",
+    "minecraft:deep_dark"
+  ],
+  "spawners": [
+    {
+    "type": "re8joymod:mannequin",
+    "weight": 5,
+    "minCount": 1,
+    "maxCount": 1
+    },
+    {
+      "type": "re8joymod:armadura",
+      "weight": 1,
+      "minCount": 1,
+      "maxCount": 1
+    }
+  ]
+}

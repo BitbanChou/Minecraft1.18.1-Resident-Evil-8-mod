@@ -1,0 +1,66 @@
+{
+  "type":"re8joymod:re8_dimension",
+  "generator": {
+    "biome_source":{
+      "biomes":[{
+        "parameters":{
+          "weirdness":[-1,1],
+          "continentalness":[-1.2,-0.19],
+          "erosion":[-1,1],
+          "temperature":[-1,1],
+          "humidity":[-1,1],
+          "depth":[-0.2,0.2],
+          "offset":0},
+        "biome":"re8joymod:re8_eforest_biome"
+      },{
+        "parameters":{
+          "weirdness":[-1,-0.7666667],
+          "continentalness":[-0.19,-0.11],
+          "erosion":[-1,1],
+          "temperature":[-1,-0.45],
+          "humidity":[-1,1],
+          "depth":[-0.2,0.2],
+          "offset":0},
+        "biome":"re8joymod:re8_evalley_biome"
+
+      },{
+        "parameters":{
+          "weirdness":[-1,-0.7666667],
+          "continentalness":[-0.19,1],
+          "erosion":[-1,-0.78],
+          "temperature":[-0.45,-0.15],
+          "humidity":[-1,1],
+          "depth":[-0.2,0.2],
+          "offset":0},
+        "biome":"re8joymod:re8_wasteland_biome"
+
+      },{
+        "parameters":{
+          "weirdness":[-1,-0.7666667],
+          "continentalness":[-0.19,1],
+          "erosion":[-1,-0.78],
+          "temperature":[-0.15,0.55],
+          "humidity":[-1,1],
+          "depth":[-0.2,0.2],
+          "offset":0},
+        "biome":"re8joymod:re8_ehills_biome"
+
+      },{
+        "parameters":{
+          "weirdness":[-1,-0.05],
+          "continentalness":[-0.19,-0.11],
+          "erosion":[-1,1],
+          "temperature":[0.55,1],
+          "humidity":[-1,1],
+          "depth":[-0.2,0.2],
+          "offset":0},"biome":"re8joymod:re8_edesert_biome"
+
+      }
+      ],
+      "type":"minecraft:multi_noise"
+    },
+    "seed":2,
+    "settings":"re8joymod:re8_dimension",
+    "type":"minecraft:noise"
+  }
+}

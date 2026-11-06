@@ -1,0 +1,28 @@
+{
+    "type": "minecraft:crafting_shaped",
+    
+    "pattern":
+    [
+        " S ",
+        "SSS",
+        "SRS"
+    ],
+    
+    "key":
+    {
+        "S":
+        {
+            "item": "re8joymod:machinehearts"
+        },
+        "R":
+        {
+        	"item": "minecraft:redstone"
+        }
+    },
+    
+    "result":
+    {
+        "item": "re8joymod:machineheartb",
+        "count": 1
+    }
+}

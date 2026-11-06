@@ -1,0 +1,27 @@
+{
+    "type": "minecraft:crafting_shaped",
+    
+    "pattern":
+    [
+        "WHW",
+        "WWW",
+        " W "
+    ],
+    
+    "key":
+    {
+        "H":
+        {
+            "item": "re8joymod:humus_ingot"
+        },
+        "W":
+        {
+        	"item": "re8joymod:dhands_block"
+        }
+    },
+    "result":
+    {
+        "item": "re8joymod:reshield",
+        "count": 1
+    }
+}

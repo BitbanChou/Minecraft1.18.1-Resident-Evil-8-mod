@@ -1,0 +1,24 @@
+{
+    "type": "minecraft:crafting_shaped",
+    
+    "pattern":
+    [
+        "Z Z",
+        "ZZZ",
+        "ZZZ"
+    ],
+    
+    "key":
+    {
+        "Z":
+        {
+            "item": "re8joymod:sleather"
+        }
+    },
+    
+    "result":
+    {
+        "item": "re8joymod:leonsuit",
+        "count": 1
+    }
+}

@@ -1,0 +1,28 @@
+{
+    "type": "minecraft:crafting_shaped",
+    
+    "pattern":
+    [
+        "IFI",
+        "FIF",
+        "IFI"
+    ],
+    
+    "key":
+    {
+        "I":
+        {
+        	"item": "minecraft:diorite"
+        },
+        "F":
+        {
+            "item": "re8joymod:castlewall_block"
+        }
+    },
+    
+    "result":
+    {
+        "item": "re8joymod:palewall_block",
+        "count": 4
+    }
+}

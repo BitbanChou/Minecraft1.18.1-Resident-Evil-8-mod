@@ -1,0 +1,28 @@
+{
+    "type": "minecraft:crafting_shaped",
+    
+    "pattern":
+    [
+        "DBD",
+        "BDB",
+        "DBD"
+    ],
+    
+    "key":
+    {
+        "D":
+        {
+        	"item": "minecraft:dirt"
+        },
+        "B":
+        {
+            "item": "minecraft:bricks"
+        }
+    },
+    
+    "result":
+    {
+        "item": "re8joymod:dungeonwall_block",
+        "count": 4
+    }
+}

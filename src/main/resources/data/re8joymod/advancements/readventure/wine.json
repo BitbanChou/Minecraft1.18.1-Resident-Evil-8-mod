@@ -1,0 +1,29 @@
+{
+  "display": {
+    "icon": {
+      "item": "re8joymod:wine"
+    },
+    "title": "The Magic Drink",
+    "description": "Get the Sanguis Virginis."
+  },
+  "parent": "re8joymod:readventure/dimi2",
+  "criteria": {
+    "wine": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "re8joymod:wine"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "wine"
+    ]
+  ]
+}

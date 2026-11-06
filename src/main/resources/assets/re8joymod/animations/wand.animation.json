@@ -1,0 +1,21 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"animation.wand.idle": {
+			"loop": true,
+			"bones": {
+				"ring": {
+					"rotation": {
+						"vector": ["math.sin(query.anim_time*180)*5", "math.cos(query.anim_time*180)*5", 0]
+					}
+				},
+				"sh_lower": {
+					"rotation": {
+						"vector": ["math.cos(query.anim_time*120)*5", 0, "math.sin(query.anim_time*180)*5"]
+					}
+				}
+			}
+		}
+	},
+	"geckolib_format_version": 2
+}

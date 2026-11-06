@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "": [
+      { "model": "re8joymod:block/humus_sand" },
+      { "model": "re8joymod:block/humus_sand", "y": 90 },
+      { "model": "re8joymod:block/humus_sand", "y": 180 },
+      { "model": "re8joymod:block/humus_sand", "y": 270 }
+    ]
+  }
+}

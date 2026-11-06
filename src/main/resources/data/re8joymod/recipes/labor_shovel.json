@@ -1,0 +1,28 @@
+{
+	"type" : "minecraft:crafting_shapeless",
+	
+	"ingredients":
+	[
+	
+	{
+		"item" : "minecraft:iron_ingot"
+	},
+	
+	{
+		"item" : "minecraft:iron_ingot"
+	},
+	{
+		"item": "minecraft:coal",	
+		"data": 0
+	},
+	{
+		"item": "minecraft:flint"	
+	}
+	
+	],
+	"result":
+	{
+		"item" :"re8joymod:labor_shovel",
+		"count": 1
+	}
+}

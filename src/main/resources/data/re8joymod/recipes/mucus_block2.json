@@ -1,0 +1,20 @@
+{
+  "type" : "minecraft:crafting_shapeless",
+
+  "ingredients":
+  [
+    {
+      "item" : "re8joymod:mutamycete_block"
+    },
+
+    {
+      "item" : "re8joymod:blackfeather"
+    }
+
+  ],
+  "result":
+  {
+    "item" :"re8joymod:mucus_block",
+    "count": 1
+  }
+}

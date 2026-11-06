@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:random_selector",
+  "config": {
+    "features": [
+      {
+        "feature": "re8joymod:forest/big_tree",
+        "chance": 0.15
+      }
+    ],
+    "default": "re8joymod:na"
+  }
+}

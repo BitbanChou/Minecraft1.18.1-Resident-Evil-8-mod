@@ -1,0 +1,40 @@
+{
+  "type": "forge:add_spawns",
+  "biomes": [
+    "minecraft:ice_spikes",
+    "minecraft:snowy_plains",
+    "minecraft:sunflower_plains",
+    "minecraft:savanna",
+    "minecraft:savanna_plateau",
+    "minecraft:windswept_savanna",
+    "minecraft:nether_wastes",
+    "minecraft:dark_forest",
+    "re8joymod:re8_edesert_biome",
+    "minecraft:desert",
+    "minecraft:badlands",
+    "minecraft:jungle",
+    "minecraft:warped_forest",
+    "minecraft:dripstone_caves",
+    "minecraft:forest"
+  ],
+  "spawners":[
+    {
+      "type": "re8joymod:frank5",
+      "weight": 10,
+      "minCount": 1,
+      "maxCount": 1
+    },
+    {
+      "type": "re8joymod:cvg",
+      "weight": 10,
+      "minCount": 1,
+      "maxCount": 1
+    },
+    {
+      "type": "re8joymod:varcolac",
+      "weight": 10,
+      "minCount": 1,
+      "maxCount": 1
+    }
+  ]
+}

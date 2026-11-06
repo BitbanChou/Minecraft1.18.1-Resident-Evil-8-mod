@@ -1,0 +1,31 @@
+{
+  "type": "forge:add_spawns",
+  "biomes": [
+    "re8joymod:re8_wasteland_biome",
+    "re8joymod:re8_ehills_biome",
+    "minecraft:taiga",
+    "minecraft:swamp",
+    "minecraft:warped_forest",
+    "minecraft:snowy_plains"
+  ],
+  "spawners":[
+    {
+      "type": "re8joymod:duke",
+      "weight": 5,
+      "minCount": 1,
+      "maxCount": 1
+    },
+    {
+      "type": "re8joymod:thehag",
+      "weight": 5,
+      "minCount": 1,
+      "maxCount": 1
+    },
+    {
+      "type": "re8joymod:rosemary",
+      "weight": 5,
+      "minCount": 1,
+      "maxCount": 1
+    }
+  ]
+}

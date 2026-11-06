@@ -1,0 +1,94 @@
+{
+	"format_version": "1.12.0",
+	"minecraft:geometry": [
+		{
+			"description": {
+				"identifier": "geometry.unknown",
+				"texture_width": 128,
+				"texture_height": 128,
+				"visible_bounds_width": 3,
+				"visible_bounds_height": 3.5,
+				"visible_bounds_offset": [0, 1.25, 0]
+			},
+			"bones": [
+				{
+					"name": "dimisuit",
+					"pivot": [0, 0, 0]
+				},
+				{
+					"name": "other",
+					"parent": "dimisuit",
+					"pivot": [0, 0, 0]
+				},
+				{
+					"name": "bone2",
+					"parent": "other",
+					"pivot": [0, 0, 0]
+				},
+				{
+					"name": "leftArm",
+					"parent": "dimisuit",
+					"pivot": [8.44424, 23.83433, -0.43018],
+					"rotation": [12, 0, 0],
+					"cubes": [
+						{"origin": [-6.01303, 31.34774, -0.59086], "size": [4, 6, 6], "pivot": [7.88848, 35.88199, 1.39306], "rotation": [2.5, -12.5, -82.5], "uv": [88, 85]}
+					]
+				},
+				{
+					"name": "Leftlib",
+					"parent": "leftArm",
+					"pivot": [9, 30.01689, 1.4987],
+					"cubes": [
+						{"origin": [7, 17.5242, -0.92009], "size": [4, 7, 4], "pivot": [9, 33.01689, 1.4987], "rotation": [-10, 0, 0], "uv": [17, 77]}
+					]
+				},
+				{
+					"name": "Leftfrontlib",
+					"parent": "Leftlib",
+					"pivot": [9, 29.01689, -0.5013]
+				},
+				{
+					"name": "rightArm",
+					"parent": "dimisuit",
+					"pivot": [-8, 24, -1],
+					"rotation": [-12.5, 0, 0],
+					"cubes": [
+						{"origin": [2.88987, 29.97069, -6.44485], "size": [4, 6, 6], "pivot": [-7, 35.52201, -3.91847], "rotation": [2.5, -10, 82.5], "uv": [90, 46]}
+					]
+				},
+				{
+					"name": "Rightbacktlib",
+					"parent": "rightArm",
+					"pivot": [-9, 31.76296, -3.1644],
+					"cubes": [
+						{"origin": [-11, 17.13034, -4.57238], "size": [4, 7, 4], "pivot": [-6, 31.11892, -0.09581], "rotation": [10, 0, 0], "uv": [0, 94]}
+					]
+				},
+				{
+					"name": "Rightfrontlib",
+					"parent": "Rightbacktlib",
+					"pivot": [-9, 31.76296, -3.1644]
+				},
+				{
+					"name": "nail",
+					"parent": "Rightfrontlib",
+					"pivot": [-10.32744, 16.90148, -7.78447],
+					"rotation": [-2.5, 0, 0]
+				},
+				{
+					"name": "chestplate",
+					"parent": "dimisuit",
+					"pivot": [0, 24, 0],
+					"cubes": [
+						{"origin": [-6, 16, -6], "size": [12, 10, 11], "uv": [56, 12]},
+						{"origin": [-5, 19.06536, -10.56791], "size": [10, 5, 5], "pivot": [0, 23.56536, -6.56791], "rotation": [57.5, 0, 0], "uv": [64, 81]},
+						{"origin": [-5, 11, -5], "size": [10, 7, 8], "uv": [46, 65]},
+						{"origin": [-6, 7, -7], "size": [12, 6, 11], "uv": [0, 60]},
+						{"origin": [-6, 7, 4], "size": [12, 4, 2], "uv": [86, 33]},
+						{"origin": [-8, 3, -7], "size": [16, 5, 14], "uv": [44, 46]}
+					]
+				}
+			]
+		}
+	]
+}

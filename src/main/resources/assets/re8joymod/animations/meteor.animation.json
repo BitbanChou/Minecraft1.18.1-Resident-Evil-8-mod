@@ -1,0 +1,43 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"animation.meteor.idle": {
+			"loop": true,
+			"bones": {
+				"hammer": {
+					"position": {
+						"vector": [0, 0, 0]}				},
+				"bone": {
+					"rotation": {
+						"vector": ["math.sin(query.anim_time*240)*20", 0, "math.sin(query.anim_time*240)*15"]}				}
+			}
+		},
+		"animation.meteor.attack": {
+			"animation_length": 0.33333,
+			"bones": {
+				"hammer": {
+					"position": {
+						"vector": [0, 0, 0]}				},
+				"bone": {
+					"rotation": {
+						"0.0": {
+						"vector": ["math.sin(query.anim_time*240)*20", 0, "math.sin(query.anim_time*240)*15"]},
+						"0.1667": {
+						"vector": ["-117.7377+math.sin(query.anim_time*240)*20", -28.86144, "-2.9619+math.sin(query.anim_time*240)*15"]},
+						"0.25": {
+						"vector": [-45.73132, 17.7103, 17.27016]},
+						"0.3333": {
+						"vector": ["-17.5+math.sin(query.anim_time*240)*20", 0, "0+math.sin(query.anim_time*240)*15"]}					},
+					"position": {
+						"0.0": {
+						"vector": [0, 0, 0]},
+						"0.1667": {
+						"vector": [0, -0.6, -1.1]},
+						"0.3333": {
+						"vector": [0, 0, 0]}					}
+				}
+			}
+		}
+	},
+	"geckolib_format_version": 2
+}

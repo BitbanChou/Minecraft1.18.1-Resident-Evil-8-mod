@@ -1,0 +1,29 @@
+{
+    "display": {
+        "icon": {
+            "item": "re8joymod:dimitorso"
+        },
+        "title": "Great Waist Line",
+        "description": "Get Dimitrescu's Crystal"
+    },
+    "parent": "re8joymod:readventure/dimi2",
+    "criteria": {
+        "dimitorso": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                         "items": [
+              				"re8joymod:dimitorso"
+            			]
+                    }
+                ]
+            }
+        }
+    },
+    "requirements": [
+    [
+      "dimitorso"
+    ]
+   ]
+}

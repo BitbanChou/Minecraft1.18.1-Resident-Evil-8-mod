@@ -1,0 +1,22 @@
+{
+  "type": "forge:add_spawns",
+  "biomes": [
+    "re8joymod:re8_eforest_biome",
+    "re8joymod:re8_wasteland_biome",
+    "minecraft:plains",
+    "minecraft:savanna",
+    "minecraft:sunflower_plains",
+    "minecraft:bamboo_jungle",
+    "minecraft:warped_forest",
+    "minecraft:dripstone_caves",
+    "minecraft:lush_caves",
+    "minecraft:deep_dark",
+    "minecraft:forest"
+  ],
+  "spawners": {
+    "type": "re8joymod:dund",
+    "weight": 30,
+    "minCount": 1,
+    "maxCount": 2
+  }
+}

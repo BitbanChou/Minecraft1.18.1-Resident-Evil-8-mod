@@ -1,0 +1,29 @@
+{
+
+  "name": "re8joymod:cs/start_pool",
+
+  "fallback": "minecraft:empty",
+
+  "elements": [
+    {
+
+      "weight": 1,
+      "element": {
+
+        // The Identifier of the nbt file itself of the structure piece.
+        // Note, this will automatically check into the 'structures' folder for the nbt file.
+        // The final path would look like 'resources/data/re8joymod/structures/bene_house_left_side.nbt'
+        // The Jigsaw block in the structure will point to side_pool.json to spawn the other half of the house.
+        "location": "re8joymod:cs1",
+
+        "processors": "minecraft:empty",
+
+
+        "projection": "rigid",
+
+
+        "element_type": "minecraft:single_pool_element"
+      }
+    }
+  ]
+}

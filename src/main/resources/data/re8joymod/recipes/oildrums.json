@@ -1,0 +1,20 @@
+{
+	"type" : "minecraft:crafting_shapeless",
+	
+	"ingredients":
+	[
+
+	{
+		"item" : "re8joymod:sleather"
+	},
+	{
+		"item" : "minecraft:tnt"
+	}
+	
+	],
+	"result":
+	{
+		"item" :"re8joymod:oildrums",
+		"count": 1
+	}
+}

@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "package": "com.joy187.re8joymod.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "refmap": "graveyard.refmap.json",
+  "mixins": [
+
+  ],
+  "client": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "minVersion": "0.8"
+}

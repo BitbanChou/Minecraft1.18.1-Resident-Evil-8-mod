@@ -1,0 +1,42 @@
+{
+  "name": "re8joymod:vi/side_pool4",
+
+  "fallback": "minecraft:empty",
+
+  "elements": [
+
+    {
+
+      // How likely out of all the element for this one to be chosen.
+      "weight": 1,
+      "element": {
+        "location": "re8joymod:v4",
+        "processors": "minecraft:empty",
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    },
+    {
+
+      // How likely out of all the element for this one to be chosen.
+      "weight": 1,
+      "element": {
+        "location": "re8joymod:v5",
+        "processors": "minecraft:empty",
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    },
+    {
+
+      // How likely out of all the element for this one to be chosen.
+      "weight": 1,
+      "element": {
+        "location": "re8joymod:v6",
+        "processors": "minecraft:empty",
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    }
+  ]
+}

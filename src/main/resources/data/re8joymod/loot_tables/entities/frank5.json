@@ -1,0 +1,143 @@
+{
+    "pools": [
+        {
+            "rolls": 1.0,
+            "bonus_rolls": 0.0,
+            "entries": [
+                {
+                    "type": "item",
+                    "name": "re8joymod:lei",
+                    "weight": 5,
+                    "functions": [
+                        {
+                            "function": "set_count",
+                            "count": {
+                                "min": 1,
+                                "max": 2
+                            }
+                        },
+                        {
+                            "function": "looting_enchant",
+                            "count": {
+                                "min": 0,
+                                "max": 1
+                            }
+                        }
+                    ]
+                },
+                {
+                    "type": "item",
+                    "weight": 8,
+                    "name": "re8joymod:rustedpart",
+					"functions": [
+                       {
+                            "function": "set_count",
+                            "count": {
+                                "min": 2,
+                                "max": 3
+                            }
+                       }
+                   ]
+                },
+                {
+                    "type": "item",
+                    "weight": 5,
+                    "name": "re8joymod:complexmechanicalheart",
+					"functions": [
+                       {
+                            "function": "set_count",
+                            "count": {
+                                "min": 1,
+                                "max": 1
+                            }
+                       }
+                   ]
+                },
+                {
+                    "type": "item",
+                    "weight": 3,
+                    "name": "re8joymod:herb1",
+					"functions": [
+                       {
+                            "function": "set_count",
+                            "count": {
+                                "min": 1,
+                                "max": 1
+                            }
+                       }
+                   ]
+                },
+                {
+                    "type": "item",
+                    "weight": 10,
+                    "name": "minecraft:rotten_flesh",
+					"functions": [
+                       {
+                            "function": "set_count",
+                            "count": {
+                                "min": 0,
+                                "max": 2
+                            }
+                       }
+                   ]
+                },
+                {
+                    "type": "item",
+                    "weight": 5,
+                    "name": "minecraft:redstone",
+					"functions": [
+                       {
+                            "function": "set_count",
+                            "count": {
+                                "min": 0,
+                                "max": 2
+                            }
+                       }
+                   ]
+                },
+                {
+                    "type": "item",
+                    "weight": 10,
+                    "name": "re8joymod:machinehearts",
+					"functions": [
+                       {
+                            "function": "set_count",
+                            "count": {
+                                "min": 1,
+                                "max": 1
+                            }
+                       }
+                   ]
+                },
+                {
+                  "type": "item",
+                  "weight": 5,
+                  "name": "re8joymod:blacksheep",
+                  "functions": [
+                    {
+                      "function": "set_count",
+                      "count": {
+                        "min": 1,
+                        "max": 2
+                      }
+                    }
+                  ]
+                },
+                {
+                    "type": "item",
+                    "weight": 4,
+                    "name": "minecraft:iron_ingot",
+					"functions": [
+                       {
+                            "function": "set_count",
+                            "count": {
+                                "min": 1,
+                                "max": 2
+                            }
+                       }
+                   ]
+                }
+             ]
+        }
+    ]
+}

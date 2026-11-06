@@ -1,0 +1,24 @@
+{
+  "type" : "minecraft:crafting_shapeless",
+
+  "ingredients":
+  [
+    {
+      "item" : "re8joymod:desolate_grass"
+    },
+
+    {
+      "item" : "re8joymod:desolate_grass"
+    },
+
+    {
+      "item": "minecraft:slime_block"
+    }
+
+  ],
+  "result":
+  {
+    "item" :"re8joymod:mutamycete_block",
+    "count": 1
+  }
+}

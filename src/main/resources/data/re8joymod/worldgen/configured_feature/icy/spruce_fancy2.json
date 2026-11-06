@@ -1,0 +1,67 @@
+{
+    "type": "minecraft:tree",
+    "config": {
+      "ignore_vines": true,
+      "force_dirt": false,
+      "minimum_size": {
+        "type": "minecraft:two_layers_feature_size",
+        "limit": 1,
+        "lower_size": 0,
+        "upper_size": 1
+      },
+      "dirt_provider": {
+        "type": "minecraft:simple_state_provider",
+        "state": {
+          "Name": "minecraft:dirt"
+        }
+      },
+      "trunk_provider": {
+        "type": "minecraft:simple_state_provider",
+        "state": {
+          "Name": "re8joymod:ebony_log",
+          "Properties": {
+            "axis": "y"
+          }
+        }
+      },
+      "foliage_provider": {
+        "type": "minecraft:weighted_state_provider",
+        "entries": [
+          {
+            "weight": 40,
+            "data": {
+              "Name": "re8joymod:ebony_leaves",
+              "Properties": {
+                "distance": "7",
+                "persistent": "true"
+              }
+            }
+          },
+          {
+            "weight": 10,
+            "data": {
+              "Name": "minecraft:air"
+            }
+          }
+        ]
+      },
+      "trunk_placer": {
+        "type": "minecraft:fancy_trunk_placer",
+        "base_height": 5,
+        "height_rand_a": 10,
+        "height_rand_b": 0
+      },
+      "foliage_placer": {
+        "type": "minecraft:fancy_foliage_placer",
+        "radius": 2,
+        "offset": 4,
+        "height": 3
+      },
+      "decorators": [
+        {
+          "type": "minecraft:trunk_vine"
+        }
+      ]
+    }
+  }
+  

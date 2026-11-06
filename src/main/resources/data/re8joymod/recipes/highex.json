@@ -1,0 +1,28 @@
+{
+  "type" : "minecraft:crafting_shapeless",
+
+  "ingredients":
+  [
+    {
+      "item" : "minecraft:gunpowder"
+    },
+    {
+      "item" : "minecraft:gunpowder"
+    },
+    {
+      "item" : "minecraft:gunpowder"
+    },
+    {
+      "item" : "minecraft:gunpowder"
+    },
+    {
+      "item" : "re8joymod:resourcel"
+    }
+
+  ],
+  "result":
+  {
+    "item" :"re8joymod:highex",
+    "count": 1
+  }
+}

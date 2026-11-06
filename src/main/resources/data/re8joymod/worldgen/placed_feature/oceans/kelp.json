@@ -1,0 +1,16 @@
+{
+  "feature": "re8joymod:oceans/kelp",
+  "placement": [
+    {
+      "type": "count",
+      "count": 10
+    },
+    {
+      "type": "minecraft:in_square"
+    },
+    {
+      "type": "heightmap",
+      "heightmap": "OCEAN_FLOOR_WG"
+    }
+  ]
+}

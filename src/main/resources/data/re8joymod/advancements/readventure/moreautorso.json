@@ -1,0 +1,29 @@
+{
+    "display": {
+        "icon": {
+            "item": "re8joymod:moreautorso"
+        },
+        "title": "The Disgusting Stuff",
+        "description": "Get Moreau's Crystal"
+    },
+    "parent": "re8joymod:readventure/moreau3",
+    "criteria": {
+        "moreautorso": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                         "items": [
+              				"re8joymod:moreautorso"
+            			]
+                    }
+                ]
+            }
+        }
+    },
+    "requirements": [
+    [
+      "moreautorso"
+    ]
+   ]
+}

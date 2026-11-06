@@ -1,0 +1,30 @@
+{
+    "display": {
+        "icon": {
+            "item": "re8joymod:humus"
+        },
+        "title": "Mycete?",
+        "description": "Create the E Humus"
+
+    },
+    "parent": "re8joymod:readventure/root",
+    "criteria": {
+        "humus": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "items": [
+			              "re8joymod:humus"
+			            ]
+                    }
+                ]
+            }
+        }
+    },
+  	"requirements": [
+    [
+      "humus"
+    ]
+  ]
+}

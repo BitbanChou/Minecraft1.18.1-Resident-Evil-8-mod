@@ -1,0 +1,33 @@
+{
+    "display": {
+        "icon": {
+            "item": "re8joymod:mcheese"
+        },
+        "title": {
+            "translate": "Delicious stuff..."
+        },
+        "description": {
+            "translate": "Do you have something from Moreau?"
+        }
+    },
+    "parent": "re8joymod:readventure/moreau3",
+    "criteria": {
+        "mcheese": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                         "items": [
+              				"re8joymod:mcheese"
+            			]
+                    }
+                ]
+            }
+        }
+    },
+    "requirements": [
+    [
+      "mcheese"
+    ]
+   ]
+}

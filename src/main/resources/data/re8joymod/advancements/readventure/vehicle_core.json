@@ -1,0 +1,29 @@
+{
+    "display": {
+        "icon": {
+            "item": "re8joymod:vehicle_core"
+        },
+        "title": "Hong Hong！",
+        "description": "Get the Heisenberg's Self-propelled Artillery"
+    },
+    "parent": "re8joymod:readventure/muheisen",
+    "criteria": {
+        "heisencar": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                         "items": [
+              				"re8joymod:vehicle_core"
+            			]
+                    }
+                ]
+            }
+        }
+    },
+    "requirements": [
+    [
+      "heisencar"
+    ]
+   ]
+}

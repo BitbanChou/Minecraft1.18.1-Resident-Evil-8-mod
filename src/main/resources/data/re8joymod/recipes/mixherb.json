@@ -1,0 +1,23 @@
+{
+  "type" : "minecraft:crafting_shapeless",
+
+  "ingredients":
+  [
+
+    {
+      "item" : "re8joymod:herb1"
+    },
+    {
+      "item" : "re8joymod:herb2"
+    },
+    {
+      "item" : "re8joymod:herb3"
+    }
+
+  ],
+  "result":
+  {
+    "item" :"re8joymod:mixherb",
+    "count": 1
+  }
+}

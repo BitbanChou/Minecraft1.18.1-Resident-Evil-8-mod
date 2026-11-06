@@ -1,0 +1,18 @@
+{
+	"type" : "minecraft:crafting_shapeless",
+	
+	"ingredients":
+	[
+
+	{
+		"item" : "re8joymod:mucus_block"
+	}
+
+	
+	],
+	"result":
+	{
+		"item" :"re8joymod:mospitter",
+		"count": 8
+	}
+}

@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+
+  "pattern":
+  [
+    "II ",
+    "IS ",
+    " S "
+  ],
+
+  "key":
+  {
+    "I":
+    {
+      "item": "re8joymod:ebony_planks"
+    },
+    "S":
+    {
+        "item": "minecraft:stick"
+     }
+  },
+
+  "result":
+  {
+    "item": "re8joymod:ebony_wooden_axe",
+    "count": 1
+  }
+}

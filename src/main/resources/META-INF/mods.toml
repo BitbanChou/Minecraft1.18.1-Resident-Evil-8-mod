@@ -1,0 +1,32 @@
+modLoader="javafml" #mandatory
+loaderVersion="[38,)" #mandatory
+license="MIT License"
+[[mods]] #mandatory
+modId="re8joymod" #mandatory
+version="0.2" #mandatory
+displayName="Resident Evil 8&4" #mandatory
+logoFile="re8.png" #optional
+credits="Thanks for Capcom" #optional
+authors="joy187" #optional
+description='''
+Have an adventure in the Resident Evil 8&4 world!
+'''
+
+[[dependencies.re8joymod]] #optional
+    modId="forge" #mandatory
+    mandatory=true #mandatory
+    versionRange="[46.0.14,)" #mandatory
+    ordering="NONE"
+    side="BOTH"
+[[dependencies.re8joymod]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.20,]"
+    ordering="NONE"
+    side="BOTH"
+[[dependencies.re8joymod]]
+    modId="geckolib"
+    mandatory=true
+    versionRange="[4.2,)"
+    ordering="NONE"
+    side="BOTH"

@@ -1,0 +1,30 @@
+{
+	"replace": false,
+	"values": [
+		"re8joymod:dhands_block",
+		"re8joymod:example_block",
+		"re8joymod:palewall_block",
+		"re8joymod:castlewall_block",
+		"re8joymod:factorywall_block",
+		"re8joymod:fact_iron_block",
+		"re8joymod:wasteland_rock",
+		"re8joymod:dense_wasteland_rock",
+		"re8joymod:fantom_block",
+		"re8joymod:deye_block",
+		"re8joymod:dlight_block",
+		"re8joymod:mutamycete_block",
+		"re8joymod:mucus_block",
+		"re8joymod:mucus_block",
+		"re8joymod:fantom_ore",
+		"re8joymod:deepslate_fantom_ore",
+		"re8joymod:moreautorso",
+		"re8joymod:heisentorso",
+		"re8joymod:dimitorso",
+		"re8joymod:virus_generator",
+		"re8joymod:aterrimus_glass",
+		"re8joymod:aterrimus_glass_pane",
+		"re8joymod:oildrums",
+		"re8joymod:liquidnitrogen",
+		"re8joymod:dungeonwall_block"
+	]
+}

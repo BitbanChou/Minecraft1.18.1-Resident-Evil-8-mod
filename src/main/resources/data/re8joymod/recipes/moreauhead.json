@@ -1,0 +1,40 @@
+{
+    "type": "minecraft:crafting_shaped",
+    
+    "pattern":
+    [
+        "ZZZ",
+        "MTM",
+        "SBS"
+    ],
+    
+    "key":
+    {
+        "M":
+        {
+            "item": "re8joymod:mucus_block"
+        },
+        "T":
+        {
+            "item": "re8joymod:moreautorso"
+        },
+        "Z":
+        {
+            "item": "minecraft:green_dye"
+        },
+        "B":
+        {
+            "item": "minecraft:black_dye"
+        },
+        "S":
+        {
+            "item": "re8joymod:blackfeather"
+        }
+    },
+    
+    "result":
+    {
+        "item": "re8joymod:moreauhead",
+        "count": 1
+    }
+}

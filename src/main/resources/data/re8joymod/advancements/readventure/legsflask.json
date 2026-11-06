@@ -1,0 +1,33 @@
+{
+    "display": {
+        "icon": {
+            "item": "re8joymod:bottle4"
+        },
+        "title": {
+            "translate": "I will save Rose."
+        },
+        "description": {
+            "translate": "Get the legs flask."
+        }
+    },
+    "parent": "re8joymod:readventure/bei",
+    "criteria": {
+        "bottle4": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "items": [
+              				"re8joymod:bottle4"
+            			]
+                    }
+                ]
+            }
+        }
+    },
+    "requirements": [
+    [
+      "bottle4"
+    ]
+  ]
+}

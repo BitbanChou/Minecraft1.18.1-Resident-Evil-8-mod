@@ -1,0 +1,23 @@
+{
+  "type": "forge:add_spawns",
+  "biomes": [
+    "minecraft:snowy_plains",
+    "minecraft:savanna",
+    "minecraft:savanna_plateau",
+    "minecraft:birch_forest",
+    "minecraft:nether_wastes",
+    "minecraft:dark_forest",
+    "re8joymod:re8_edesert_biome",
+    "minecraft:bamboo_jungle",
+    "minecraft:warped_forest",
+    "minecraft:dripstone_caves",
+    "minecraft:deep_dark",
+    "minecraft:forest"
+  ],
+  "spawners": {
+    "type": "re8joymod:frank6",
+    "weight": 8,
+    "minCount": 1,
+    "maxCount": 1
+  }
+}

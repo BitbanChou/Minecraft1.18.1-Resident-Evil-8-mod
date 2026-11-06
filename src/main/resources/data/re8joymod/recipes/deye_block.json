@@ -1,0 +1,24 @@
+{
+    "type": "minecraft:crafting_shaped",
+    
+    "pattern":
+    [
+        "FFF",
+        "FFF",
+        "FFF"
+    ],
+    
+    "key":
+    {
+        "F":
+        {
+        	"item": "re8joymod:lyeye"
+        }
+    },
+    
+    "result":
+    {
+        "item": "re8joymod:deye_block",
+        "count": 1
+    }
+}

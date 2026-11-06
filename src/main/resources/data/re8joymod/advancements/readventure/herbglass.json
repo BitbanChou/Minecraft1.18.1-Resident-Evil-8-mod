@@ -1,0 +1,29 @@
+{
+    "display": {
+        "icon": {
+            "item": "re8joymod:herbglass"
+        },
+        "title": "The Way to Self-salvation",
+        "description": "Craft a glassbottle"
+    },
+    "parent": "re8joymod:readventure/herb",
+    "criteria": {
+        "herbglass": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                         "items": [
+              				"re8joymod:herbglass"
+            			]
+                    }
+                ]
+            }
+        }
+    },
+    "requirements": [
+    [
+      "herbglass"
+    ]
+   ]
+}

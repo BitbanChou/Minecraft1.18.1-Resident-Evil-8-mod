@@ -1,0 +1,9 @@
+{
+  "feature": "re8joymod:oceans/coral_tre",
+  "placement": [
+    {
+      "type": "minecraft:count_on_every_layer",
+      "count": 1
+    }
+  ]
+}

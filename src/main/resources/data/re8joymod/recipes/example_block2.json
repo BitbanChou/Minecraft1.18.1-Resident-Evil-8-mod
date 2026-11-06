@@ -1,0 +1,14 @@
+{
+	"type":"re8joymod:virus_generator",
+	"ingredients":[
+		{
+			"item":"re8joymod:fantom_block"
+		},		
+		{
+			"item":"minecraft:redstone_block"
+		}
+	],
+	"output":{
+		"item":"re8joymod:example_block"
+	}
+}

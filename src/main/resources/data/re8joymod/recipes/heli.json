@@ -1,0 +1,36 @@
+{
+    "type": "minecraft:crafting_shaped",
+    
+    "pattern":
+    [
+        "PMP",
+        "IGI",
+        "III"
+    ],
+    
+    "key":
+    {
+        "P":
+        {
+            "item": "re8joymod:propeller"
+        },
+        "I":
+        {
+        	"item": "re8joymod:factorywall_block"
+        },
+        "M":
+        {
+            "item": "re8joymod:complexmechanicalheart"
+        },
+        "G":
+        {
+            "item": "minecraft:glass"
+        }
+    },
+    
+    "result":
+    {
+        "item": "re8joymod:heli",
+        "count": 1
+    }
+}

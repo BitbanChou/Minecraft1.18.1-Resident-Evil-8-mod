@@ -1,0 +1,29 @@
+{
+    "display": {
+        "icon": {
+            "item": "re8joymod:herb1"
+        },
+        "title": "The Magic Plant",
+        "description": "Get a herb"
+    },
+    "parent": "re8joymod:readventure/root",
+    "criteria": {
+        "herb1": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                         "items": [
+              				"re8joymod:herb1"
+            			]
+                    }
+                ]
+            }
+        }
+    },
+    "requirements": [
+    [
+      "herb1"
+    ]
+   ]
+}

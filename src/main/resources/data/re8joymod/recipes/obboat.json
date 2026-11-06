@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+
+  "pattern":
+  [
+    "   ",
+    "S S",
+    "SSS"
+  ],
+
+  "key":
+  {
+    "S":
+    {
+        "item": "re8joymod:ebony_planks"
+     }
+  },
+
+  "result":
+  {
+    "item": "re8joymod:obboat",
+    "count": 1
+  }
+}

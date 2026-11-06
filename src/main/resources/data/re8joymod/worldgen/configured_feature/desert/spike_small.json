@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:huge_fungus",
+  "config": {
+    "hat_state": {
+      "Properties": {
+        "axis": "y"
+      },
+      "Name": "minecraft:air"
+    },
+    "decor_state": {
+      "Name": "minecraft:air"
+    },
+    "planted": false,
+    "valid_base_block": {
+      "Name": "minecraft:terracotta"
+    },
+    "stem_state": {
+      "Properties": {
+        "axis": "y"
+      },
+      "Name": "minecraft:terracotta"
+    },    "replaceable_blocks": {
+      "type": "minecraft:true"
+    }
+  }
+}

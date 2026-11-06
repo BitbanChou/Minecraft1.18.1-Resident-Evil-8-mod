@@ -1,0 +1,85 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"1": "re8joymod:item/mutamycete_block1",
+		"particle": "re8joymod:item/zs_block"
+	},
+	"elements": [
+		{
+			"from": [8.24001, 4, 3.95858],
+			"to": [11.04001, 5, 11.95858],
+			"rotation": {"angle": 0, "axis": "y", "origin": [-0.35999, 6.5, -1.64142]},
+			"faces": {
+				"north": {"uv": [8, 19, 10, 20], "texture": "#1"},
+				"east": {"uv": [0, 19, 8, 20], "texture": "#1"},
+				"south": {"uv": [18, 19, 20, 20], "texture": "#1"},
+				"west": {"uv": [10, 19, 18, 20], "texture": "#1"},
+				"up": {"uv": [10, 19, 8, 11], "texture": "#1"},
+				"down": {"uv": [12, 11, 10, 19], "texture": "#1"}
+			}
+		},
+		{
+			"from": [8.04001, 4, 9.24142],
+			"to": [10.84001, 4, 12.04142],
+			"rotation": {"angle": 0, "axis": "y", "origin": [-0.35999, 6.5, -1.35858]},
+			"faces": {
+				"north": {"uv": [3, 13, 5, 13], "texture": "#1"},
+				"east": {"uv": [1, 13, 3, 13], "texture": "#1"},
+				"south": {"uv": [7, 13, 9, 13], "texture": "#1"},
+				"west": {"uv": [5, 13, 7, 13], "texture": "#1"},
+				"up": {"uv": [5, 13, 3, 11], "rotation": 90, "texture": "#1"},
+				"down": {"uv": [7, 11, 5, 13], "rotation": 270, "texture": "#1"}
+			}
+		},
+		{
+			"from": [3.16313, 4.3, 9.8849],
+			"to": [11.16313, 5.3, 12.4849],
+			"rotation": {"angle": 0, "axis": "x", "origin": [-0.50141, 5, 0.4799]},
+			"faces": {
+				"north": {"uv": [2, 11, 10, 12], "rotation": 90, "texture": "#1"},
+				"east": {"uv": [0, 11, 2, 12], "rotation": 270, "texture": "#1"},
+				"south": {"uv": [12, 11, 20, 12], "rotation": 270, "texture": "#1"},
+				"west": {"uv": [10, 11, 12, 12], "rotation": 270, "texture": "#1"},
+				"up": {"uv": [10, 11, 2, 9], "rotation": 270, "texture": "#1"},
+				"down": {"uv": [18, 9, 10, 11], "rotation": 270, "texture": "#1"}
+			}
+		}
+	],
+	"display": {
+		"thirdperson_righthand": {
+			"rotation": [139.38, 33.53, -164.06],
+			"translation": [0, 2, -1.25]
+		},
+		"thirdperson_lefthand": {
+			"rotation": [176.01, -35.97, 162.51],
+			"translation": [0.75, 2, 1]
+		},
+		"firstperson_righthand": {
+			"rotation": [-180, 53.75, -180],
+			"translation": [0, 3, 0]
+		},
+		"firstperson_lefthand": {
+			"rotation": [180, -41.25, -180],
+			"translation": [1.5, 2.5, 0]
+		},
+		"gui": {
+			"rotation": [-63.94, 41.4, 162.07],
+			"translation": [-1.5, -2.5, 0]
+		},
+		"head": {
+			"translation": [0, 0, -0.75]
+		},
+		"fixed": {
+			"rotation": [-93.29, -39.5, 2.7],
+			"translation": [0, 0, -4]
+		}
+	},
+	"groups": [
+		{
+			"name": "mopro",
+			"origin": [-1, 8, -1],
+			"color": 0,
+			"children": [0, 1, 2]
+		}
+	]
+}

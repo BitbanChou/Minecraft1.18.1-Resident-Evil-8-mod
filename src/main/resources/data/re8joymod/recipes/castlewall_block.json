@@ -1,0 +1,28 @@
+{
+    "type": "minecraft:crafting_shaped",
+    
+    "pattern":
+    [
+        "D D",
+        " G ",
+        "D D"
+    ],
+    
+    "key":
+    {
+        "D":
+        {
+        	"item": "minecraft:dirt"
+        },
+        "G":
+        {
+            "item": "minecraft:granite"
+        }
+    },
+    
+    "result":
+    {
+        "item": "re8joymod:castlewall_block",
+        "count": 1
+    }
+}

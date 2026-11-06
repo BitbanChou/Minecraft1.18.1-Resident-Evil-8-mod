@@ -1,0 +1,17 @@
+{
+	"type" : "minecraft:crafting_shapeless",
+	
+	"ingredients":
+	[
+
+	{
+		"item" : "re8joymod:ebony_log"
+	}
+	
+	],
+	"result":
+	{
+		"item" :"re8joymod:ebony_planks",
+		"count": 4
+	}
+}

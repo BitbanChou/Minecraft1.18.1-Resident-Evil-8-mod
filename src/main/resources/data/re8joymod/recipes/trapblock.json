@@ -1,0 +1,28 @@
+{
+    "type": "minecraft:crafting_shaped",
+    
+    "pattern":
+    [
+        " F ",
+        "FSF",
+        " F "
+    ],
+    
+    "key":
+    {
+        "F":
+        {
+        	"item": "minecraft:iron_ingot"
+        },
+        "S":
+        {
+            "item": "re8joymod:resourcesm"
+        }
+    },
+    
+    "result":
+    {
+        "item": "re8joymod:trapblock",
+        "count": 1
+    }
+}

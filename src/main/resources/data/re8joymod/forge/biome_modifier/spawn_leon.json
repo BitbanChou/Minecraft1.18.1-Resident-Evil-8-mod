@@ -1,0 +1,29 @@
+{
+  "type": "forge:add_spawns",
+  "biomes": [
+    "re8joymod:re8_wasteland_biome",
+    "minecraft:old_growth_pine_taiga",
+    "minecraft:windswept_forest",
+    "minecraft:windswept_gravelly_hills"
+  ],
+  "spawners":[
+    {
+      "type": "re8joymod:leon",
+      "weight": 5,
+      "minCount": 1,
+      "maxCount": 1
+    },
+    {
+      "type": "re8joymod:chris",
+      "weight": 5,
+      "minCount": 1,
+      "maxCount": 1
+    },
+    {
+      "type": "re8joymod:ada4",
+      "weight": 5,
+      "minCount": 1,
+      "maxCount": 1
+    }
+  ]
+}

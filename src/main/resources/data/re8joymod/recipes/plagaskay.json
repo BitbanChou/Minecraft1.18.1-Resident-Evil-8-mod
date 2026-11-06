@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:crafting_shaped",
+
+  "pattern":
+  [
+    "R G",
+    " W ",
+    " B "
+  ],
+
+  "key":
+  {
+    "R":
+    {
+      "item": "minecraft:red_stained_glass"
+    },
+    "G":
+    {
+      "item": "minecraft:green_stained_glass"
+    },
+    "B":
+    {
+      "item": "minecraft:blue_stained_glass"
+    },
+    "W":
+    {
+      "item": "re8joymod:labor_shovel"
+    }
+  },
+  "result":
+  {
+    "item": "re8joymod:plagaskey",
+    "count": 1
+  }
+}

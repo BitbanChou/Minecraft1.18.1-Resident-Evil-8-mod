@@ -1,0 +1,28 @@
+{
+    "type": "minecraft:crafting_shaped",
+    
+    "pattern":
+    [
+        " S ",
+        " R ",
+        "S S"
+    ],
+    
+    "key":
+    {
+        "S":
+        {
+            "item": "minecraft:redstone"
+        },
+        "R":
+        {
+        	"item": "re8joymod:crystaltorso"
+        }
+    },
+    
+    "result":
+    {
+        "item": "re8joymod:summonbcd_core",
+        "count": 1
+    }
+}

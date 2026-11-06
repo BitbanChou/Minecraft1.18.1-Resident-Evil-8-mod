@@ -1,0 +1,20 @@
+{
+    "type" : "minecraft:crafting_shapeless",
+
+    "ingredients":
+    [
+
+        {
+            "item" : "re8joymod:blacksheephead"
+        },
+        {
+            "item" : "re8joymod:blacksheepbody"
+        }
+
+    ],
+    "result":
+    {
+        "item" :"re8joymod:blacksheep",
+        "count": 1
+    }
+}

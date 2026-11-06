@@ -1,0 +1,39 @@
+{
+    "type": "minecraft:crafting_shaped",
+    
+    "pattern":
+    [
+        "USU",
+        "WCW",
+        "FFF"
+    ],
+    
+    "key":
+    {
+        "C":
+        {
+            "item": "re8joymod:dimitorso"
+        },
+        "U":
+        {
+            "item": "minecraft:white_dye"
+        },
+        "W":
+        {
+        	"item": "minecraft:wither_rose"
+        },
+        "F":
+        {
+            "item": "minecraft:light_gray_dye"
+        },
+        "S":
+        {
+        	"item": "minecraft:gray_dye"
+        }
+    },
+    "result":
+    {
+        "item": "re8joymod:dimisuit",
+        "count": 1
+    }
+}

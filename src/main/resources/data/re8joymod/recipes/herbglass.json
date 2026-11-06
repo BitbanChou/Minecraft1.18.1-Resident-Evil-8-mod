@@ -1,0 +1,31 @@
+{
+    "type": "minecraft:crafting_shaped",
+    
+    "pattern":
+    [
+        " H ",
+        "SWS",
+        " H "
+    ],
+    
+    "key":
+    {
+        "H":
+        {
+            "item": "re8joymod:herb1"
+        },
+        "W":
+        {
+        	"item": "minecraft:glass_bottle"
+        },
+        "S":
+        {
+        	"item": "minecraft:sugar"        
+        }
+    },
+    "result":
+    {
+        "item": "re8joymod:herbglass",
+        "count": 1
+    }
+}

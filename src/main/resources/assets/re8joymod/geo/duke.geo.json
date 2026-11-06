@@ -1,0 +1,78 @@
+{
+	"format_version": "1.12.0",
+	"minecraft:geometry": [
+		{
+			"description": {
+				"identifier": "geometry.unknown",
+				"texture_width": 128,
+				"texture_height": 128,
+				"visible_bounds_width": 4,
+				"visible_bounds_height": 4.5,
+				"visible_bounds_offset": [0, 1.75, 0]
+			},
+			"bones": [
+				{
+					"name": "duke",
+					"pivot": [1, 11, -10],
+					"rotation": [0, -90, 0]
+				},
+				{
+					"name": "upbody",
+					"parent": "duke",
+					"pivot": [10, 39, -10],
+					"cubes": [
+						{"origin": [1, 37, -18], "size": [16, 16, 16], "pivot": [9, 42, -10], "rotation": [0, 90, 0], "uv": [0, 0]}
+					]
+				},
+				{
+					"name": "rightlib",
+					"parent": "duke",
+					"pivot": [10.64994, 31.88225, -21.07743],
+					"rotation": [-167.87755, -19.25651, -96.56663],
+					"cubes": [
+						{"origin": [4.08335, 13.37055, -24.22654], "size": [10, 6, 6], "pivot": [19.08335, 20.76748, -10.80634], "rotation": [4.62852, 7.72146, 81.33938], "uv": [80, 41]},
+						{"origin": [2.62519, 11.63421, -22.12925], "size": [8, 22, 6], "pivot": [8.38324, 27.53199, -19.9612], "rotation": [0, 12.5, 75], "uv": [82, 34]}
+					]
+				},
+				{
+					"name": "leftlib",
+					"parent": "duke",
+					"pivot": [11.1153, 32.48137, 0.87064],
+					"rotation": [97.5, 0, -10],
+					"cubes": [
+						{"origin": [5.44867, 29.54071, -6.53536], "size": [10, 6, 6], "pivot": [5.44867, 9.54071, -7.53536], "rotation": [-12.5, 0, 0], "uv": [46, 51]},
+						{"origin": [6.64844, 14.17433, -2.82173], "size": [8, 22, 6], "pivot": [9.99581, 31.10494, -2.14593], "rotation": [-72.5, 7.5, 0], "uv": [2, 34]}
+					]
+				},
+				{
+					"name": "body",
+					"parent": "duke",
+					"pivot": [1, 27, -10],
+					"cubes": [
+						{"origin": [3, 27, -16], "size": [15, 10, 13], "uv": [27, 33]},
+						{"origin": [4, 27, -4], "size": [13, 10, 4], "uv": [87, 90]},
+						{"origin": [4, 27, -20], "size": [13, 10, 4], "uv": [87, 90]},
+						{"origin": [-1, 7, -23], "size": [22, 18, 27], "uv": [24, 58]},
+						{"origin": [1, 23, -20], "size": [18, 7, 21], "uv": [33, 39]}
+					]
+				},
+				{
+					"name": "leftl",
+					"parent": "duke",
+					"pivot": [10, 11, -7],
+					"cubes": [
+						{"origin": [6, 0, -10], "size": [8, 10, 6], "uv": [66, 99]}
+					]
+				},
+				{
+					"name": "rightl",
+					"parent": "duke",
+					"pivot": [10, 16, -13],
+					"cubes": [
+						{"origin": [6, 0, -16], "size": [8, 9, 6], "uv": [34, 98]}
+					]
+				}
+			]
+		}
+	]
+}

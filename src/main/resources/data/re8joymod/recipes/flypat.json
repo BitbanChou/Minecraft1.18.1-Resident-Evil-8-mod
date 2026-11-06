@@ -1,0 +1,28 @@
+{
+    "type": "minecraft:crafting_shaped",
+    
+    "pattern":
+    [
+        "WWW",
+        "WZW",
+        " Z "
+    ],
+    
+    "key":
+    {
+        "Z":
+        {
+            "item": "re8joymod:labor_shovel"
+        },
+        "W":
+        {
+        	"item": "minecraft:cobweb"
+        }
+    },
+    
+    "result":
+    {
+        "item": "re8joymod:flypat",
+        "count": 1
+    }
+}

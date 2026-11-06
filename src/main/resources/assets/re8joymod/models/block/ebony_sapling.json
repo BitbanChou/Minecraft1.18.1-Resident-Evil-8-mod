@@ -1,0 +1,6 @@
+{
+  "parent" : "block/cross",
+  "textures": {
+	   "cross": "re8joymod:block/ebony_sapling"
+	}
+}

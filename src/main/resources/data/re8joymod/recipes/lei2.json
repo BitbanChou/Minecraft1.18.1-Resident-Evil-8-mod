@@ -1,0 +1,38 @@
+{
+	"type" : "minecraft:crafting_shapeless",
+	
+	"ingredients":
+	[
+
+	{
+		"item" : "re8joymod:lei"
+	},
+	{
+		"item" : "re8joymod:lei"
+	},	
+	{
+		"item" : "re8joymod:lei"
+	},	
+	{
+		"item" : "re8joymod:lei"
+	},	
+	{
+		"item" : "re8joymod:lei"
+	},	
+	{
+		"item" : "re8joymod:lei"
+	},	
+	{
+		"item" : "re8joymod:lei"
+	},	
+	{
+		"item" : "re8joymod:lei"
+	}	
+	
+	],
+	"result":
+	{
+		"item" :"re8joymod:lei2",
+		"count": 1
+	}
+}

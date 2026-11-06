@@ -1,0 +1,36 @@
+{
+    "feature": "re8joymod:mountain/valley/tree_placer_test1",
+    "placement": [
+      {
+        "type": "minecraft:surface_water_depth_filter",
+        "max_water_depth": 3
+      },
+      {
+        "type": "minecraft:count",
+        "count": {
+          "type": "minecraft:weighted_list",
+          "distribution": [
+            {
+              "weight": 5,
+              "data": 8
+            },
+            {
+              "weight": 5,
+              "data": 9
+            }
+          ]
+        }
+      },
+      {
+        "type": "minecraft:in_square"
+      },
+      {
+        "type": "minecraft:heightmap",
+        "heightmap": "OCEAN_FLOOR_WG"
+      },
+      {
+        "type": "minecraft:biome"
+      }
+    ]
+  }
+  

@@ -1,0 +1,28 @@
+{
+    "type": "minecraft:crafting_shaped",
+    
+    "pattern":
+    [
+        "   ",
+        "Z Z",
+        "S S"
+    ],
+    
+    "key":
+    {
+        "Z":
+        {
+            "item": "re8joymod:machineheartb"
+        },
+        "S":
+        {
+            "item": "re8joymod:machinehearts"
+        }
+    },
+    
+    "result":
+    {
+        "item": "re8joymod:frankboots",
+        "count": 1
+    }
+}

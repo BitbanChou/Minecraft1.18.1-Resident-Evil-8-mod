@@ -1,0 +1,36 @@
+{
+    "feature": "re8joymod:mountain/valley/bush2",
+    "placement": [
+      {
+        "type": "minecraft:count",
+        "count": {
+          "type": "minecraft:weighted_list",
+          "distribution": [
+            {
+              "weight": 50,
+              "data": 11
+            },
+            {
+              "weight": 50,
+              "data": 12
+            }
+          ]
+        }
+      },
+      {
+        "type": "minecraft:in_square"
+      },
+      {
+        "max_water_depth": 0,
+        "type": "minecraft:surface_water_depth_filter"
+      },
+      {
+        "type": "minecraft:heightmap",
+        "heightmap": "OCEAN_FLOOR_WG"
+      },
+      {
+        "type": "minecraft:biome"
+      }
+    ]
+  }
+  

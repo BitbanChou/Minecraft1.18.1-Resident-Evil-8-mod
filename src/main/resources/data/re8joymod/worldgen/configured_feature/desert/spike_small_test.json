@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:huge_fungus",
+  "config": {
+    "hat_state": {
+      "Properties": {
+        "axis": "y"
+      },
+      "Name": "minecraft:air"
+    },
+    "decor_state": {
+      "Name": "minecraft:air"
+    },
+    "planted": false,
+    "valid_base_block": {
+      "Name": "minecraft:red_sand"
+    },
+    "stem_state": {
+      "Properties": {
+        "axis": "y"
+      },
+      "Name": "minecraft:smooth_red_sandstone"
+    },
+    "replaceable_blocks": {
+      "type": "minecraft:true"
+    }
+  }
+}

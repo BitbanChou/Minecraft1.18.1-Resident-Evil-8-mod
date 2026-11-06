@@ -1,0 +1,205 @@
+{
+    "pools": [
+        {
+            "rolls": 1.0,
+            "bonus_rolls": 0.0,
+            "entries": [
+                {
+                    "type": "item",
+                    "name": "minecraft:totem_of_undying",
+                    "weight": 3,
+                    "functions": [
+                        {
+                            "function": "set_count",
+                            "count": {
+                                "min": 1,
+                                "max": 3
+                            }
+                        },
+                        {
+                            "function": "looting_enchant",
+                            "count": {
+                                "min": 0,
+                                "max": 1
+                            }
+                        }
+                    ]
+                },
+                {
+                    "type": "item",
+                    "weight": 8,
+                    "name": "minecraft:diamond",
+					"functions": [
+                       {
+                            "function": "set_count",
+                            "count": {
+                                "min": 2,
+                                "max": 4
+                            }
+                       }
+                   ]
+                },
+                {
+                    "type": "item",
+                    "weight": 5,
+                    "name": "minecraft:nether_star",
+					"functions": [
+                       {
+                            "function": "set_count",
+                            "count": {
+                                "min": 1,
+                                "max": 2
+                            }
+                       }
+                   ]
+                },
+                {
+                    "type": "item",
+                    "weight": 2,
+                    "name": "re8joymod:thehagwand",
+					"functions": [
+                       {
+                            "function": "set_count",
+                            "count": {
+                                "min": 1,
+                                "max": 1
+                            }
+                       }
+                   ]
+                },
+                {
+                  "type": "item",
+                  "weight": 4,
+                  "name": "re8joymod:solar_disk",
+                  "functions": [
+                    {
+                      "function": "set_count",
+                      "count": {
+                        "min": 1,
+                        "max": 1
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "item",
+                  "weight": 4,
+                  "name": "re8joymod:example_block",
+                  "functions": [
+                    {
+                      "function": "set_count",
+                      "count": {
+                        "min": 1,
+                        "max": 2
+                      }
+                    }
+                  ]
+                },
+                {
+                    "type": "item",
+                    "weight": 5,
+                    "name": "re8joymod:lei2",
+					"functions": [
+                       {
+                            "function": "set_count",
+                            "count": {
+                                "min": 1,
+                                "max": 2
+                            }
+                       }
+                   ]
+                }                
+             ]
+        },
+        {
+			"name": "pool1",
+            "rolls": 1,
+            "entries": [
+                {
+                    "type": "item",
+                    "weight": 5,
+                    "name": "minecraft:nether_star",
+					"functions": [
+                       {
+                            "function": "set_count",
+                            "count": {
+                                "min": 1,
+                                "max": 1
+                            }
+                       }
+                   ]
+                },
+                {
+                  "type": "item",
+                  "name": "re8joymod:mirandamask",
+                  "weight": 2,
+                  "functions": [
+                    {
+                      "function": "set_count",
+                      "count": {
+                        "min": 1,
+                        "max": 1
+                      }
+                    }
+                  ]
+                },
+                {
+                    "type": "item",
+                    "name": "re8joymod:bottle4",
+                    "weight": 1,
+                    "functions": [
+                        {
+                            "function": "set_count",
+                            "count": {
+                                "min": 1,
+                                "max": 1
+                            }
+                        }
+                    ]
+                },
+                {
+                    "type": "item",
+                    "name": "re8joymod:bottle3",
+                    "weight": 1,
+                    "functions": [
+                        {
+                            "function": "set_count",
+                            "count": {
+                                "min": 1,
+                                "max": 1
+                            }
+                        }
+                    ]
+                },
+                {
+                    "type": "item",
+                    "name": "re8joymod:bottle2",
+                    "weight": 1,
+                    "functions": [
+                        {
+                            "function": "set_count",
+                            "count": {
+                                "min": 1,
+                                "max": 1
+                            }
+                        }
+                    ]
+                },
+                {
+                    "type": "item",
+                    "name": "re8joymod:bottle1",
+                    "weight": 1,
+                    "functions": [
+                        {
+                            "function": "set_count",
+                            "count": {
+                                "min": 1,
+                                "max": 1
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

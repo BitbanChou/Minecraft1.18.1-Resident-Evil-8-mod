@@ -1,0 +1,17 @@
+{
+  "type" : "minecraft:crafting_shapeless",
+
+  "ingredients":
+  [
+
+    {
+      "item" : "re8joymod:desolate_grass"
+    }
+
+  ],
+  "result":
+  {
+    "item" :"re8joymod:lei",
+    "count": 4
+  }
+}

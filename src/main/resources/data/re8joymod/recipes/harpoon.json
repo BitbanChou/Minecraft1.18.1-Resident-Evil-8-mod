@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+
+  "pattern":
+  [
+    "  S",
+    " Z ",
+    "Z  "
+  ],
+
+  "key":
+  {
+    "Z":
+    {
+      "item": "minecraft:stick"
+    },
+    "S":
+    {
+      "item": "minecraft:amethyst_shard"
+    }
+  },
+
+  "result":
+  {
+    "item": "re8joymod:harpoon",
+    "count": 1
+  }
+}

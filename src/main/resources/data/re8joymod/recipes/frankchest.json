@@ -1,0 +1,32 @@
+{
+    "type": "minecraft:crafting_shaped",
+    
+    "pattern":
+    [
+        "Z Z",
+        "ZRZ",
+        "SZS"
+    ],
+    
+    "key":
+    {
+        "Z":
+        {
+            "item": "re8joymod:machineheartb"
+        },
+        "S":
+        {
+            "item": "re8joymod:machinehearts"
+        },
+        "R":
+        {
+            "item": "minecraft:redstone"        
+        }        
+    },
+    
+    "result":
+    {
+        "item": "re8joymod:frankchest",
+        "count": 1
+    }
+}

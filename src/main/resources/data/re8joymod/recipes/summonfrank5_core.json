@@ -1,0 +1,28 @@
+{
+    "type": "minecraft:crafting_shaped",
+    
+    "pattern":
+    [
+        " S ",
+        " R ",
+        "S S"
+    ],
+    
+    "key":
+    {
+        "S":
+        {
+            "item": "re8joymod:rustedpart"
+        },
+        "R":
+        {
+        	"item": "re8joymod:complexmechanicalheart"
+        }
+    },
+    
+    "result":
+    {
+        "item": "re8joymod:summonfrank5_core",
+        "count": 1
+    }
+}

@@ -1,0 +1,39 @@
+{
+    "type": "minecraft:crafting_shaped",
+    
+    "pattern":
+    [
+        "FSF",
+        "WCW",
+        "FUF"
+    ],
+    
+    "key":
+    {
+        "C":
+        {
+            "item": "minecraft:netherite_chestplate"
+        },
+        "U":
+        {
+            "item": "re8joymod:example_block"
+        },
+        "W":
+        {
+        	"item": "minecraft:wither_rose"
+        },
+        "F":
+        {
+            "item": "re8joymod:blackfeather"
+        },
+        "S":
+        {
+        	"item": "re8joymod:solar_disk"
+        }
+    },
+    "result":
+    {
+        "item": "re8joymod:mirandasuit",
+        "count": 1
+    }
+}

@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:random_selector",
+  "config": {
+    "features": [
+      {
+        "chance": 1,
+        "feature": "re8joymod:forest/hills/lantern_normal"
+      }
+    ],
+    "default": "re8joymod:na"
+  }
+}

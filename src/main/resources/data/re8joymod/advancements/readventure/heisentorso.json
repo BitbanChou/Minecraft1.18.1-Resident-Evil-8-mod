@@ -1,0 +1,29 @@
+{
+    "display": {
+        "icon": {
+            "item": "re8joymod:heisentorso"
+        },
+        "title": "The Beating Heart",
+        "description": "Get Heisenberg's Crystal"
+    },
+    "parent": "re8joymod:readventure/muheisen",
+    "criteria": {
+        "heisentorso": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                         "items": [
+              				"re8joymod:heisentorso"
+            			]
+                    }
+                ]
+            }
+        }
+    },
+    "requirements": [
+    [
+      "heisentorso"
+    ]
+   ]
+}

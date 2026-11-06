@@ -1,0 +1,15 @@
+{
+  "feature": "re8joymod:deadbush_base",
+  "placement": [
+    {
+      "type": "count",
+      "count": {
+        "type": "minecraft:uniform",
+        "value": {
+          "min_inclusive": 5,
+          "max_inclusive": 12
+        }
+      }
+    }
+  ]
+}

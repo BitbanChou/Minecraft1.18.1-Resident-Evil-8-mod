@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:jigsaw",
+  "start_pool": "re8joymod:cs/start_pool",
+  "size": 3,
+  "max_distance_from_center": 124,
+  "step": "surface_structures",
+
+  "biomes": "#re8joymod:has_structure/cs",
+
+  "start_height": {
+    "absolute": 0
+  },
+  "adapt_noise": true,
+  "project_start_to_heightmap": "WORLD_SURFACE_WG",
+  "use_expansion_hack": false,
+
+  "spawn_overrides": {
+    "creature": {
+      "bounding_box": "piece",
+      "spawns": [
+        {
+          "type": "minecraft:bat",
+          "weight": 1,
+          "minCount": 1,
+          "maxCount": 1
+        }
+      ]
+    }
+  }
+}

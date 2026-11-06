@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:netherrack_replace_blobs",
+  "config": {
+    "target": {
+      "Name": "minecraft:air"
+    },
+    "state": {
+      "Name": "re8joymod:aterrimus_glass"
+    },
+    "radius": 0
+  }
+}

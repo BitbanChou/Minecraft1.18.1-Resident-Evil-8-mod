@@ -1,0 +1,21 @@
+{
+  "type": "forge:add_spawns",
+  "biomes": [
+    "re8joymod:re8_eforest_biome",
+    "minecraft:warped_forest"
+  ],
+  "spawners": [
+    {
+    "type": "re8joymod:mycete",
+    "weight": 5,
+    "minCount": 1,
+    "maxCount": 1
+    },
+    {
+      "type": "re8joymod:angie",
+      "weight": 5,
+      "minCount": 1,
+      "maxCount": 1
+    }
+  ]
+}

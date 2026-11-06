@@ -1,0 +1,21 @@
+{
+    "type": "minecraft:random_selector",
+    "config": {
+      "features": [
+        {
+          "feature": "re8joymod:icy/spruce_tall1",
+          "chance": 0.5
+        },
+        {
+          "feature": "re8joymod:icy/spruce_tall2",
+          "chance": 0.4
+        },
+        {
+          "feature": "re8joymod:icy/spruce_tall_glass",
+          "chance": 0.1
+        }
+      ],
+      "default": "re8joymod:na"
+    }
+  }
+  

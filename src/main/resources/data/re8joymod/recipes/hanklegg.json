@@ -1,0 +1,28 @@
+{
+    "type": "minecraft:crafting_shaped",
+    
+    "pattern":
+    [
+        "SSS",
+        "Z Z",
+        "Z Z"
+    ],
+    
+    "key":
+    {
+        "Z":
+        {
+            "item": "re8joymod:sleather"
+        },
+        "S":
+        {
+            "item": "minecraft:black_dye"
+        }
+    },
+    
+    "result":
+    {
+        "item": "re8joymod:hanklegg",
+        "count": 1
+    }
+}

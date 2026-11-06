@@ -1,0 +1,29 @@
+{
+  "display": {
+    "icon": {
+      "item": "re8joymod:uriashammer"
+    },
+    "title": "Head Trauma",
+    "description": "Get the Urias's Hammer."
+  },
+  "parent": "re8joymod:readventure/urias",
+  "criteria": {
+    "uriashammer": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+              "items": [
+              				"re8joymod:uriashammer"
+            			]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "uriashammer"
+    ]
+   ]
+}

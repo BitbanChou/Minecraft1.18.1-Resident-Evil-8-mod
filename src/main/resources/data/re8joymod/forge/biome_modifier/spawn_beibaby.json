@@ -1,0 +1,23 @@
+{
+  "type": "forge:add_spawns",
+  "biomes": [
+    "re8joymod:re8_evalley_biome",
+    "re8joymod:re8_ehills_biome",
+    "minecraft:desert",
+    "minecraft:swamp"
+  ],
+  "spawners":[
+    {
+      "type": "re8joymod:mmycete",
+      "weight": 3,
+      "minCount": 1,
+      "maxCount": 1
+    },
+    {
+      "type": "re8joymod:beibaby",
+      "weight": 5,
+      "minCount": 1,
+      "maxCount": 1
+    }
+  ]
+}

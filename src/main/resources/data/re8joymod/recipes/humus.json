@@ -1,0 +1,14 @@
+{
+	"type":"re8joymod:virus_generator",
+	"ingredients":[
+		{
+			"item":"re8joymod:lyeye"
+		},
+		{
+			"item":"minecraft:rotten_flesh"
+		}
+	],
+	"output":{
+		"item":"re8joymod:humus"
+	}
+}

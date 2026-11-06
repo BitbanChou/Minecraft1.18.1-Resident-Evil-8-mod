@@ -1,0 +1,17 @@
+{
+  "type" : "minecraft:crafting_shapeless",
+
+  "ingredients":
+  [
+
+    {
+      "item" : "re8joymod:dimitorso"
+    }
+
+  ],
+  "result":
+  {
+    "item" :"re8joymod:lei2",
+    "count": 3
+  }
+}

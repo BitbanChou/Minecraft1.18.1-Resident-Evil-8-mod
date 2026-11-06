@@ -1,0 +1,14 @@
+{
+	"type":"re8joymod:virus_generator",
+	"ingredients":[
+		{
+			"item":"minecraft:leather"
+		},
+		{
+			"item":"re8joymod:herb2"
+		}
+	],
+	"output":{
+		"item":"re8joymod:sleather"
+	}
+}

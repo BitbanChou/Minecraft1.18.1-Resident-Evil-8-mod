@@ -1,0 +1,31 @@
+{
+  "name": "re8joymod:re8_dund/side_pool4",
+
+  "fallback": "minecraft:empty",
+
+  "elements": [
+
+    {
+
+      // How likely out of all the element for this one to be chosen.
+      "weight": 1,
+      "element": {
+        "location": "re8joymod:dimie",
+        "processors": "minecraft:empty",
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    },
+    {
+
+      // How likely out of all the element for this one to be chosen.
+      "weight": 1,
+      "element": {
+        "location": "re8joymod:moreaue",
+        "processors": "minecraft:empty",
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    }
+  ]
+}

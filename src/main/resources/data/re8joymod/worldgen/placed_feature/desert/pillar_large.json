@@ -1,0 +1,30 @@
+{
+	"feature": "re8joymod:desert/pillar_large",
+	"placement": [
+	  {
+		"type": "minecraft:rarity_filter",
+		"chance": 20
+	  },
+	  {
+		"type": "minecraft:in_square"
+	  },
+	  {
+		"type": "minecraft:count",
+		"count": {
+		  "type": "minecraft:uniform",
+		  "value": {
+			"min_inclusive": 45,
+			"max_inclusive": 70
+		  }
+		}
+	  },
+	  {
+		"type": "minecraft:heightmap",
+		"heightmap": "MOTION_BLOCKING"
+	  },
+	  {
+		"type": "minecraft:biome"
+	  }
+	]
+  }
+  

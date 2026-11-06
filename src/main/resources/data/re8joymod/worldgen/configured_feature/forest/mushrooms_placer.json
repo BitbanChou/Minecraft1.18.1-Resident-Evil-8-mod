@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:random_selector",
+  "config": {
+    "features": [
+      {
+        "feature": "re8joymod:forest/mushroom_red",
+        "chance": 0.05
+      },
+      {
+        "feature": "re8joymod:forest/mushroom_brown",
+        "chance": 0.05
+      },
+      {
+        "feature": "re8joymod:forest/mushroom_jack",
+        "chance": 0.003
+      },
+      {
+        "feature": "re8joymod:forest/mushroom_orange",
+        "chance": 0.008
+      },
+      {
+        "feature": "re8joymod:forest/mushroom_lush",
+        "chance": 0.008
+      }
+    ],
+    "default": "re8joymod:na"
+  }
+}

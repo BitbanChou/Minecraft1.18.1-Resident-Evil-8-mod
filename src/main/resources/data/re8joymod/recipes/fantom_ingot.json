@@ -1,0 +1,17 @@
+{
+	"type" : "minecraft:crafting_shapeless",
+	
+	"ingredients":
+	[
+	
+	{
+		"item": "re8joymod:fantom_block"	
+	}
+	
+	],
+	"result":
+	{
+		"item" :"re8joymod:fantom_ingot",
+		"count": 9
+	}
+}

@@ -1,0 +1,30 @@
+{
+  "display": {
+    "icon": {
+      "item": "re8joymod:sample"
+    },
+    "title": "A Terrifying Assassin",
+    "announce_to_chat": true,
+    "description": "Defeat Verdugo."
+  },
+  "parent": "re8joymod:readventure/root",
+  "criteria": {
+    "requirement": {
+      "trigger": "minecraft:player_killed_entity",
+      "conditions": {
+        "entity": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type": "re8joymod:verdugo"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "rewards": {
+    "experience": 20
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "name": "re8joymod:castle/side_pool6",
+
+  "fallback": "minecraft:empty",
+
+  "elements": [
+    {
+
+      // How likely out of all the element for this one to be chosen.
+      "weight": 1,
+      "element": {
+        "location": "re8joymod:hall4",
+        "processors": "minecraft:empty",
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    }
+  ]
+}

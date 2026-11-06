@@ -1,0 +1,25 @@
+{
+  "type" : "minecraft:crafting_shapeless",
+
+  "ingredients":
+  [
+    {
+      "item" : "minecraft:redstone"
+    },
+    {
+      "item" : "minecraft:redstone"
+    },
+    {
+      "item" : "re8joymod:machineheartb"
+    },
+    {
+      "item" : "re8joymod:rustedpart"
+    }
+
+  ],
+  "result":
+  {
+    "item" :"re8joymod:propeller",
+    "count": 1
+  }
+}

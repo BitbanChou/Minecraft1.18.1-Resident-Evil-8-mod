@@ -1,0 +1,23 @@
+{
+	"type" : "minecraft:crafting_shapeless",
+	
+	"ingredients":
+	[
+
+	{
+		"item" : "re8joymod:rustedpart"
+	},
+	{
+		"item" : "re8joymod:rustedpart"
+	},
+	{
+		"item" : "minecraft:tnt"
+	}
+	
+	],
+	"result":
+	{
+		"item" :"re8joymod:mine",
+		"count": 1
+	}
+}

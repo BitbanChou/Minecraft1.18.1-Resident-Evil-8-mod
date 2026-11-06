@@ -1,0 +1,19 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"animation.tribody.run": {
+			"loop": true,
+			"bones": {
+				"Drop": {
+					"rotation": {
+						"vector": [0, "math.sin(query.anim_time*120)*5", "math.sin(query.anim_time*360)*360"]
+					},
+					"position": {
+						"vector": ["math.sin(query.anim_time*360)*10", "math.sin(query.anim_time*720)*2", "math.cos(query.anim_time*360)*10"]
+					}
+				}
+			}
+		}
+	},
+	"geckolib_format_version": 2
+}

@@ -1,0 +1,32 @@
+{
+  "type": "minecraft:crafting_shaped",
+
+  "pattern":
+  [
+    "ZZZ",
+    "SFS",
+    "SSS"
+  ],
+
+  "key":
+  {
+    "S":
+    {
+      "item": "re8joymod:fact_iron_block"
+    },
+    "F":
+    {
+      "item": "re8joymod:fantom_block"
+    },
+    "Z":
+    {
+      "item": "re8joymod:machineheartb"
+    }
+  },
+
+  "result":
+  {
+    "item": "re8joymod:virus_generator",
+    "count": 1
+  }
+}

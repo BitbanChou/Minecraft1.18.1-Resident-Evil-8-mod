@@ -1,0 +1,7 @@
+{
+    "condition": "minecraft:location_check",
+    "predicate": {
+      "dimension": "re8joymod:re8_dimension"
+    }
+  }
+  

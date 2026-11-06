@@ -1,0 +1,36 @@
+{
+    "type": "minecraft:crafting_shaped",
+    
+    "pattern":
+    [
+        "ZGZ",
+        "ZRZ",
+        "SZS"
+    ],
+    
+    "key":
+    {
+        "Z":
+        {
+            "item": "re8joymod:machineheartb"
+        },
+        "S":
+        {
+            "item": "minecraft:brown_dye"
+        },
+        "G":
+        {
+            "item": "minecraft:green_dye"
+        },
+        "R":
+        {
+            "item": "re8joymod:heisentorso"
+        }        
+    },
+    
+    "result":
+    {
+        "item": "re8joymod:heisensuit",
+        "count": 1
+    }
+}

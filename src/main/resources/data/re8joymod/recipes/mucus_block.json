@@ -1,0 +1,28 @@
+{
+    "type": "minecraft:crafting_shaped",
+    
+    "pattern":
+    [
+        "III",
+        "ISI",
+        "III"
+    ],
+    
+    "key":
+    {
+        "I":
+        {
+        	"item": "re8joymod:mospitter"
+        },
+        "S":
+        {
+            "item": "minecraft:stone"
+        }
+    },
+    
+    "result":
+    {
+        "item": "re8joymod:mucus_block",
+        "count": 1
+    }
+}

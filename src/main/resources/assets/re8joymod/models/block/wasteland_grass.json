@@ -1,0 +1,8 @@
+{
+	"parent":"block/orientable",
+	"textures": {
+    "top": "re8joymod:block/wasteland_grass",
+    "front": "re8joymod:block/wasteland_grass_side",
+    "side": "re8joymod:block/wasteland_grass_side"
+	}
+}

@@ -1,0 +1,25 @@
+{
+  "name": "re8joymod:ehouse/start_pool",
+  "fallback": "minecraft:empty",
+
+  // Here you can list as many nbt files or placed features to spawn.
+  // Do note that placed features needs a special element entry stuff.
+  "elements": [
+    {
+
+      // How likely out of all the element for this one to be chosen.
+      "weight": 1,
+      "element": {
+        "location": "re8joymod:ehouse",
+        "processors": "minecraft:empty",
+
+        // If set to 'terrain_matching', the house would be deformed to fit the change in land.
+        // That's best for roads so lets stay 'rigid' for now.
+        "projection": "rigid",
+
+
+        "element_type": "minecraft:single_pool_element"
+      }
+    }
+  ]
+}

@@ -1,0 +1,784 @@
+{
+  "sea_level": 63,
+  "disable_mob_generation": false,
+  "aquifers_enabled": true,
+  "ore_veins_enabled": true,
+  "legacy_random_source": false,
+  "default_block": {
+    "Name": "minecraft:stone"
+  },
+  "default_fluid": {
+    "Name": "minecraft:water",
+    "Properties": {
+      "level": "0"
+    }
+  },
+  "spawn_target": [
+    {
+      "temperature": [
+        -1,
+        1
+      ],
+      "humidity": [
+        -1,
+        1
+      ],
+      "continentalness": [
+        -0.11,
+        1
+      ],
+      "erosion": [
+        -1,
+        1
+      ],
+      "weirdness": [
+        -1,
+        -0.16
+      ],
+      "depth": 0,
+      "offset": 0
+    },
+    {
+      "temperature": [
+        -1,
+        1
+      ],
+      "humidity": [
+        -1,
+        1
+      ],
+      "continentalness": [
+        -0.11,
+        1
+      ],
+      "erosion": [
+        -1,
+        1
+      ],
+      "weirdness": [
+        0.16,
+        1
+      ],
+      "depth": 0,
+      "offset": 0
+    }
+  ],
+  "noise": {
+    "min_y": -64,
+    "height": 384,
+    "size_horizontal": 1,
+    "size_vertical": 2,
+    "sampling": {
+      "xz_scale": 1,
+      "y_scale": 1,
+      "xz_factor": 80,
+      "y_factor": 160
+    },
+    "bottom_slide": {
+      "target": 0.1171875,
+      "size": 3,
+      "offset": 0
+    },
+    "top_slide": {
+      "target": -0.11715987,
+      "size": 2,
+      "offset": 0
+    },
+    "terrain_shaper": {"offset":{"coordinate":"continents","points":[{"location":-1.1,"derivative":0,"value":{"coordinate":"erosion","points":[{"location":-0.85,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-1.3020071988963258,"value":-0.24853397667440943,"derivative":0},{"location":-0.6448898177421872,"value":-0.24853397667440943,"derivative":0},{"location":-0.09448957071726216,"value":-0.24803780631221425,"derivative":0},{"location":0,"value":-0.5181140233312325,"derivative":0},{"location":0.09448957071726216,"value":-0.24803780631221425,"derivative":0},{"location":0.6448898177421872,"value":-0.24853397667440943,"derivative":0},{"location":1.3020071988963258,"value":-0.24853397667440943,"derivative":0}]}},{"location":-0.7000000000000001,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-1.4360430398632649,"value":-0.2481389299374906,"derivative":0},{"location":-1.3020071988963258,"value":-0.24781767854439915,"derivative":0.004424196822634302},{"location":-0.6522243583369964,"value":-0.2299741422843853,"derivative":-0.004750445969643557},{"location":-0.6448898177421872,"value":-0.2453910389673315,"derivative":-0.004956481313529723},{"location":-0.09448957071726216,"value":-0.24803780631221425,"derivative":-0.0020638722804520427},{"location":0,"value":-0.33470118530484916,"derivative":0},{"location":0.09448957071726216,"value":-0.24803780631221425,"derivative":0.0020638722804520427},{"location":0.6448898177421872,"value":-0.2453910389673315,"derivative":0.004956481313529725},{"location":0.6522243583369964,"value":-0.2299741422843853,"derivative":0.004750445969643557},{"location":1.3020071988963258,"value":-0.24781767854439915,"derivative":-0.004424196822634306},{"location":1.4360430398632649,"value":-0.2481389299374906,"derivative":0}]}},{"location":-0.35,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-1.4360430398632649,"value":-0.2476934803148837,"derivative":0},{"location":-1.3020071988963258,"value":-0.24700998998031756,"derivative":0.009412864291075835},{"location":-0.6522243583369964,"value":-0.20904631159487153,"derivative":-0.010106987782636242},{"location":-0.6448898177421872,"value":-0.24184710280824756,"derivative":-0.01054534593190385},{"location":-0.09448957071726216,"value":-0.24747833098959193,"derivative":-0.004391068134812521},{"location":0,"value":-0.43186222216060505,"derivative":0},{"location":0.09448957071726216,"value":-0.24747833098959193,"derivative":0.004391068134812521},{"location":0.6448898177421872,"value":-0.24184710280824756,"derivative":0.010545345931903859},{"location":0.6522243583369964,"value":-0.20904631159487153,"derivative":0.010106987782636242},{"location":1.3020071988963258,"value":-0.24700998998031756,"derivative":-0.009412864291075844},{"location":1.4360430398632649,"value":-0.2476934803148837,"derivative":0}]}},{"location":0.2,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-1.4360430398632649,"value":-0.24543286611497583,"derivative":0},{"location":-1.3020071988963258,"value":-0.24291104782299677,"derivative":0.034729874218660126},{"location":-0.6522243583369964,"value":-0.10283957388766896,"derivative":-0.03729092479887143},{"location":-0.6448898177421872,"value":-0.22386196599769917,"derivative":-0.03890829894939673},{"location":-0.09448957071726216,"value":-0.2446390472757203,"derivative":-0.01620136435539488},{"location":0,"value":-0.4132705904670781,"derivative":0},{"location":0.09448957071726216,"value":-0.2446390472757203,"derivative":0.01620136435539488},{"location":0.6448898177421872,"value":-0.22386196599769914,"derivative":0.038908298949396763},{"location":0.6522243583369964,"value":-0.10283957388766896,"derivative":0.03729092479887143},{"location":1.3020071988963258,"value":-0.24291104782299677,"derivative":-0.03472987421866015},{"location":1.4360430398632649,"value":-0.24543286611497583,"derivative":0}]}},{"location":0.45,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-1.3020071988963258,"value":-0.24853397667440943,"derivative":0},{"location":-0.6522243583369964,"value":-0.11954344318791878,"derivative":-0.2588524048693253},{"location":-0.6448898177421872,"value":-0.12146742482653064,"derivative":-0.2657339121770482},{"location":-0.20641725240211684,"value":-0.24853397667440943,"derivative":-0.1366642313069607},{"location":-0.09448957071726216,"value":-0.2596832976485639,"derivative":-0.06255942465236936},{"location":0,"value":-0.34056809274010247,"derivative":0},{"location":0.09448957071726216,"value":-0.2596832976485639,"derivative":0.06255942465236936},{"location":0.20641725240211684,"value":-0.24853397667440943,"derivative":0.1366642313069607},{"location":0.6448898177421872,"value":-0.12146742482653064,"derivative":0.26573391217704817},{"location":0.6522243583369964,"value":-0.11954344318791878,"derivative":0.2588524048693253},{"location":1.3020071988963258,"value":-0.24853397667440943,"derivative":0}]}},{"location":0.58,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-1.3020071988963258,"value":-0.24853397667440943,"derivative":0},{"location":-0.6522243583369964,"value":-0.04937366311314401,"derivative":-0.39966596560562084},{"location":-0.6448898177421872,"value":-0.05234427480126596,"derivative":-0.4102909557978179},{"location":-0.20641725240211684,"value":-0.24853397667440943,"derivative":-0.21100843933290797},{"location":-0.09448957071726216,"value":-0.26574843576059,"derivative":-0.09659123265261262},{"location":0,"value":-0.2871445725311507,"derivative":0},{"location":0.09448957071726216,"value":-0.26574843576059,"derivative":0.09659123265261262},{"location":0.20641725240211684,"value":-0.24853397667440943,"derivative":0.21100843933290797},{"location":0.6448898177421872,"value":-0.05234427480126596,"derivative":0.4102909557978178},{"location":0.6522243583369964,"value":-0.04937366311314401,"derivative":0.39966596560562084},{"location":1.3020071988963258,"value":-0.24853397667440943,"derivative":0}]}},{"location":0.7,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-1.3020071988963258,"value":-0.24853397667440943,"derivative":0},{"location":-0.6522243583369964,"value":-0.04937366311314401,"derivative":-0.43846153846153896},{"location":-0.20641725240211684,"value":-0.24853397667440943,"derivative":-0.23149102725842405},{"location":0.20641725240211684,"value":-0.24853397667440943,"derivative":0.23149102725842405},{"location":0.6522243583369964,"value":-0.04937366311314401,"derivative":0.43846153846153896},{"location":1.3020071988963258,"value":-0.24853397667440943,"derivative":0}]}}]}},{"location":-1.02,"derivative":0,"value":{"coordinate":"erosion","points":[{"location":-0.85,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-1.3020071988963258,"value":-0.24853397667440943,"derivative":0},{"location":-0.6448898177421872,"value":-0.24853397667440943,"derivative":0},{"location":-0.09448957071726216,"value":-0.24803780631221425,"derivative":0},{"location":0,"value":-0.5181140233312325,"derivative":0},{"location":0.09448957071726216,"value":-0.24803780631221425,"derivative":0},{"location":0.6448898177421872,"value":-0.24853397667440943,"derivative":0},{"location":1.3020071988963258,"value":-0.24853397667440943,"derivative":0}]}},{"location":-0.7000000000000001,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-1.4360430398632649,"value":-0.2481389299374906,"derivative":0},{"location":-1.3020071988963258,"value":-0.24781767854439915,"derivative":0.004424196822634302},{"location":-0.6522243583369964,"value":-0.2299741422843853,"derivative":-0.004750445969643557},{"location":-0.6448898177421872,"value":-0.2453910389673315,"derivative":-0.004956481313529723},{"location":-0.09448957071726216,"value":-0.24803780631221425,"derivative":-0.0020638722804520427},{"location":0,"value":-0.33470118530484916,"derivative":0},{"location":0.09448957071726216,"value":-0.24803780631221425,"derivative":0.0020638722804520427},{"location":0.6448898177421872,"value":-0.2453910389673315,"derivative":0.004956481313529725},{"location":0.6522243583369964,"value":-0.2299741422843853,"derivative":0.004750445969643557},{"location":1.3020071988963258,"value":-0.24781767854439915,"derivative":-0.004424196822634306},{"location":1.4360430398632649,"value":-0.2481389299374906,"derivative":0}]}},{"location":-0.35,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-1.4360430398632649,"value":-0.2476934803148837,"derivative":0},{"location":-1.3020071988963258,"value":-0.24700998998031756,"derivative":0.009412864291075835},{"location":-0.6522243583369964,"value":-0.20904631159487153,"derivative":-0.010106987782636242},{"location":-0.6448898177421872,"value":-0.24184710280824756,"derivative":-0.01054534593190385},{"location":-0.09448957071726216,"value":-0.24747833098959193,"derivative":-0.004391068134812521},{"location":0,"value":-0.43186222216060505,"derivative":0},{"location":0.09448957071726216,"value":-0.24747833098959193,"derivative":0.004391068134812521},{"location":0.6448898177421872,"value":-0.24184710280824756,"derivative":0.010545345931903859},{"location":0.6522243583369964,"value":-0.20904631159487153,"derivative":0.010106987782636242},{"location":1.3020071988963258,"value":-0.24700998998031756,"derivative":-0.009412864291075844},{"location":1.4360430398632649,"value":-0.2476934803148837,"derivative":0}]}},{"location":0.2,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-1.4360430398632649,"value":-0.24543286611497583,"derivative":0},{"location":-1.3020071988963258,"value":-0.24291104782299677,"derivative":0.034729874218660126},{"location":-0.6522243583369964,"value":-0.10283957388766896,"derivative":-0.03729092479887143},{"location":-0.6448898177421872,"value":-0.22386196599769917,"derivative":-0.03890829894939673},{"location":-0.09448957071726216,"value":-0.2446390472757203,"derivative":-0.01620136435539488},{"location":0,"value":-0.4132705904670781,"derivative":0},{"location":0.09448957071726216,"value":-0.2446390472757203,"derivative":0.01620136435539488},{"location":0.6448898177421872,"value":-0.22386196599769914,"derivative":0.038908298949396763},{"location":0.6522243583369964,"value":-0.10283957388766896,"derivative":0.03729092479887143},{"location":1.3020071988963258,"value":-0.24291104782299677,"derivative":-0.03472987421866015},{"location":1.4360430398632649,"value":-0.24543286611497583,"derivative":0}]}},{"location":0.45,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-1.3020071988963258,"value":-0.24853397667440943,"derivative":0},{"location":-0.6522243583369964,"value":-0.11954344318791878,"derivative":-0.2588524048693253},{"location":-0.6448898177421872,"value":-0.12146742482653064,"derivative":-0.2657339121770482},{"location":-0.20641725240211684,"value":-0.24853397667440943,"derivative":-0.1366642313069607},{"location":-0.09448957071726216,"value":-0.2596832976485639,"derivative":-0.06255942465236936},{"location":0,"value":-0.34056809274010247,"derivative":0},{"location":0.09448957071726216,"value":-0.2596832976485639,"derivative":0.06255942465236936},{"location":0.20641725240211684,"value":-0.24853397667440943,"derivative":0.1366642313069607},{"location":0.6448898177421872,"value":-0.12146742482653064,"derivative":0.26573391217704817},{"location":0.6522243583369964,"value":-0.11954344318791878,"derivative":0.2588524048693253},{"location":1.3020071988963258,"value":-0.24853397667440943,"derivative":0}]}},{"location":0.58,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-1.3020071988963258,"value":-0.24853397667440943,"derivative":0},{"location":-0.6522243583369964,"value":-0.04937366311314401,"derivative":-0.39966596560562084},{"location":-0.6448898177421872,"value":-0.05234427480126596,"derivative":-0.4102909557978179},{"location":-0.20641725240211684,"value":-0.24853397667440943,"derivative":-0.21100843933290797},{"location":-0.09448957071726216,"value":-0.26574843576059,"derivative":-0.09659123265261262},{"location":0,"value":-0.2871445725311507,"derivative":0},{"location":0.09448957071726216,"value":-0.26574843576059,"derivative":0.09659123265261262},{"location":0.20641725240211684,"value":-0.24853397667440943,"derivative":0.21100843933290797},{"location":0.6448898177421872,"value":-0.05234427480126596,"derivative":0.4102909557978178},{"location":0.6522243583369964,"value":-0.04937366311314401,"derivative":0.39966596560562084},{"location":1.3020071988963258,"value":-0.24853397667440943,"derivative":0}]}},{"location":0.7,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-1.3020071988963258,"value":-0.24853397667440943,"derivative":0},{"location":-0.6522243583369964,"value":-0.04937366311314401,"derivative":-0.43846153846153896},{"location":-0.20641725240211684,"value":-0.24853397667440943,"derivative":-0.23149102725842405},{"location":0.20641725240211684,"value":-0.24853397667440943,"derivative":0.23149102725842405},{"location":0.6522243583369964,"value":-0.04937366311314401,"derivative":0.43846153846153896},{"location":1.3020071988963258,"value":-0.24853397667440943,"derivative":0}]}}]}},{"location":-0.51,"derivative":0,"value":{"coordinate":"erosion","points":[{"location":-0.85,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-1.3020071988963258,"value":-0.24853397667440943,"derivative":0},{"location":-0.6448898177421872,"value":-0.24853397667440943,"derivative":0},{"location":-0.09448957071726216,"value":-0.24803780631221425,"derivative":0},{"location":0,"value":-0.5181140233312325,"derivative":0},{"location":0.09448957071726216,"value":-0.24803780631221425,"derivative":0},{"location":0.6448898177421872,"value":-0.24853397667440943,"derivative":0},{"location":1.3020071988963258,"value":-0.24853397667440943,"derivative":0}]}},{"location":-0.7000000000000001,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-1.4360430398632649,"value":-0.2481389299374906,"derivative":0},{"location":-1.3020071988963258,"value":-0.24781767854439915,"derivative":0.004424196822634302},{"location":-0.6522243583369964,"value":-0.2299741422843853,"derivative":-0.004750445969643557},{"location":-0.6448898177421872,"value":-0.2453910389673315,"derivative":-0.004956481313529723},{"location":-0.09448957071726216,"value":-0.24803780631221425,"derivative":-0.0020638722804520427},{"location":0,"value":-0.33470118530484916,"derivative":0},{"location":0.09448957071726216,"value":-0.24803780631221425,"derivative":0.0020638722804520427},{"location":0.6448898177421872,"value":-0.2453910389673315,"derivative":0.004956481313529725},{"location":0.6522243583369964,"value":-0.2299741422843853,"derivative":0.004750445969643557},{"location":1.3020071988963258,"value":-0.24781767854439915,"derivative":-0.004424196822634306},{"location":1.4360430398632649,"value":-0.2481389299374906,"derivative":0}]}},{"location":-0.35,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-1.4360430398632649,"value":-0.2476934803148837,"derivative":0},{"location":-1.3020071988963258,"value":-0.24700998998031756,"derivative":0.009412864291075835},{"location":-0.6522243583369964,"value":-0.20904631159487153,"derivative":-0.010106987782636242},{"location":-0.6448898177421872,"value":-0.24184710280824756,"derivative":-0.01054534593190385},{"location":-0.09448957071726216,"value":-0.24747833098959193,"derivative":-0.004391068134812521},{"location":0,"value":-0.43186222216060505,"derivative":0},{"location":0.09448957071726216,"value":-0.24747833098959193,"derivative":0.004391068134812521},{"location":0.6448898177421872,"value":-0.24184710280824756,"derivative":0.010545345931903859},{"location":0.6522243583369964,"value":-0.20904631159487153,"derivative":0.010106987782636242},{"location":1.3020071988963258,"value":-0.24700998998031756,"derivative":-0.009412864291075844},{"location":1.4360430398632649,"value":-0.2476934803148837,"derivative":0}]}},{"location":0.2,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-1.4360430398632649,"value":-0.24543286611497583,"derivative":0},{"location":-1.3020071988963258,"value":-0.24291104782299677,"derivative":0.034729874218660126},{"location":-0.6522243583369964,"value":-0.10283957388766896,"derivative":-0.03729092479887143},{"location":-0.6448898177421872,"value":-0.22386196599769917,"derivative":-0.03890829894939673},{"location":-0.09448957071726216,"value":-0.2446390472757203,"derivative":-0.01620136435539488},{"location":0,"value":-0.4132705904670781,"derivative":0},{"location":0.09448957071726216,"value":-0.2446390472757203,"derivative":0.01620136435539488},{"location":0.6448898177421872,"value":-0.22386196599769914,"derivative":0.038908298949396763},{"location":0.6522243583369964,"value":-0.10283957388766896,"derivative":0.03729092479887143},{"location":1.3020071988963258,"value":-0.24291104782299677,"derivative":-0.03472987421866015},{"location":1.4360430398632649,"value":-0.24543286611497583,"derivative":0}]}},{"location":0.45,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-1.3020071988963258,"value":-0.24853397667440943,"derivative":0},{"location":-0.6522243583369964,"value":-0.11954344318791878,"derivative":-0.2588524048693253},{"location":-0.6448898177421872,"value":-0.12146742482653064,"derivative":-0.2657339121770482},{"location":-0.20641725240211684,"value":-0.24853397667440943,"derivative":-0.1366642313069607},{"location":-0.09448957071726216,"value":-0.2596832976485639,"derivative":-0.06255942465236936},{"location":0,"value":-0.34056809274010247,"derivative":0},{"location":0.09448957071726216,"value":-0.2596832976485639,"derivative":0.06255942465236936},{"location":0.20641725240211684,"value":-0.24853397667440943,"derivative":0.1366642313069607},{"location":0.6448898177421872,"value":-0.12146742482653064,"derivative":0.26573391217704817},{"location":0.6522243583369964,"value":-0.11954344318791878,"derivative":0.2588524048693253},{"location":1.3020071988963258,"value":-0.24853397667440943,"derivative":0}]}},{"location":0.58,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-1.3020071988963258,"value":-0.24853397667440943,"derivative":0},{"location":-0.6522243583369964,"value":-0.04937366311314401,"derivative":-0.39966596560562084},{"location":-0.6448898177421872,"value":-0.05234427480126596,"derivative":-0.4102909557978179},{"location":-0.20641725240211684,"value":-0.24853397667440943,"derivative":-0.21100843933290797},{"location":-0.09448957071726216,"value":-0.26574843576059,"derivative":-0.09659123265261262},{"location":0,"value":-0.2871445725311507,"derivative":0},{"location":0.09448957071726216,"value":-0.26574843576059,"derivative":0.09659123265261262},{"location":0.20641725240211684,"value":-0.24853397667440943,"derivative":0.21100843933290797},{"location":0.6448898177421872,"value":-0.05234427480126596,"derivative":0.4102909557978178},{"location":0.6522243583369964,"value":-0.04937366311314401,"derivative":0.39966596560562084},{"location":1.3020071988963258,"value":-0.24853397667440943,"derivative":0}]}},{"location":0.7,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-1.3020071988963258,"value":-0.24853397667440943,"derivative":0},{"location":-0.6522243583369964,"value":-0.04937366311314401,"derivative":-0.43846153846153896},{"location":-0.20641725240211684,"value":-0.24853397667440943,"derivative":-0.23149102725842405},{"location":0.20641725240211684,"value":-0.24853397667440943,"derivative":0.23149102725842405},{"location":0.6522243583369964,"value":-0.04937366311314401,"derivative":0.43846153846153896},{"location":1.3020071988963258,"value":-0.24853397667440943,"derivative":0}]}}]}},{"location":-0.44,"derivative":0,"value":{"coordinate":"erosion","points":[{"location":-0.85,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-1.3020071988963258,"value":-0.24853397667440943,"derivative":0},{"location":-0.6448898177421872,"value":-0.24853397667440943,"derivative":0},{"location":-0.09448957071726216,"value":-0.24803780631221425,"derivative":0},{"location":0,"value":-0.5181140233312325,"derivative":0},{"location":0.09448957071726216,"value":-0.24803780631221425,"derivative":0},{"location":0.6448898177421872,"value":-0.24853397667440943,"derivative":0},{"location":1.3020071988963258,"value":-0.24853397667440943,"derivative":0}]}},{"location":-0.7000000000000001,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-1.4360430398632649,"value":-0.2481389299374906,"derivative":0},{"location":-1.3020071988963258,"value":-0.24781767854439915,"derivative":0.004424196822634302},{"location":-0.6522243583369964,"value":-0.2299741422843853,"derivative":-0.004750445969643557},{"location":-0.6448898177421872,"value":-0.2453910389673315,"derivative":-0.004956481313529723},{"location":-0.09448957071726216,"value":-0.24803780631221425,"derivative":-0.0020638722804520427},{"location":0,"value":-0.33470118530484916,"derivative":0},{"location":0.09448957071726216,"value":-0.24803780631221425,"derivative":0.0020638722804520427},{"location":0.6448898177421872,"value":-0.2453910389673315,"derivative":0.004956481313529725},{"location":0.6522243583369964,"value":-0.2299741422843853,"derivative":0.004750445969643557},{"location":1.3020071988963258,"value":-0.24781767854439915,"derivative":-0.004424196822634306},{"location":1.4360430398632649,"value":-0.2481389299374906,"derivative":0}]}},{"location":-0.35,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-1.4360430398632649,"value":-0.2476934803148837,"derivative":0},{"location":-1.3020071988963258,"value":-0.24700998998031756,"derivative":0.009412864291075835},{"location":-0.6522243583369964,"value":-0.20904631159487153,"derivative":-0.010106987782636242},{"location":-0.6448898177421872,"value":-0.24184710280824756,"derivative":-0.01054534593190385},{"location":-0.09448957071726216,"value":-0.24747833098959193,"derivative":-0.004391068134812521},{"location":0,"value":-0.43186222216060505,"derivative":0},{"location":0.09448957071726216,"value":-0.24747833098959193,"derivative":0.004391068134812521},{"location":0.6448898177421872,"value":-0.24184710280824756,"derivative":0.010545345931903859},{"location":0.6522243583369964,"value":-0.20904631159487153,"derivative":0.010106987782636242},{"location":1.3020071988963258,"value":-0.24700998998031756,"derivative":-0.009412864291075844},{"location":1.4360430398632649,"value":-0.2476934803148837,"derivative":0}]}},{"location":0.2,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-1.4360430398632649,"value":-0.24543286611497583,"derivative":0},{"location":-1.3020071988963258,"value":-0.24291104782299677,"derivative":0.034729874218660126},{"location":-0.6522243583369964,"value":-0.10283957388766896,"derivative":-0.03729092479887143},{"location":-0.6448898177421872,"value":-0.22386196599769917,"derivative":-0.03890829894939673},{"location":-0.09448957071726216,"value":-0.2446390472757203,"derivative":-0.01620136435539488},{"location":0,"value":-0.4132705904670781,"derivative":0},{"location":0.09448957071726216,"value":-0.2446390472757203,"derivative":0.01620136435539488},{"location":0.6448898177421872,"value":-0.22386196599769914,"derivative":0.038908298949396763},{"location":0.6522243583369964,"value":-0.10283957388766896,"derivative":0.03729092479887143},{"location":1.3020071988963258,"value":-0.24291104782299677,"derivative":-0.03472987421866015},{"location":1.4360430398632649,"value":-0.24543286611497583,"derivative":0}]}},{"location":0.45,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-1.3020071988963258,"value":-0.24853397667440943,"derivative":0},{"location":-0.6522243583369964,"value":-0.11954344318791878,"derivative":-0.2588524048693253},{"location":-0.6448898177421872,"value":-0.12146742482653064,"derivative":-0.2657339121770482},{"location":-0.20641725240211684,"value":-0.24853397667440943,"derivative":-0.1366642313069607},{"location":-0.09448957071726216,"value":-0.2596832976485639,"derivative":-0.06255942465236936},{"location":0,"value":-0.34056809274010247,"derivative":0},{"location":0.09448957071726216,"value":-0.2596832976485639,"derivative":0.06255942465236936},{"location":0.20641725240211684,"value":-0.24853397667440943,"derivative":0.1366642313069607},{"location":0.6448898177421872,"value":-0.12146742482653064,"derivative":0.26573391217704817},{"location":0.6522243583369964,"value":-0.11954344318791878,"derivative":0.2588524048693253},{"location":1.3020071988963258,"value":-0.24853397667440943,"derivative":0}]}},{"location":0.58,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-1.3020071988963258,"value":-0.24853397667440943,"derivative":0},{"location":-0.6522243583369964,"value":-0.04937366311314401,"derivative":-0.39966596560562084},{"location":-0.6522243583369964,"value":-0.03004117268437953,"derivative":-0.4102909557978179},{"location":-0.20641725240211684,"value":-0.24853397667440943,"derivative":-0.21100843933290797},{"location":-0.09448957071726216,"value":-0.26574843576059,"derivative":-0.09659123265261262},{"location":0,"value":-0.2871445725311507,"derivative":0},{"location":0.09448957071726216,"value":-0.26574843576059,"derivative":0.09659123265261262},{"location":0.20641725240211684,"value":-0.24853397667440943,"derivative":0.21100843933290797},{"location":0.6522243583369964,"value":-0.03004117268437953,"derivative":0.4102909557978178},{"location":0.6522243583369964,"value":-0.04937366311314401,"derivative":0.39966596560562084},{"location":1.3020071988963258,"value":-0.24853397667440943,"derivative":0}]}},{"location":0.7,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-1.3020071988963258,"value":-0.24853397667440943,"derivative":0},{"location":-0.6522243583369964,"value":-0.04937366311314401,"derivative":-0.43846153846153896},{"location":-0.20641725240211684,"value":-0.24853397667440943,"derivative":-0.23149102725842405},{"location":0.20641725240211684,"value":-0.24853397667440943,"derivative":0.23149102725842405},{"location":0.6522243583369964,"value":-0.04937366311314401,"derivative":0.43846153846153896},{"location":1.3020071988963258,"value":-0.24853397667440943,"derivative":0}]}}]}},{"location":-0.18,"derivative":0,"value":{"coordinate":"erosion","points":[{"location":-0.85,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-1.4360430398632649,"value":-0.12,"derivative":0},{"location":-0.09448957071726216,"value":-0.12,"derivative":0},{"location":0,"value":-0.17965681427410524,"derivative":0},{"location":0.09448957071726216,"value":-0.12,"derivative":0},{"location":1.4360430398632649,"value":-0.12,"derivative":0}]}},{"location":-0.7000000000000001,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-1.4360430398632649,"value":-0.12,"derivative":0},{"location":-0.6448898177421872,"value":-0.10014811981384618,"derivative":0},{"location":-0.6052196523011882,"value":-0.1179221440494527,"derivative":-0.001603131363369913},{"location":-0.09448957071726216,"value":-0.12,"derivative":0},{"location":0,"value":-0.17965681427410524,"derivative":0},{"location":0.09448957071726216,"value":-0.12,"derivative":0},{"location":0.6052196523011882,"value":-0.1179221440494527,"derivative":0.001603131363369913},{"location":0.6448898177421872,"value":-0.10014811981384618,"derivative":0},{"location":1.4360430398632649,"value":-0.12,"derivative":0}]}},{"location":-0.35,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-1.4360430398632649,"value":-0.12,"derivative":0},{"location":-0.6448898177421872,"value":-0.07776339489261255,"derivative":0},{"location":-0.6052196523011882,"value":-0.11557918038843934,"derivative":-0.003410801682006384},{"location":-0.09448957071726216,"value":-0.12,"derivative":0},{"location":0.09448957071726216,"value":-0.12,"derivative":0},{"location":0.6052196523011882,"value":-0.11557918038843934,"derivative":0.003410801682006384},{"location":0.6448898177421872,"value":-0.07776339489261255,"derivative":0},{"location":1.4360430398632649,"value":-0.12,"derivative":0}]}},{"location":0.2,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-1.4360430398632649,"value":-0.12,"derivative":0},{"location":-0.6448898177421872,"value":-0.03552678978522508,"derivative":0},{"location":-0.6052196523011882,"value":-0.11115836077687867,"derivative":-0.00682160336401277},{"location":0,"value":-0.12,"derivative":0},{"location":0.6052196523011882,"value":-0.11115836077687867,"derivative":0.00682160336401277},{"location":0.6448898177421872,"value":-0.03552678978522508,"derivative":0},{"location":1.4360430398632649,"value":-0.12,"derivative":0}]}},{"location":0.45,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-1.4360430398632649,"value":-0.12,"derivative":0},{"location":-0.6666667,"value":-0.07887278221437595,"derivative":0},{"location":0,"value":-0.12,"derivative":0},{"location":0.6666667,"value":-0.07887278221437595,"derivative":0},{"location":1.4360430398632649,"value":-0.12,"derivative":0}]}},{"location":0.58,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-1.4360430398632649,"value":-0.12,"derivative":0},{"location":-0.6666667,"value":-0.04379395672298245,"derivative":0},{"location":0,"value":-0.12,"derivative":0},{"location":0.6666667,"value":-0.04379395672298245,"derivative":0},{"location":1.4360430398632649,"value":-0.12,"derivative":0}]}},{"location":0.7,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-1.4360430398632649,"value":-0.12,"derivative":0},{"location":-0.6666667,"value":-0.04379395672298245,"derivative":0},{"location":0,"value":-0.12,"derivative":0},{"location":0.6666667,"value":-0.04379395672298245,"derivative":0},{"location":1.4360430398632649,"value":-0.12,"derivative":0}]}}]}},{"location":-0.16,"derivative":0,"value":{"coordinate":"erosion","points":[{"location":-0.85,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-1.33333334,"value":-0.08880186,"derivative":1.16820288},{"location":-0.6666667,"value":0.8818134033406735,"derivative":1.16820288},{"location":-0.6666667,"value":0.8818134033406735,"derivative":-1.16820288},{"location":0,"value":-0.08880186,"derivative":-1.16820288},{"location":0,"value":-0.08880186,"derivative":1.16820288},{"location":0.6666667,"value":0.8818134033406735,"derivative":1.16820288},{"location":0.6666667,"value":0.8818134033406735,"derivative":-1.16820288},{"location":1.33333334,"value":-0.08880186,"derivative":-1.16820288}]}},{"location":-0.7000000000000001,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-1.33333334,"value":-0.08880186,"derivative":1.16820288},{"location":-0.6666667,"value":0.717396926933336,"derivative":1.16820288},{"location":-0.6666667,"value":0.717396926933336,"derivative":-1.16820288},{"location":0,"value":-0.08880186,"derivative":-1.16820288},{"location":0,"value":-0.08880186,"derivative":1.16820288},{"location":0.6666667,"value":0.717396926933336,"derivative":1.16820288},{"location":0.6666667,"value":0.717396926933336,"derivative":-1.16820288},{"location":1.33333334,"value":-0.08880186,"derivative":-1.16820288}]}},{"location":-0.4,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-1.33333334,"value":-0.3,"derivative":1.5},{"location":-1.1333333733333333,"value":0.05,"derivative":0},{"location":-1.0062097994518187,"value":0.1870813201352372,"derivative":0},{"location":-0.8666667066666666,"value":0.05,"derivative":0},{"location":-0.6666667,"value":0.2706789749073921,"derivative":0.021000003},{"location":-0.6666667,"value":0.2706789749073921,"derivative":-0.021000003},{"location":-0.4666666933333333,"value":0.05,"derivative":0},{"location":-0.31311050591147227,"value":0.1870813201352372,"derivative":0},{"location":0,"value":-0.3,"derivative":-1.5},{"location":0,"value":-0.3,"derivative":1.5},{"location":0.31311050591147227,"value":0.1870813201352372,"derivative":0},{"location":0.4666666933333333,"value":0.05,"derivative":0},{"location":0.6666667,"value":0.2706789749073921,"derivative":0.021000003},{"location":0.6666667,"value":0.2706789749073921,"derivative":-0.021000003},{"location":0.8666667066666666,"value":0.05,"derivative":0},{"location":1.0062097994518187,"value":0.1870813201352372,"derivative":0},{"location":1.1333333733333333,"value":0.05,"derivative":0},{"location":1.33333334,"value":-0.3,"derivative":-1.5}]}},{"location":-0.35,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-1.33333334,"value":-0.2222,"derivative":0},{"location":-1.25000004,"value":-0.2222,"derivative":0},{"location":-1.2166667066666665,"value":0,"derivative":0},{"location":-1.1098508153083184,"value":0.100000024,"derivative":8.230779273960065e-8},{"location":-1.0062097994518187,"value":1.521138023534279e-8,"derivative":1.076591645877909e-7},{"location":-0.8960912201042869,"value":0.100000024,"derivative":6.803285145731629e-8},{"location":-0.8015151399999999,"value":2.9802322e-8,"derivative":0},{"location":-0.7981818066666666,"value":2.9802322e-8,"derivative":0.7603689},{"location":-0.6666667,"value":0.100000024,"derivative":0.7603689},{"location":-0.6666667,"value":0.100000024,"derivative":-0.7603689},{"location":-0.5351515933333333,"value":2.9802322e-8,"derivative":-0.7603689},{"location":-0.53181826,"value":2.9802322e-8,"derivative":0},{"location":-0.410273958276941,"value":0.100000024,"derivative":-8.62929172501916e-8},{"location":-0.31311050591147227,"value":1.3703620548628269e-8,"derivative":-1.0737022044730576e-7},{"location":-0.22890218052806555,"value":0.100000024,"derivative":-7.475984483764895e-8},{"location":-0.11666669333333335,"value":0,"derivative":0},{"location":-0.08333335999999991,"value":-0.2222,"derivative":0},{"location":0,"value":-0.2222,"derivative":0},{"location":0.08333335999999991,"value":-0.2222,"derivative":0},{"location":0.11666669333333335,"value":0,"derivative":0},{"location":0.22890218052806555,"value":0.100000024,"derivative":7.475984483764895e-8},{"location":0.31311050591147227,"value":1.3703620548628269e-8,"derivative":1.0737022044730576e-7},{"location":0.410273958276941,"value":0.100000024,"derivative":8.62929172501916e-8},{"location":0.53181826,"value":2.9802322e-8,"derivative":0},{"location":0.5351515933333333,"value":2.9802322e-8,"derivative":0.7603689},{"location":0.6666667,"value":0.100000024,"derivative":0.7603689},{"location":0.6666667,"value":0.100000024,"derivative":-0.7603689},{"location":0.7981818066666666,"value":2.9802322e-8,"derivative":-0.7603689},{"location":0.8015151399999999,"value":2.9802322e-8,"derivative":0},{"location":0.8960912201042869,"value":0.100000024,"derivative":-6.803285145731629e-8},{"location":1.0062097994518187,"value":1.521138023534279e-8,"derivative":-1.076591645877909e-7},{"location":1.1098508153083184,"value":0.100000024,"derivative":-8.230779273960065e-8},{"location":1.2166667066666665,"value":0,"derivative":0},{"location":1.25000004,"value":-0.2222,"derivative":0},{"location":1.33333334,"value":-0.2222,"derivative":0}]}},{"location":-0.1,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-1.33333334,"value":-0.15,"derivative":1.5},{"location":-1.1333333733333333,"value":0,"derivative":0},{"location":-1.1098508153083184,"value":0.05,"derivative":0},{"location":-1.00000004,"value":0,"derivative":0},{"location":-0.8666667066666666,"value":0.05,"derivative":0.30000000000000004},{"location":-0.6666667,"value":0.21445572986846692,"derivative":0.021000003},{"location":-0.6666667,"value":0.21445572986846692,"derivative":-0.021000003},{"location":-0.4666666933333333,"value":0.05,"derivative":-0.30000000000000004},{"location":-0.33333335999999997,"value":0,"derivative":0},{"location":-0.22890218052806555,"value":0.05,"derivative":0},{"location":-0.2000000266666666,"value":0,"derivative":0},{"location":0,"value":-0.15,"derivative":-1.5},{"location":0,"value":-0.15,"derivative":1.5},{"location":0.2000000266666666,"value":0,"derivative":0},{"location":0.22890218052806555,"value":0.05,"derivative":0},{"location":0.33333335999999997,"value":0,"derivative":0},{"location":0.4666666933333333,"value":0.05,"derivative":0.30000000000000004},{"location":0.6666667,"value":0.21445572986846692,"derivative":0.021000003},{"location":0.6666667,"value":0.21445572986846692,"derivative":-0.021000003},{"location":0.8666667066666666,"value":0.05,"derivative":-0.30000000000000004},{"location":1.00000004,"value":0,"derivative":0},{"location":1.1098508153083184,"value":0.05,"derivative":0},{"location":1.1333333733333333,"value":0,"derivative":0},{"location":1.33333334,"value":-0.15,"derivative":-1.5}]}},{"location":0.2,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-1.33333334,"value":-0.15,"derivative":1.5},{"location":-1.1333333733333333,"value":0,"derivative":0},{"location":-0.6666667,"value":0.14025043017148137,"derivative":0},{"location":-0.595786642878794,"value":0,"derivative":0},{"location":-0.2000000266666666,"value":0,"derivative":0},{"location":0,"value":-0.15,"derivative":-1.5},{"location":0,"value":-0.15,"derivative":1.5},{"location":0.2000000266666666,"value":0,"derivative":0},{"location":0.595786642878794,"value":0,"derivative":0},{"location":0.6666667,"value":0.14025043017148137,"derivative":0},{"location":1.1333333733333333,"value":0,"derivative":0},{"location":1.33333334,"value":-0.15,"derivative":-1.5}]}},{"location":0.4,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-1.33333334,"value":-0.15,"derivative":1.5},{"location":-1.1333333733333333,"value":0,"derivative":0},{"location":-0.6666667,"value":0.14025043017148137,"derivative":0},{"location":-0.595786642878794,"value":0,"derivative":0},{"location":-0.2000000266666666,"value":0,"derivative":0},{"location":0,"value":-0.15,"derivative":-1.5},{"location":0,"value":-0.15,"derivative":1.5},{"location":0.2000000266666666,"value":0,"derivative":0},{"location":0.595786642878794,"value":0,"derivative":0},{"location":0.6666667,"value":0.14025043017148137,"derivative":0},{"location":1.1333333733333333,"value":0,"derivative":0},{"location":1.33333334,"value":-0.15,"derivative":-1.5}]}},{"location":0.55,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-1.33333334,"value":-0.08499999999999995,"derivative":0.7499999999999996},{"location":-1.1333333733333333,"value":-0.01500000000000001,"derivative":0},{"location":-1.00000004,"value":-0.0010976253480591662,"derivative":0.18400201788510417},{"location":-0.8666667066666666,"value":0.04252491093095885,"derivative":0.31080242440615735},{"location":-0.6666667,"value":0.07012521508574064,"derivative":0},{"location":-0.595786642878794,"value":0.0014595667275346998,"derivative":0.02988016968531417},{"location":-0.4666666933333333,"value":0,"derivative":-0.09000000000000005},{"location":-0.33333335999999997,"value":-0.01500000000000001,"derivative":0},{"location":-0.2000000266666666,"value":-0.01500000000000001,"derivative":0},{"location":0,"value":-0.08499999999999995,"derivative":-0.7499999999999996},{"location":0,"value":-0.08499999999999995,"derivative":0.7499999999999996},{"location":0.2000000266666666,"value":-0.01500000000000001,"derivative":0},{"location":0.33333335999999997,"value":-0.01500000000000001,"derivative":0},{"location":0.4666666933333333,"value":0,"derivative":0.09000000000000005},{"location":0.595786642878794,"value":0.0014595667275346994,"derivative":-0.029880169685314154},{"location":0.6666667,"value":0.07012521508574064,"derivative":0},{"location":0.8666667066666666,"value":0.04252491093095885,"derivative":-0.31080242440615735},{"location":1.00000004,"value":-0.0010976253480591766,"derivative":-0.18400201788510417},{"location":1.1333333733333333,"value":-0.01500000000000001,"derivative":0},{"location":1.33333334,"value":-0.08499999999999995,"derivative":-0.7499999999999996}]}},{"location":0.7,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-1.33333334,"value":-0.02,"derivative":0},{"location":-0.8666667066666666,"value":0,"derivative":0.18},{"location":-0.4666666933333333,"value":0,"derivative":-0.18},{"location":-0.33333335999999997,"value":-0.03,"derivative":0},{"location":-0.2000000266666666,"value":-0.03,"derivative":0},{"location":0,"value":-0.02,"derivative":0},{"location":0.2000000266666666,"value":-0.03,"derivative":0},{"location":0.33333335999999997,"value":-0.03,"derivative":0},{"location":0.4666666933333333,"value":0,"derivative":0.18},{"location":0.8666667066666666,"value":0,"derivative":-0.18},{"location":1.33333334,"value":-0.02,"derivative":0}]}}]}},{"location":-0.15,"derivative":0,"value":{"coordinate":"erosion","points":[{"location":-0.85,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-1.33333334,"value":-0.08880186,"derivative":1.16820288},{"location":-0.6666667,"value":1.0533904320098126,"derivative":1.16820288},{"location":-0.6666667,"value":1.0533904320098126,"derivative":-1.16820288},{"location":0,"value":-0.08880186,"derivative":-1.16820288},{"location":0,"value":-0.08880186,"derivative":1.16820288},{"location":0.6666667,"value":1.0533904320098126,"derivative":1.16820288},{"location":0.6666667,"value":1.0533904320098126,"derivative":-1.16820288},{"location":1.33333334,"value":-0.08880186,"derivative":-1.16820288}]}},{"location":-0.7000000000000001,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-1.33333334,"value":-0.08880186,"derivative":1.16820288},{"location":-0.6666667,"value":0.9575533584141734,"derivative":1.16820288},{"location":-0.6666667,"value":0.9575533584141734,"derivative":-1.16820288},{"location":0,"value":-0.08880186,"derivative":-1.16820288},{"location":0,"value":-0.08880186,"derivative":1.16820288},{"location":0.6666667,"value":0.9575533584141734,"derivative":1.16820288},{"location":0.6666667,"value":0.9575533584141734,"derivative":-1.16820288},{"location":1.33333334,"value":-0.08880186,"derivative":-1.16820288}]}},{"location":-0.4,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-1.33333334,"value":-0.3,"derivative":1.5},{"location":-1.1333333733333333,"value":0.05,"derivative":0},{"location":-1.0062097994518187,"value":0.1870813201352372,"derivative":0},{"location":-0.8666667066666666,"value":0.05,"derivative":0},{"location":-0.6666667,"value":0.2706789749073921,"derivative":0.021000003},{"location":-0.6666667,"value":0.2706789749073921,"derivative":-0.021000003},{"location":-0.4666666933333333,"value":0.05,"derivative":0},{"location":-0.31311050591147227,"value":0.1870813201352372,"derivative":0},{"location":-0.2000000266666666,"value":0.05,"derivative":0},{"location":0,"value":-0.3,"derivative":-1.5},{"location":0,"value":-0.3,"derivative":1.5},{"location":0.2000000266666666,"value":0.05,"derivative":0},{"location":0.31311050591147227,"value":0.1870813201352372,"derivative":0},{"location":0.4666666933333333,"value":0.05,"derivative":0},{"location":0.6666667,"value":0.2706789749073921,"derivative":0.021000003},{"location":0.6666667,"value":0.2706789749073921,"derivative":-0.021000003},{"location":0.8666667066666666,"value":0.05,"derivative":0},{"location":1.0062097994518187,"value":0.1870813201352372,"derivative":0},{"location":1.1333333733333333,"value":0.05,"derivative":0},{"location":1.33333334,"value":-0.3,"derivative":-1.5}]}},{"location":-0.35,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-1.33333334,"value":-0.2222,"derivative":0},{"location":-1.25000004,"value":-0.2222,"derivative":0},{"location":-1.2166667066666665,"value":0,"derivative":0},{"location":-1.1098508153083184,"value":0.100000024,"derivative":8.230779273960065e-8},{"location":-1.0062097994518187,"value":1.521138023534279e-8,"derivative":1.076591645877909e-7},{"location":-0.8960912201042869,"value":0.100000024,"derivative":6.803285145731629e-8},{"location":-0.8015151399999999,"value":2.9802322e-8,"derivative":0},{"location":-0.7981818066666666,"value":2.9802322e-8,"derivative":0.7603689},{"location":-0.6666667,"value":0.100000024,"derivative":0.7603689},{"location":-0.6666667,"value":0.100000024,"derivative":-0.7603689},{"location":-0.5351515933333333,"value":2.9802322e-8,"derivative":-0.7603689},{"location":-0.53181826,"value":2.9802322e-8,"derivative":0},{"location":-0.410273958276941,"value":0.100000024,"derivative":-8.62929172501916e-8},{"location":-0.31311050591147227,"value":1.3703620548628269e-8,"derivative":-1.0737022044730576e-7},{"location":-0.22890218052806555,"value":0.100000024,"derivative":-7.475984483764895e-8},{"location":-0.11666669333333335,"value":0,"derivative":0},{"location":-0.08333335999999991,"value":-0.2222,"derivative":0},{"location":0,"value":-0.2222,"derivative":0},{"location":0.08333335999999991,"value":-0.2222,"derivative":0},{"location":0.11666669333333335,"value":0,"derivative":0},{"location":0.22890218052806555,"value":0.100000024,"derivative":7.475984483764895e-8},{"location":0.31311050591147227,"value":1.3703620548628269e-8,"derivative":1.0737022044730576e-7},{"location":0.410273958276941,"value":0.100000024,"derivative":8.62929172501916e-8},{"location":0.53181826,"value":2.9802322e-8,"derivative":0},{"location":0.5351515933333333,"value":2.9802322e-8,"derivative":0.7603689},{"location":0.6666667,"value":0.100000024,"derivative":0.7603689},{"location":0.6666667,"value":0.100000024,"derivative":-0.7603689},{"location":0.7981818066666666,"value":2.9802322e-8,"derivative":-0.7603689},{"location":0.8015151399999999,"value":2.9802322e-8,"derivative":0},{"location":0.8960912201042869,"value":0.100000024,"derivative":-6.803285145731629e-8},{"location":1.0062097994518187,"value":1.521138023534279e-8,"derivative":-1.076591645877909e-7},{"location":1.1098508153083184,"value":0.100000024,"derivative":-8.230779273960065e-8},{"location":1.2166667066666665,"value":0,"derivative":0},{"location":1.25000004,"value":-0.2222,"derivative":0},{"location":1.33333334,"value":-0.2222,"derivative":0}]}},{"location":-0.1,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-1.33333334,"value":-0.15,"derivative":1.5},{"location":-1.1333333733333333,"value":0,"derivative":0},{"location":-1.1098508153083184,"value":0.05,"derivative":0},{"location":-1.00000004,"value":0,"derivative":0},{"location":-0.8666667066666666,"value":0.05,"derivative":0.30000000000000004},{"location":-0.6666667,"value":0.21445572986846692,"derivative":0.021000003},{"location":-0.6666667,"value":0.21445572986846692,"derivative":-0.021000003},{"location":-0.4666666933333333,"value":0.05,"derivative":-0.30000000000000004},{"location":-0.33333335999999997,"value":0,"derivative":0},{"location":-0.22890218052806555,"value":0.05,"derivative":0},{"location":-0.2000000266666666,"value":0,"derivative":0},{"location":0,"value":-0.15,"derivative":-1.5},{"location":0,"value":-0.15,"derivative":1.5},{"location":0.2000000266666666,"value":0,"derivative":0},{"location":0.22890218052806555,"value":0.05,"derivative":0},{"location":0.33333335999999997,"value":0,"derivative":0},{"location":0.4666666933333333,"value":0.05,"derivative":0.30000000000000004},{"location":0.6666667,"value":0.21445572986846692,"derivative":0.021000003},{"location":0.6666667,"value":0.21445572986846692,"derivative":-0.021000003},{"location":0.8666667066666666,"value":0.05,"derivative":-0.30000000000000004},{"location":1.00000004,"value":0,"derivative":0},{"location":1.1098508153083184,"value":0.05,"derivative":0},{"location":1.1333333733333333,"value":0,"derivative":0},{"location":1.33333334,"value":-0.15,"derivative":-1.5}]}},{"location":0.2,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-1.33333334,"value":-0.15,"derivative":1.5},{"location":-1.1333333733333333,"value":0,"derivative":0},{"location":-0.6666667,"value":0.14025043017148137,"derivative":0},{"location":-0.595786642878794,"value":0,"derivative":0},{"location":-0.2000000266666666,"value":0,"derivative":0},{"location":0,"value":-0.15,"derivative":-1.5},{"location":0,"value":-0.15,"derivative":1.5},{"location":0.2000000266666666,"value":0,"derivative":0},{"location":0.595786642878794,"value":0,"derivative":0},{"location":0.6666667,"value":0.14025043017148137,"derivative":0},{"location":1.1333333733333333,"value":0,"derivative":0},{"location":1.33333334,"value":-0.15,"derivative":-1.5}]}},{"location":0.4,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-1.33333334,"value":-0.15,"derivative":1.5},{"location":-1.1333333733333333,"value":0,"derivative":0},{"location":-0.6666667,"value":0.14025043017148137,"derivative":0},{"location":-0.595786642878794,"value":0,"derivative":0},{"location":-0.2000000266666666,"value":0,"derivative":0},{"location":0,"value":-0.15,"derivative":-1.5},{"location":0,"value":-0.15,"derivative":1.5},{"location":0.2000000266666666,"value":0,"derivative":0},{"location":0.595786642878794,"value":0,"derivative":0},{"location":0.6666667,"value":0.14025043017148137,"derivative":0},{"location":1.1333333733333333,"value":0,"derivative":0},{"location":1.33333334,"value":-0.15,"derivative":-1.5}]}},{"location":0.55,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-1.33333334,"value":-0.08499999999999995,"derivative":0.7499999999999996},{"location":-1.1333333733333333,"value":-0.01500000000000001,"derivative":0},{"location":-1.00000004,"value":-0.0010976253480591662,"derivative":0.18400201788510417},{"location":-0.8666667066666666,"value":0.04252491093095885,"derivative":0.31080242440615735},{"location":-0.6666667,"value":0.07012521508574064,"derivative":0},{"location":-0.595786642878794,"value":0.0014595667275346998,"derivative":0.02988016968531417},{"location":-0.4666666933333333,"value":0,"derivative":-0.09000000000000005},{"location":-0.33333335999999997,"value":-0.01500000000000001,"derivative":0},{"location":-0.2000000266666666,"value":-0.01500000000000001,"derivative":0},{"location":0,"value":-0.08499999999999995,"derivative":-0.7499999999999996},{"location":0,"value":-0.08499999999999995,"derivative":0.7499999999999996},{"location":0.2000000266666666,"value":-0.01500000000000001,"derivative":0},{"location":0.33333335999999997,"value":-0.01500000000000001,"derivative":0},{"location":0.4666666933333333,"value":0,"derivative":0.09000000000000005},{"location":0.595786642878794,"value":0.0014595667275346994,"derivative":-0.029880169685314154},{"location":0.6666667,"value":0.07012521508574064,"derivative":0},{"location":0.8666667066666666,"value":0.04252491093095885,"derivative":-0.31080242440615735},{"location":1.00000004,"value":-0.0010976253480591766,"derivative":-0.18400201788510417},{"location":1.1333333733333333,"value":-0.01500000000000001,"derivative":0},{"location":1.33333334,"value":-0.08499999999999995,"derivative":-0.7499999999999996}]}},{"location":0.7,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-1.33333334,"value":-0.02,"derivative":0},{"location":-0.8666667066666666,"value":0,"derivative":0.18},{"location":-0.4666666933333333,"value":0,"derivative":-0.18},{"location":-0.33333335999999997,"value":-0.03,"derivative":0},{"location":-0.2000000266666666,"value":-0.03,"derivative":0},{"location":0,"value":-0.02,"derivative":0},{"location":0.2000000266666666,"value":-0.03,"derivative":0},{"location":0.33333335999999997,"value":-0.03,"derivative":0},{"location":0.4666666933333333,"value":0,"derivative":0.18},{"location":0.8666667066666666,"value":0,"derivative":-0.18},{"location":1.33333334,"value":-0.02,"derivative":0}]}}]}},{"location":-0.1,"derivative":0,"value":{"coordinate":"erosion","points":[{"location":-0.85,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-1.33333334,"value":-0.08880186,"derivative":1.16820288},{"location":-0.6666667,"value":1.23,"derivative":1.16820288},{"location":-0.6666667,"value":1.23,"derivative":-1.16820288},{"location":0,"value":-0.08880186,"derivative":-1.16820288},{"location":0,"value":-0.08880186,"derivative":1.16820288},{"location":0.6666667,"value":1.23,"derivative":1.16820288},{"location":0.6666667,"value":1.23,"derivative":-1.16820288},{"location":1.33333334,"value":-0.08880186,"derivative":-1.16820288}]}},{"location":-0.7000000000000001,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-1.33333334,"value":-0.08880186,"derivative":1.16820288},{"location":-0.6666667,"value":1.0533904320098126,"derivative":1.16820288},{"location":-0.6666667,"value":1.0533904320098126,"derivative":-1.16820288},{"location":0,"value":-0.08880186,"derivative":-1.16820288},{"location":0,"value":-0.08880186,"derivative":1.16820288},{"location":0.6666667,"value":1.0533904320098126,"derivative":1.16820288},{"location":0.6666667,"value":1.0533904320098126,"derivative":-1.16820288},{"location":1.33333334,"value":-0.08880186,"derivative":-1.16820288}]}},{"location":-0.4,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-1.33333334,"value":-0.3,"derivative":1.5},{"location":-1.1333333733333333,"value":0.05,"derivative":0},{"location":-1.0062097994518187,"value":0.1870813201352372,"derivative":0},{"location":-0.8666667066666666,"value":0.05,"derivative":0},{"location":-0.6666667,"value":0.2706789749073921,"derivative":0.021000003},{"location":-0.6666667,"value":0.2706789749073921,"derivative":-0.021000003},{"location":-0.4666666933333333,"value":0.05,"derivative":0},{"location":-0.31311050591147227,"value":0.1870813201352372,"derivative":0},{"location":-0.2000000266666666,"value":0.05,"derivative":0},{"location":0,"value":-0.3,"derivative":-1.5},{"location":0,"value":-0.3,"derivative":1.5},{"location":0.2000000266666666,"value":0.05,"derivative":0},{"location":0.31311050591147227,"value":0.1870813201352372,"derivative":0},{"location":0.4666666933333333,"value":0.05,"derivative":0},{"location":0.6666667,"value":0.2706789749073921,"derivative":0.021000003},{"location":0.6666667,"value":0.2706789749073921,"derivative":-0.021000003},{"location":0.8666667066666666,"value":0.05,"derivative":0},{"location":1.0062097994518187,"value":0.1870813201352372,"derivative":0},{"location":1.1333333733333333,"value":0.05,"derivative":0},{"location":1.33333334,"value":-0.3,"derivative":-1.5}]}},{"location":-0.35,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-1.33333334,"value":-0.2222,"derivative":0},{"location":-1.25000004,"value":-0.2222,"derivative":0},{"location":-1.2166667066666665,"value":0,"derivative":0},{"location":-1.1098508153083184,"value":0.100000024,"derivative":8.230779273960065e-8},{"location":-1.0062097994518187,"value":1.521138023534279e-8,"derivative":1.076591645877909e-7},{"location":-0.8960912201042869,"value":0.100000024,"derivative":6.803285145731629e-8},{"location":-0.8015151399999999,"value":2.9802322e-8,"derivative":0},{"location":-0.7981818066666666,"value":2.9802322e-8,"derivative":0.7603689},{"location":-0.6666667,"value":0.100000024,"derivative":0.7603689},{"location":-0.6666667,"value":0.100000024,"derivative":-0.7603689},{"location":-0.5351515933333333,"value":2.9802322e-8,"derivative":-0.7603689},{"location":-0.53181826,"value":2.9802322e-8,"derivative":0},{"location":-0.410273958276941,"value":0.100000024,"derivative":-8.62929172501916e-8},{"location":-0.31311050591147227,"value":1.3703620548628269e-8,"derivative":-1.0737022044730576e-7},{"location":-0.22890218052806555,"value":0.100000024,"derivative":-7.475984483764895e-8},{"location":-0.11666669333333335,"value":0,"derivative":0},{"location":0,"value":-0.2222,"derivative":0},{"location":0.11666669333333335,"value":0,"derivative":0},{"location":0.22890218052806555,"value":0.100000024,"derivative":7.475984483764895e-8},{"location":0.31311050591147227,"value":1.3703620548628269e-8,"derivative":1.0737022044730576e-7},{"location":0.410273958276941,"value":0.100000024,"derivative":8.62929172501916e-8},{"location":0.53181826,"value":2.9802322e-8,"derivative":0},{"location":0.5351515933333333,"value":2.9802322e-8,"derivative":0.7603689},{"location":0.6666667,"value":0.100000024,"derivative":0.7603689},{"location":0.6666667,"value":0.100000024,"derivative":-0.7603689},{"location":0.7981818066666666,"value":2.9802322e-8,"derivative":-0.7603689},{"location":0.8015151399999999,"value":2.9802322e-8,"derivative":0},{"location":0.8960912201042869,"value":0.100000024,"derivative":-6.803285145731629e-8},{"location":1.0062097994518187,"value":1.521138023534279e-8,"derivative":-1.076591645877909e-7},{"location":1.1098508153083184,"value":0.100000024,"derivative":-8.230779273960065e-8},{"location":1.2166667066666665,"value":0,"derivative":0},{"location":1.25000004,"value":-0.2222,"derivative":0},{"location":1.33333334,"value":-0.2222,"derivative":0}]}},{"location":-0.1,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-1.33333334,"value":-0.15,"derivative":1.5},{"location":-1.1333333733333333,"value":0,"derivative":0},{"location":-1.1098508153083184,"value":0.05,"derivative":0},{"location":-1.00000004,"value":0,"derivative":0},{"location":-0.8666667066666666,"value":0.05,"derivative":0.30000000000000004},{"location":-0.6666667,"value":0.21445572986846692,"derivative":0.021000003},{"location":-0.6666667,"value":0.21445572986846692,"derivative":-0.021000003},{"location":-0.4666666933333333,"value":0.05,"derivative":-0.30000000000000004},{"location":-0.33333335999999997,"value":0,"derivative":0},{"location":-0.22890218052806555,"value":0.05,"derivative":0},{"location":-0.2000000266666666,"value":0,"derivative":0},{"location":0,"value":-0.15,"derivative":-1.5},{"location":0,"value":-0.15,"derivative":1.5},{"location":0.2000000266666666,"value":0,"derivative":0},{"location":0.22890218052806555,"value":0.05,"derivative":0},{"location":0.33333335999999997,"value":0,"derivative":0},{"location":0.4666666933333333,"value":0.05,"derivative":0.30000000000000004},{"location":0.6666667,"value":0.21445572986846692,"derivative":0.021000003},{"location":0.6666667,"value":0.21445572986846692,"derivative":-0.021000003},{"location":0.8666667066666666,"value":0.05,"derivative":-0.30000000000000004},{"location":1.00000004,"value":0,"derivative":0},{"location":1.1098508153083184,"value":0.05,"derivative":0},{"location":1.1333333733333333,"value":0,"derivative":0},{"location":1.33333334,"value":-0.15,"derivative":-1.5}]}},{"location":0.2,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-1.33333334,"value":-0.15,"derivative":1.5},{"location":-1.1333333733333333,"value":0,"derivative":0},{"location":-0.6666667,"value":0.14025043017148137,"derivative":0},{"location":-0.595786642878794,"value":0,"derivative":0},{"location":-0.2000000266666666,"value":0,"derivative":0},{"location":0,"value":-0.15,"derivative":-1.5},{"location":0,"value":-0.15,"derivative":1.5},{"location":0.2000000266666666,"value":0,"derivative":0},{"location":0.595786642878794,"value":0,"derivative":0},{"location":0.6666667,"value":0.14025043017148137,"derivative":0},{"location":1.1333333733333333,"value":0,"derivative":0},{"location":1.33333334,"value":-0.15,"derivative":-1.5}]}},{"location":0.4,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-1.33333334,"value":-0.15,"derivative":1.5},{"location":-1.1333333733333333,"value":0,"derivative":0},{"location":-0.6666667,"value":0.14025043017148137,"derivative":0},{"location":-0.595786642878794,"value":0,"derivative":0},{"location":-0.2000000266666666,"value":0,"derivative":0},{"location":0,"value":-0.15,"derivative":-1.5},{"location":0,"value":-0.15,"derivative":1.5},{"location":0.2000000266666666,"value":0,"derivative":0},{"location":0.595786642878794,"value":0,"derivative":0},{"location":0.6666667,"value":0.14025043017148137,"derivative":0},{"location":1.1333333733333333,"value":0,"derivative":0},{"location":1.33333334,"value":-0.15,"derivative":-1.5}]}},{"location":0.55,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-1.33333334,"value":-0.08499999999999995,"derivative":0.7499999999999996},{"location":-1.1333333733333333,"value":-0.01500000000000001,"derivative":0},{"location":-1.00000004,"value":-0.0010976253480591662,"derivative":0.18400201788510417},{"location":-0.8666667066666666,"value":0.04252491093095885,"derivative":0.22080242440615722},{"location":-0.6666667,"value":0.07012521508574064,"derivative":0},{"location":-0.595786642878794,"value":0,"derivative":0},{"location":-0.4666666933333333,"value":0,"derivative":0},{"location":-0.33333335999999997,"value":-0.01500000000000001,"derivative":0},{"location":-0.2000000266666666,"value":-0.01500000000000001,"derivative":0},{"location":0,"value":-0.08499999999999995,"derivative":-0.7499999999999996},{"location":0,"value":-0.08499999999999995,"derivative":0.7499999999999996},{"location":0.2000000266666666,"value":-0.01500000000000001,"derivative":0},{"location":0.33333335999999997,"value":-0.01500000000000001,"derivative":0},{"location":0.4666666933333333,"value":0,"derivative":0},{"location":0.595786642878794,"value":0,"derivative":0},{"location":0.6666667,"value":0.07012521508574064,"derivative":0},{"location":0.8666667066666666,"value":0.04252491093095885,"derivative":-0.22080242440615724},{"location":1.00000004,"value":-0.0010976253480591766,"derivative":-0.18400201788510417},{"location":1.1333333733333333,"value":-0.01500000000000001,"derivative":0},{"location":1.33333334,"value":-0.08499999999999995,"derivative":-0.7499999999999996}]}},{"location":0.7,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-1.33333334,"value":-0.02,"derivative":0},{"location":-0.8666667066666666,"value":0,"derivative":0},{"location":-0.6666667,"value":0,"derivative":0},{"location":-0.4666666933333333,"value":0,"derivative":0},{"location":-0.33333335999999997,"value":-0.03,"derivative":0},{"location":-0.2000000266666666,"value":-0.03,"derivative":0},{"location":0,"value":-0.02,"derivative":0},{"location":0.2000000266666666,"value":-0.03,"derivative":0},{"location":0.33333335999999997,"value":-0.03,"derivative":0},{"location":0.4666666933333333,"value":0,"derivative":0},{"location":0.6666667,"value":0,"derivative":0},{"location":0.8666667066666666,"value":0,"derivative":0},{"location":1.33333334,"value":-0.02,"derivative":0}]}}]}},{"location":0.25,"derivative":0,"value":{"coordinate":"erosion","points":[{"location":-0.85,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-1.33333334,"value":0.20235021,"derivative":0},{"location":-1.00000004,"value":0.7161751,"derivative":1.5414747000000002},{"location":-0.6666667,"value":1.23,"derivative":1.5414747000000002},{"location":-0.6666667,"value":1.23,"derivative":-1.5414747000000002},{"location":-0.33333335999999997,"value":0.7161751,"derivative":-1.5414747000000002},{"location":0,"value":0.20235021,"derivative":0},{"location":0.33333335999999997,"value":0.7161751,"derivative":1.5414747000000002},{"location":0.6666667,"value":1.23,"derivative":1.5414747000000002},{"location":0.6666667,"value":1.23,"derivative":-1.5414747000000002},{"location":1.00000004,"value":0.7161751,"derivative":-1.5414747000000002},{"location":1.33333334,"value":0.20235021,"derivative":0}]}},{"location":-0.7000000000000001,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-1.33333334,"value":0.20235021,"derivative":0},{"location":-1.00000004,"value":0.7161751,"derivative":1.5414747000000002},{"location":-0.6666667,"value":1.23,"derivative":1.5414747000000002},{"location":-0.6666667,"value":1.23,"derivative":-1.5414747000000002},{"location":-0.33333335999999997,"value":0.7161751,"derivative":-1.5414747000000002},{"location":0,"value":-0.08880186,"derivative":0},{"location":0.33333335999999997,"value":0.7161751,"derivative":1.5414747000000002},{"location":0.6666667,"value":1.23,"derivative":1.5414747000000002},{"location":0.6666667,"value":1.23,"derivative":-1.5414747000000002},{"location":1.00000004,"value":0.7161751,"derivative":-1.5414747000000002},{"location":1.33333334,"value":0.20235021,"derivative":0}]}},{"location":-0.4,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-1.33333334,"value":0.20235021,"derivative":0},{"location":-1.00000004,"value":0.6432959957583138,"derivative":1.5414747000000002},{"location":-0.6666667,"value":1.1448320153156162,"derivative":1.8942896702854668},{"location":-0.6666667,"value":1.1448320153156162,"derivative":-1.999950086109393},{"location":-0.4666666933333333,"value":0.6432959957583138,"derivative":-1.5414747000000002},{"location":0,"value":-0.08880186,"derivative":0},{"location":0.4666666933333333,"value":0.6432959957583138,"derivative":1.5414747000000002},{"location":0.6666667,"value":1.1448320153156162,"derivative":1.999950086109393},{"location":0.6666667,"value":1.1448320153156162,"derivative":-1.8942896702854668},{"location":1.00000004,"value":0.6432959957583138,"derivative":-1.5414747000000002},{"location":1.33333334,"value":0.20235021,"derivative":0}]}},{"location":-0.35,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-1.33333334,"value":-0.2,"derivative":1.5},{"location":-1.1333333733333333,"value":0.5,"derivative":0},{"location":-1.0035430851341793,"value":0.6,"derivative":0},{"location":-0.8666667066666666,"value":0.5,"derivative":0},{"location":-0.6666667,"value":0.6,"derivative":0.210000045},{"location":-0.6666667,"value":0.6,"derivative":-0.210000045},{"location":-0.4666666933333333,"value":0.5,"derivative":0},{"location":-0.35578673603105226,"value":0.6,"derivative":0},{"location":-0.23750079402091595,"value":0.5,"derivative":0},{"location":-0.15864349934749145,"value":0.04402060136294292,"derivative":0},{"location":-0.06852087686357833,"value":0.04402060136294292,"derivative":0},{"location":0,"value":-0.2,"derivative":-1.5},{"location":0,"value":-0.2,"derivative":1.5},{"location":0.06852087686357833,"value":0.04402060136294292,"derivative":0},{"location":0.15864349934749145,"value":0.04402060136294292,"derivative":0},{"location":0.23750079402091595,"value":0.5,"derivative":0},{"location":0.35578673603105226,"value":0.6,"derivative":0},{"location":0.4666666933333333,"value":0.5,"derivative":0},{"location":0.6666667,"value":0.6,"derivative":0.210000045},{"location":0.6666667,"value":0.6,"derivative":-0.210000045},{"location":0.8666667066666666,"value":0.5,"derivative":0},{"location":1.0035430851341793,"value":0.6,"derivative":0},{"location":1.1333333733333333,"value":0.5,"derivative":0},{"location":1.33333334,"value":-0.2,"derivative":-1.5}]}},{"location":-0.1,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-1.33333334,"value":-0.05,"derivative":1.5},{"location":-1.1576228460546742,"value":0.08215505615705196,"derivative":0.299999982},{"location":-0.9827286317968298,"value":0.1444407656375961,"derivative":0.299999982},{"location":-0.8666667066666666,"value":0.5,"derivative":2.82},{"location":-0.6666667,"value":0.6,"derivative":0.210000045},{"location":-0.6666667,"value":0.6,"derivative":-0.210000045},{"location":-0.4666666933333333,"value":0.5,"derivative":-2.82},{"location":-0.33333335999999997,"value":0.1444407656375961,"derivative":-0.299999982},{"location":-0.18598832239998364,"value":0.08215505615705196,"derivative":-0.5215686274509811},{"location":0,"value":-0.05,"derivative":-1.5},{"location":0,"value":-0.05,"derivative":1.5},{"location":0.18598832239998364,"value":0.08215505615705196,"derivative":0.5215686274509811},{"location":0.33333335999999997,"value":0.1444407656375961,"derivative":0.299999982},{"location":0.4666666933333333,"value":0.5,"derivative":2.82},{"location":0.6666667,"value":0.6,"derivative":0.210000045},{"location":0.6666667,"value":0.6,"derivative":-0.210000045},{"location":0.8666667066666666,"value":0.5,"derivative":-2.82},{"location":0.9827286317968298,"value":0.1444407656375961,"derivative":-0.299999982},{"location":1.1576228460546742,"value":0.08215505615705196,"derivative":-0.299999982},{"location":1.33333334,"value":-0.05,"derivative":-1.5}]}},{"location":0.2,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-1.33333334,"value":-0.1,"derivative":0},{"location":-1.1333333733333333,"value":0.01,"derivative":0},{"location":-1.00000004,"value":0.17,"derivative":0},{"location":-0.6666667,"value":0.24255454136473806,"derivative":0},{"location":-0.33333335999999997,"value":0.17,"derivative":0},{"location":-0.2000000266666666,"value":0.01,"derivative":0},{"location":0,"value":-0.1,"derivative":0},{"location":0.2000000266666666,"value":0.01,"derivative":0},{"location":0.33333335999999997,"value":0.17,"derivative":0},{"location":0.6666667,"value":0.24255454136473806,"derivative":0},{"location":1.00000004,"value":0.17,"derivative":0},{"location":1.1333333733333333,"value":0.01,"derivative":0},{"location":1.33333334,"value":-0.1,"derivative":0}]}},{"location":0.4,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-1.33333334,"value":-0.1,"derivative":0},{"location":-1.1333333733333333,"value":0.01,"derivative":0},{"location":-1.00000004,"value":0.17,"derivative":0},{"location":-0.6564769939929667,"value":0.24365072576311242,"derivative":0},{"location":-0.6334015003270999,"value":0.17,"derivative":0},{"location":-0.33333335999999997,"value":0.17,"derivative":0},{"location":-0.2000000266666666,"value":0.01,"derivative":0},{"location":0,"value":-0.1,"derivative":0},{"location":0.2000000266666666,"value":0.01,"derivative":0},{"location":0.33333335999999997,"value":0.17,"derivative":0},{"location":0.6334015003270999,"value":0.17,"derivative":0},{"location":0.6564769939929667,"value":0.24365072576311242,"derivative":0},{"location":1.00000004,"value":0.17,"derivative":0},{"location":1.1333333733333333,"value":0.01,"derivative":0},{"location":1.33333334,"value":-0.1,"derivative":0}]}},{"location":0.45,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-1.33333334,"value":-0.05,"derivative":1.5},{"location":-1.1333333733333333,"value":0.01,"derivative":0},{"location":-0.644939247160031,"value":0.13038851101981705,"derivative":0},{"location":-0.6210015577389861,"value":0.01,"derivative":0},{"location":-0.33333335999999997,"value":0.01,"derivative":0},{"location":-0.2000000266666666,"value":0.01,"derivative":0},{"location":0,"value":-0.05,"derivative":-1.5},{"location":0,"value":-0.05,"derivative":1.5},{"location":0.2000000266666666,"value":0.01,"derivative":0},{"location":0.33333335999999997,"value":0.01,"derivative":0},{"location":0.6210015577389861,"value":0.01,"derivative":0},{"location":0.644939247160031,"value":0.13038851101981705,"derivative":0},{"location":1.1333333733333333,"value":0.01,"derivative":0},{"location":1.33333334,"value":-0.05,"derivative":-1.5}]}},{"location":0.55,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-1.33333334,"value":-0.05,"derivative":1.5},{"location":-1.1333333733333333,"value":0.01,"derivative":0},{"location":-0.6476163649798621,"value":0.09744599034561252,"derivative":0},{"location":-0.6210015577389861,"value":0.01,"derivative":0},{"location":-0.33333335999999997,"value":0.01,"derivative":0},{"location":-0.2000000266666666,"value":0.01,"derivative":0},{"location":0,"value":-0.05,"derivative":-1.5},{"location":0,"value":-0.05,"derivative":1.5},{"location":0.2000000266666666,"value":0.01,"derivative":0},{"location":0.33333335999999997,"value":0.01,"derivative":0},{"location":0.6210015577389861,"value":0.01,"derivative":0},{"location":0.6476163649798621,"value":0.09744599034561252,"derivative":0},{"location":1.1333333733333333,"value":0.01,"derivative":0},{"location":1.33333334,"value":-0.05,"derivative":-1.5}]}},{"location":0.58,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-1.33333334,"value":-0.05,"derivative":1.5},{"location":-1.1333333733333333,"value":0.01,"derivative":0},{"location":-0.6476163649798621,"value":0.09744599034561252,"derivative":0},{"location":-0.6210015577389861,"value":0.01,"derivative":0},{"location":-0.33333335999999997,"value":0.01,"derivative":0},{"location":-0.2000000266666666,"value":0.01,"derivative":0},{"location":0,"value":-0.05,"derivative":-1.5},{"location":0,"value":-0.05,"derivative":1.5},{"location":0.2000000266666666,"value":0.01,"derivative":0},{"location":0.33333335999999997,"value":0.01,"derivative":0},{"location":0.6210015577389861,"value":0.01,"derivative":0},{"location":0.6476163649798621,"value":0.09744599034561252,"derivative":0},{"location":1.1333333733333333,"value":0.01,"derivative":0},{"location":1.33333334,"value":-0.05,"derivative":-1.5}]}},{"location":0.7,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-1.33333334,"value":-0.02,"derivative":0},{"location":-0.8666667066666666,"value":0,"derivative":0},{"location":-0.6666667,"value":0,"derivative":0},{"location":-0.4666666933333333,"value":0,"derivative":0},{"location":-0.33333335999999997,"value":-0.03,"derivative":0},{"location":-0.2000000266666666,"value":-0.03,"derivative":0},{"location":0,"value":-0.02,"derivative":0},{"location":0.2000000266666666,"value":-0.03,"derivative":0},{"location":0.33333335999999997,"value":-0.03,"derivative":0},{"location":0.4666666933333333,"value":0,"derivative":0},{"location":0.6666667,"value":0,"derivative":0},{"location":0.8666667066666666,"value":0,"derivative":0},{"location":1.33333334,"value":-0.02,"derivative":0}]}}]}},{"location":1,"derivative":0,"value":{"coordinate":"erosion","points":[{"location":-0.85,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-1.33333334,"value":0.34792626,"derivative":0},{"location":-1.00000004,"value":0.9239631,"derivative":1.7281106999999998},{"location":-0.6666667,"value":1.6177330023866503,"derivative":1.7281106999999998},{"location":-0.6666667,"value":1.6177330023866503,"derivative":-1.7281106999999998},{"location":-0.33333335999999997,"value":0.9239631,"derivative":-1.7281106999999998},{"location":0,"value":0.34792626,"derivative":0},{"location":0.33333335999999997,"value":0.9239631,"derivative":1.7281106999999998},{"location":0.6666667,"value":1.6177330023866503,"derivative":1.7281106999999998},{"location":0.6666667,"value":1.6177330023866503,"derivative":-1.7281106999999998},{"location":1.00000004,"value":0.9239631,"derivative":-1.7281106999999998},{"location":1.33333334,"value":0.34792626,"derivative":0}]}},{"location":-0.7000000000000001,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-1.33333334,"value":0.20235021,"derivative":0},{"location":-1.00000004,"value":0.7161751,"derivative":1.5414747000000002},{"location":-0.6666667,"value":1.3776554316135419,"derivative":1.5414747000000002},{"location":-0.6666667,"value":1.3776554316135419,"derivative":-1.5414747000000002},{"location":-0.33333335999999997,"value":0.7161751,"derivative":-1.5414747000000002},{"location":0,"value":-0.08880186,"derivative":0},{"location":0.33333335999999997,"value":0.7161751,"derivative":1.5414747000000002},{"location":0.6666667,"value":1.3776554316135419,"derivative":1.5414747000000002},{"location":0.6666667,"value":1.3776554316135419,"derivative":-1.5414747000000002},{"location":1.00000004,"value":0.7161751,"derivative":-1.5414747000000002},{"location":1.33333334,"value":0.20235021,"derivative":0}]}},{"location":-0.4,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-1.33333334,"value":0.20235021,"derivative":0},{"location":-1.00000004,"value":0.6432959957583138,"derivative":1.5414747000000002},{"location":-0.8666667066666666,"value":0.9695365140302358,"derivative":1.2986069124533117},{"location":-0.6666667,"value":1.3122683380831819,"derivative":1.8942896702854668},{"location":-0.6666667,"value":1.3122683380831819,"derivative":-1.999950086109393},{"location":-0.4666666933333333,"value":0.9695365140302358,"derivative":-1.3993405159155983},{"location":-0.33333335999999997,"value":0.6432959957583138,"derivative":-1.5414747000000002},{"location":0,"value":-0.08880186,"derivative":0},{"location":0.33333335999999997,"value":0.6432959957583138,"derivative":1.5414747000000002},{"location":0.4666666933333333,"value":0.9695365140302358,"derivative":1.3993405159155983},{"location":0.6666667,"value":1.3122683380831819,"derivative":1.999950086109393},{"location":0.6666667,"value":1.3122683380831819,"derivative":-1.8942896702854668},{"location":0.8666667066666666,"value":0.9695365140302358,"derivative":-1.2986069124533117},{"location":1.00000004,"value":0.6432959957583138,"derivative":-1.5414747000000002},{"location":1.33333334,"value":0.20235021,"derivative":0}]}},{"location":-0.35,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-1.0719659098522314,"value":1.50580061722739,"derivative":0},{"location":-1.0038202595808414,"value":1.168621618488741,"derivative":0},{"location":-0.8888244747478704,"value":1.168621618488741,"derivative":0},{"location":-0.8206788244764804,"value":0.855719507659275,"derivative":0},{"location":-0.7269785553533192,"value":0.855719507659275,"derivative":0},{"location":-0.6545738019399671,"value":0.5158430769307166,"derivative":0},{"location":-0.5480962233909201,"value":0.5158430769307166,"derivative":0},{"location":-0.5055051919713013,"value":0.21912555804070538,"derivative":0},{"location":-0.38199120085440663,"value":0.21912555804070538,"derivative":0},{"location":-0.33088196315086393,"value":0,"derivative":0},{"location":-0.2000000266666666,"value":0,"derivative":0},{"location":0,"value":-0.15,"derivative":0},{"location":0.2000000266666666,"value":0,"derivative":0},{"location":0.33088196315086393,"value":0,"derivative":0},{"location":0.38199120085440663,"value":0.21912555804070538,"derivative":0},{"location":0.5055051919713013,"value":0.21912555804070538,"derivative":0},{"location":0.5480962233909201,"value":0.5158430769307166,"derivative":0},{"location":0.6545738019399671,"value":0.5158430769307166,"derivative":0},{"location":0.7269785553533192,"value":0.855719507659275,"derivative":0},{"location":0.8206788244764804,"value":0.855719507659275,"derivative":0},{"location":0.8888244747478704,"value":1.168621618488741,"derivative":0},{"location":1.0038202595808414,"value":1.168621618488741,"derivative":0},{"location":1.0719659098522314,"value":1.50580061722739,"derivative":0}]}},{"location":-0.1,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-0.9953020532969176,"value":0.7613093880124531,"derivative":0},{"location":-0.9569701250192607,"value":0.5697917167289004,"derivative":0},{"location":-0.7908651024827473,"value":0.5697917167289004,"derivative":0},{"location":-0.7525331742050905,"value":0.2892587897783445,"derivative":0},{"location":-0.4842096762614916,"value":0.2892587897783445,"derivative":0},{"location":-0.42458223227402536,"value":0,"derivative":0},{"location":-0.2000000266666666,"value":0,"derivative":0},{"location":0,"value":-0.15,"derivative":0},{"location":0.2000000266666666,"value":0,"derivative":0},{"location":0.42458223227402536,"value":0,"derivative":0},{"location":0.4842096762614916,"value":0.2892587897783445,"derivative":0},{"location":0.7525331742050905,"value":0.2892587897783445,"derivative":0},{"location":0.7908651024827473,"value":0.5697917167289004,"derivative":0},{"location":0.9569701250192607,"value":0.5697917167289004,"derivative":0},{"location":0.9953020532969176,"value":0.7613093880124531,"derivative":0}]}},{"location":0.2,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-1.33333334,"value":-0.1,"derivative":0},{"location":-1.1333333733333333,"value":0.01,"derivative":0},{"location":-1.00000004,"value":0.17,"derivative":0},{"location":-0.8666667066666666,"value":0.24255454136473806,"derivative":0},{"location":-0.7845378384341837,"value":0.17,"derivative":0},{"location":-0.6666667,"value":0.24255454136473806,"derivative":0},{"location":-0.5633039117702642,"value":0.17,"derivative":0},{"location":-0.4666666933333333,"value":0.24255454136473806,"derivative":0},{"location":-0.33333335999999997,"value":0.17,"derivative":0},{"location":-0.2000000266666666,"value":0.01,"derivative":0},{"location":0,"value":-0.1,"derivative":0},{"location":0.2000000266666666,"value":0.01,"derivative":0},{"location":0.33333335999999997,"value":0.17,"derivative":0},{"location":0.4666666933333333,"value":0.24255454136473806,"derivative":0},{"location":0.5633039117702642,"value":0.17,"derivative":0},{"location":0.6666667,"value":0.24255454136473806,"derivative":0},{"location":0.7845378384341837,"value":0.17,"derivative":0},{"location":0.8666667066666666,"value":0.24255454136473806,"derivative":0},{"location":1.00000004,"value":0.17,"derivative":0},{"location":1.1333333733333333,"value":0.01,"derivative":0},{"location":1.33333334,"value":-0.1,"derivative":0}]}},{"location":0.4,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-1.33333334,"value":-0.1,"derivative":0},{"location":-1.1333333733333333,"value":0.01,"derivative":0},{"location":-1.00000004,"value":0.17,"derivative":0},{"location":-0.6666667,"value":0.29902590131805107,"derivative":0},{"location":-0.6334015003270999,"value":0.17,"derivative":0},{"location":-0.33333335999999997,"value":0.17,"derivative":0},{"location":-0.2000000266666666,"value":0.01,"derivative":0},{"location":0,"value":-0.1,"derivative":0},{"location":0.2000000266666666,"value":0.01,"derivative":0},{"location":0.33333335999999997,"value":0.17,"derivative":0},{"location":0.6334015003270999,"value":0.17,"derivative":0},{"location":0.6666667,"value":0.29902590131805107,"derivative":0},{"location":1.00000004,"value":0.17,"derivative":0},{"location":1.1333333733333333,"value":0.01,"derivative":0},{"location":1.33333334,"value":-0.1,"derivative":0}]}},{"location":0.45,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-1.33333334,"value":-0.05,"derivative":1.5},{"location":-1.1333333733333333,"value":0.01,"derivative":0},{"location":-0.644939247160031,"value":0.13038851101981705,"derivative":0},{"location":-0.6210015577389861,"value":0.01,"derivative":0},{"location":-0.33333335999999997,"value":0.01,"derivative":0},{"location":-0.2000000266666666,"value":0.01,"derivative":0},{"location":0,"value":-0.05,"derivative":-1.5},{"location":0,"value":-0.05,"derivative":1.5},{"location":0.2000000266666666,"value":0.01,"derivative":0},{"location":0.33333335999999997,"value":0.01,"derivative":0},{"location":0.6210015577389861,"value":0.01,"derivative":0},{"location":0.644939247160031,"value":0.13038851101981705,"derivative":0},{"location":1.1333333733333333,"value":0.01,"derivative":0},{"location":1.33333334,"value":-0.05,"derivative":-1.5}]}},{"location":0.55,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-1.33333334,"value":-0.05,"derivative":1.5},{"location":-1.1333333733333333,"value":0.01,"derivative":0},{"location":-0.6476163649798621,"value":0.09744599034561252,"derivative":0},{"location":-0.6210015577389861,"value":0.01,"derivative":0},{"location":-0.33333335999999997,"value":0.01,"derivative":0},{"location":-0.2000000266666666,"value":0.01,"derivative":0},{"location":0,"value":-0.05,"derivative":-1.5},{"location":0,"value":-0.05,"derivative":1.5},{"location":0.2000000266666666,"value":0.01,"derivative":0},{"location":0.33333335999999997,"value":0.01,"derivative":0},{"location":0.6210015577389861,"value":0.01,"derivative":0},{"location":0.6476163649798621,"value":0.09744599034561252,"derivative":0},{"location":1.1333333733333333,"value":0.01,"derivative":0},{"location":1.33333334,"value":-0.05,"derivative":-1.5}]}},{"location":0.58,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-1.33333334,"value":-0.05,"derivative":1.5},{"location":-1.1333333733333333,"value":0.01,"derivative":0},{"location":-0.6476163649798621,"value":0.09744599034561252,"derivative":0},{"location":-0.6210015577389861,"value":0.01,"derivative":0},{"location":-0.33333335999999997,"value":0.01,"derivative":0},{"location":-0.2000000266666666,"value":0.01,"derivative":0},{"location":0,"value":-0.05,"derivative":-1.5},{"location":0,"value":-0.05,"derivative":1.5},{"location":0.2000000266666666,"value":0.01,"derivative":0},{"location":0.33333335999999997,"value":0.01,"derivative":0},{"location":0.6210015577389861,"value":0.01,"derivative":0},{"location":0.6476163649798621,"value":0.09744599034561252,"derivative":0},{"location":1.1333333733333333,"value":0.01,"derivative":0},{"location":1.33333334,"value":-0.05,"derivative":-1.5}]}},{"location":0.7,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-1.33333334,"value":-0.02,"derivative":0.045},{"location":-1.1333333733333333,"value":0.01,"derivative":0},{"location":-1.00000004,"value":0.01,"derivative":0},{"location":-0.8666667066666666,"value":0,"derivative":0},{"location":-0.6666667,"value":0,"derivative":0},{"location":-0.4666666933333333,"value":0,"derivative":0},{"location":-0.33333335999999997,"value":0.01,"derivative":0},{"location":-0.2000000266666666,"value":0.01,"derivative":0},{"location":0,"value":-0.02,"derivative":-0.045},{"location":0,"value":-0.02,"derivative":0.045},{"location":0.2000000266666666,"value":0.01,"derivative":0},{"location":0.33333335999999997,"value":0.01,"derivative":0},{"location":0.4666666933333333,"value":0,"derivative":0},{"location":0.6666667,"value":0,"derivative":0},{"location":0.8666667066666666,"value":0,"derivative":0},{"location":1.00000004,"value":0.01,"derivative":0},{"location":1.1333333733333333,"value":0.01,"derivative":0},{"location":1.33333334,"value":-0.02,"derivative":-0.045}]}}]}}]},"factor":{"coordinate":"continents","points":[{"location":-0.19,"derivative":0,"value":{"coordinate":"erosion","points":[{"location":-0.6,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-0.2,"value":6.3,"derivative":0},{"location":0.2,"value":6.25,"derivative":0}]}}]}},{"location":-0.15,"derivative":0,"value":{"coordinate":"erosion","points":[{"location":-0.6,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-0.2,"value":6.3,"derivative":0},{"location":0.2,"value":6.25,"derivative":0}]}},{"location":-0.5,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-0.05,"value":6.3,"derivative":0},{"location":0.05,"value":2.67,"derivative":0}]}},{"location":-0.35,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-0.2,"value":6.3,"derivative":0},{"location":0.2,"value":6.25,"derivative":0}]}},{"location":-0.25,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-0.2,"value":6.3,"derivative":0},{"location":0.2,"value":6.25,"derivative":0}]}},{"location":-0.1,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-0.05,"value":2.67,"derivative":0},{"location":0.05,"value":6.3,"derivative":0}]}},{"location":0.03,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-0.2,"value":6.3,"derivative":0},{"location":0.2,"value":6.25,"derivative":0}]}},{"location":0.35,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":0,"value":6.25,"derivative":0}]}},{"location":0.45,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-1.30000004,"value":6.25,"derivative":0},{"location":-1.23000004,"value":6.25,"derivative":0},{"location":-0.10333335999999993,"value":6.25,"derivative":0},{"location":-0.03333335999999998,"value":6.25,"derivative":0},{"location":0.03333335999999998,"value":6.25,"derivative":0},{"location":0.10333335999999993,"value":0.625,"derivative":0},{"location":1.23000004,"value":0.625,"derivative":0},{"location":1.30000004,"value":6.25,"derivative":0}]}},{"location":0.55,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-1.30000004,"value":6.25,"derivative":0},{"location":-1.23000004,"value":6.25,"derivative":0},{"location":-0.10333335999999993,"value":6.25,"derivative":0},{"location":-0.03333335999999998,"value":6.25,"derivative":0},{"location":0.03333335999999998,"value":6.25,"derivative":0},{"location":0.10333335999999993,"value":0.625,"derivative":0},{"location":1.23000004,"value":0.625,"derivative":0},{"location":1.30000004,"value":6.25,"derivative":0}]}},{"location":0.62,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":0,"value":6.25,"derivative":0}]}}]}},{"location":-0.1,"derivative":0,"value":{"coordinate":"erosion","points":[{"location":-0.6,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-0.2,"value":6.3,"derivative":0},{"location":0.2,"value":5.47,"derivative":0}]}},{"location":-0.5,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-0.05,"value":6.3,"derivative":0},{"location":0.05,"value":2.67,"derivative":0}]}},{"location":-0.35,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-0.2,"value":6.3,"derivative":0},{"location":0.2,"value":5.47,"derivative":0}]}},{"location":-0.25,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-0.2,"value":6.3,"derivative":0},{"location":0.2,"value":5.47,"derivative":0}]}},{"location":-0.1,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-0.05,"value":2.67,"derivative":0},{"location":0.05,"value":6.3,"derivative":0}]}},{"location":0.03,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-0.2,"value":6.3,"derivative":0},{"location":0.2,"value":5.47,"derivative":0}]}},{"location":0.35,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":0,"value":5.47,"derivative":0}]}},{"location":0.45,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-1.30000004,"value":5.47,"derivative":0},{"location":-1.23000004,"value":5.47,"derivative":0},{"location":-0.10333335999999993,"value":5.47,"derivative":0},{"location":-0.03333335999999998,"value":5.47,"derivative":0},{"location":0.03333335999999998,"value":5.47,"derivative":0},{"location":0.10333335999999993,"value":0.625,"derivative":0},{"location":1.23000004,"value":0.625,"derivative":0},{"location":1.30000004,"value":5.47,"derivative":0}]}},{"location":0.55,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-1.30000004,"value":5.47,"derivative":0},{"location":-1.23000004,"value":5.47,"derivative":0},{"location":-0.10333335999999993,"value":5.47,"derivative":0},{"location":-0.03333335999999998,"value":5.47,"derivative":0},{"location":0.03333335999999998,"value":5.47,"derivative":0},{"location":0.10333335999999993,"value":0.625,"derivative":0},{"location":1.23000004,"value":0.625,"derivative":0},{"location":1.30000004,"value":5.47,"derivative":0}]}},{"location":0.62,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":0,"value":5.47,"derivative":0}]}}]}},{"location":0.03,"derivative":0,"value":{"coordinate":"erosion","points":[{"location":-0.6,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-0.2,"value":6.3,"derivative":0},{"location":0.2,"value":5.08,"derivative":0}]}},{"location":-0.5,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-0.05,"value":6.3,"derivative":0},{"location":0.05,"value":2.67,"derivative":0}]}},{"location":-0.35,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-0.2,"value":6.3,"derivative":0},{"location":0.2,"value":5.08,"derivative":0}]}},{"location":-0.25,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-0.2,"value":6.3,"derivative":0},{"location":0.2,"value":5.08,"derivative":0}]}},{"location":-0.1,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-0.05,"value":2.67,"derivative":0},{"location":0.05,"value":6.3,"derivative":0}]}},{"location":0.03,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-0.2,"value":6.3,"derivative":0},{"location":0.2,"value":5.08,"derivative":0}]}},{"location":0.35,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":0,"value":5.08,"derivative":0}]}},{"location":0.45,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-1.30000004,"value":5.08,"derivative":0},{"location":-1.23000004,"value":5.08,"derivative":0},{"location":-0.10333335999999993,"value":5.08,"derivative":0},{"location":-0.03333335999999998,"value":5.08,"derivative":0},{"location":0.03333335999999998,"value":5.08,"derivative":0},{"location":0.10333335999999993,"value":0.625,"derivative":0},{"location":1.23000004,"value":0.625,"derivative":0},{"location":1.30000004,"value":5.08,"derivative":0}]}},{"location":0.55,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-1.30000004,"value":5.08,"derivative":0},{"location":-1.23000004,"value":5.08,"derivative":0},{"location":-0.10333335999999993,"value":5.08,"derivative":0},{"location":-0.03333335999999998,"value":5.08,"derivative":0},{"location":0.03333335999999998,"value":5.08,"derivative":0},{"location":0.10333335999999993,"value":0.625,"derivative":0},{"location":1.23000004,"value":0.625,"derivative":0},{"location":1.30000004,"value":5.08,"derivative":0}]}},{"location":0.62,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":0,"value":5.08,"derivative":0}]}}]}},{"location":0.06,"derivative":0,"value":{"coordinate":"erosion","points":[{"location":-0.6,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-0.2,"value":6.3,"derivative":0},{"location":0.2,"value":4.69,"derivative":0}]}},{"location":-0.5,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-0.05,"value":6.3,"derivative":0},{"location":0.05,"value":2.67,"derivative":0}]}},{"location":-0.35,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-0.2,"value":6.3,"derivative":0},{"location":0.2,"value":4.69,"derivative":0}]}},{"location":-0.25,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-0.2,"value":6.3,"derivative":0},{"location":0.2,"value":4.69,"derivative":0}]}},{"location":-0.1,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-0.05,"value":2.67,"derivative":0},{"location":0.05,"value":6.3,"derivative":0}]}},{"location":0.03,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-0.2,"value":6.3,"derivative":0},{"location":0.2,"value":4.69,"derivative":0}]}},{"location":0.05,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-0.85000004,"value":6.3,"derivative":0},{"location":-0.7666667066666666,"value":1.56,"derivative":0},{"location":-0.5666666933333333,"value":1.56,"derivative":0},{"location":-0.48333335999999993,"value":6.3,"derivative":0},{"location":0.48333335999999993,"value":4.69,"derivative":0},{"location":0.5666666933333333,"value":1.56,"derivative":0},{"location":0.7666667066666666,"value":1.56,"derivative":0},{"location":0.85000004,"value":4.69,"derivative":0}]}},{"location":0.4,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-0.85000004,"value":6.3,"derivative":0},{"location":-0.7666667066666666,"value":1.56,"derivative":0},{"location":-0.5666666933333333,"value":1.56,"derivative":0},{"location":-0.48333335999999993,"value":6.3,"derivative":0},{"location":0.48333335999999993,"value":4.69,"derivative":0},{"location":0.5666666933333333,"value":1.56,"derivative":0},{"location":0.7666667066666666,"value":1.56,"derivative":0},{"location":0.85000004,"value":4.69,"derivative":0}]}},{"location":0.45,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-1.2333333733333331,"value":6.3,"derivative":0},{"location":-1.05000004,"value":1.37,"derivative":0},{"location":-0.28333336,"value":1.37,"derivative":0},{"location":-0.10000002666666663,"value":6.048437620749989,"derivative":0},{"location":0.10000002666666663,"value":4.941562379250011,"derivative":0},{"location":0.28333336,"value":1.37,"derivative":0},{"location":1.05000004,"value":1.37,"derivative":0},{"location":1.2333333733333331,"value":4.69,"derivative":0}]}},{"location":0.55,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-1.2333333733333331,"value":6.3,"derivative":0},{"location":-1.05000004,"value":1.37,"derivative":0},{"location":-0.28333336,"value":1.37,"derivative":0},{"location":-0.10000002666666663,"value":6.048437620749989,"derivative":0},{"location":0.10000002666666663,"value":4.941562379250011,"derivative":0},{"location":0.28333336,"value":1.37,"derivative":0},{"location":1.05000004,"value":1.37,"derivative":0},{"location":1.2333333733333331,"value":4.69,"derivative":0}]}},{"location":0.58,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":0,"value":4.69,"derivative":0}]}}]}}]},"jaggedness":{"coordinate":"continents","points":[{"location":-0.11,"derivative":0,"value":{"coordinate":"erosion","points":[{"location":-1,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":0,"value":0,"derivative":0}]}}]}},{"location":0.03,"derivative":0,"value":{"coordinate":"erosion","points":[{"location":-1,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-0.9333333766666666,"value":0,"derivative":0},{"location":-0.8500000533333333,"value":0,"derivative":0},{"location":-0.6666667,"value":1.37710970464135,"derivative":0},{"location":-0.4833333466666666,"value":0,"derivative":0},{"location":-0.4000000233333333,"value":0,"derivative":0},{"location":0.4000000233333333,"value":0,"derivative":0},{"location":0.4833333466666666,"value":0,"derivative":0},{"location":0.6666667,"value":1.37710970464135,"derivative":0},{"location":0.8500000533333333,"value":0,"derivative":0},{"location":0.9333333766666666,"value":0,"derivative":0}]}},{"location":-0.78,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-0.9333333766666666,"value":0,"derivative":0},{"location":-0.8500000533333333,"value":0,"derivative":0},{"location":-0.6666667,"value":1.009810263044416,"derivative":0},{"location":-0.4833333466666666,"value":0,"derivative":0},{"location":-0.4000000233333333,"value":0,"derivative":0},{"location":0.4000000233333333,"value":0,"derivative":0},{"location":0.4833333466666666,"value":0,"derivative":0},{"location":0.6666667,"value":1.009810263044416,"derivative":0},{"location":0.8500000533333333,"value":0,"derivative":0},{"location":0.9333333766666666,"value":0,"derivative":0}]}},{"location":-0.5775,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-0.9333333766666666,"value":0,"derivative":0},{"location":-0.8500000533333333,"value":0,"derivative":0},{"location":-0.6666667,"value":0.825822912174788,"derivative":0},{"location":-0.4833333466666666,"value":0,"derivative":0},{"location":-0.4000000233333333,"value":0,"derivative":0},{"location":0.4000000233333333,"value":0,"derivative":0},{"location":0.4833333466666666,"value":0,"derivative":0},{"location":0.6666667,"value":0.825822912174788,"derivative":0},{"location":0.8500000533333333,"value":0,"derivative":0},{"location":0.9333333766666666,"value":0,"derivative":0}]}},{"location":-0.375,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":0,"value":0,"derivative":0}]}}]}},{"location":0.65,"derivative":0,"value":{"coordinate":"erosion","points":[{"location":-1,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-0.9333333766666666,"value":0,"derivative":0},{"location":-0.8500000533333333,"value":0,"derivative":0},{"location":-0.6666667,"value":1.905942334739803,"derivative":0},{"location":-0.4833333466666666,"value":0,"derivative":0},{"location":-0.4000000233333333,"value":0,"derivative":0},{"location":0.4000000233333333,"value":0,"derivative":0},{"location":0.4833333466666666,"value":0,"derivative":0},{"location":0.6666667,"value":1.905942334739803,"derivative":0},{"location":0.8500000533333333,"value":0,"derivative":0},{"location":0.9333333766666666,"value":0,"derivative":0}]}},{"location":-0.78,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-0.9333333766666666,"value":0,"derivative":0},{"location":-0.8500000533333333,"value":0,"derivative":0},{"location":-0.6666667,"value":1.37710970464135,"derivative":0},{"location":-0.4833333466666666,"value":0,"derivative":0},{"location":-0.4000000233333333,"value":0,"derivative":0},{"location":0.4000000233333333,"value":0,"derivative":0},{"location":0.4833333466666666,"value":0,"derivative":0},{"location":0.6666667,"value":1.37710970464135,"derivative":0},{"location":0.8500000533333333,"value":0,"derivative":0},{"location":0.9333333766666666,"value":0,"derivative":0}]}},{"location":-0.5775,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":-0.9333333766666666,"value":0,"derivative":0},{"location":-0.8500000533333333,"value":0,"derivative":0},{"location":-0.6666667,"value":1.0241842748311054,"derivative":0},{"location":-0.4833333466666666,"value":0,"derivative":0},{"location":-0.4000000233333333,"value":0,"derivative":0},{"location":0.4000000233333333,"value":0,"derivative":0},{"location":0.4833333466666666,"value":0,"derivative":0},{"location":0.6666667,"value":1.0241842748311054,"derivative":0},{"location":0.8500000533333333,"value":0,"derivative":0},{"location":0.9333333766666666,"value":0,"derivative":0}]}},{"location":-0.375,"derivative":0,"value":{"coordinate":"weirdness","points":[{"location":0,"value":0,"derivative":0}]}}]}}]}}
+  },
+  "noise_router": {
+    "barrier": {
+      "type": "minecraft:noise",
+      "noise": "minecraft:aquifer_barrier",
+      "xz_scale": 1,
+      "y_scale": 0.5
+    },
+    "fluid_level_floodedness": {
+      "type": "minecraft:noise",
+      "noise": "minecraft:aquifer_fluid_level_floodedness",
+      "xz_scale": 1,
+      "y_scale": 0.67
+    },
+    "fluid_level_spread": {
+      "type": "minecraft:noise",
+      "noise": "minecraft:aquifer_fluid_level_spread",
+      "xz_scale": 1,
+      "y_scale": 0.7142857142857143
+    },
+    "lava": {
+      "type": "minecraft:noise",
+      "noise": "minecraft:aquifer_lava",
+      "xz_scale": 1,
+      "y_scale": 1
+    },
+    "temperature": {
+      "type": "minecraft:shifted_noise",
+      "noise": "minecraft:temperature",
+      "xz_scale": 0.25,
+      "y_scale": 0,
+      "shift_x": "minecraft:shift_x",
+      "shift_y": 0,
+      "shift_z": "minecraft:shift_z"
+    },
+    "vegetation": {
+      "type": "minecraft:shifted_noise",
+      "noise": "minecraft:vegetation",
+      "xz_scale": 0.25,
+      "y_scale": 0,
+      "shift_x": "minecraft:shift_x",
+      "shift_y": 0,
+      "shift_z": "minecraft:shift_z"
+    },
+    "continents": "minecraft:overworld/continents",
+    "erosion": "minecraft:overworld/erosion",
+    "depth": "minecraft:overworld/depth",
+    "ridges": "minecraft:overworld/ridges",
+    "initial_density_without_jaggedness": {
+      "type": "minecraft:mul",
+      "argument1": 4,
+      "argument2": {
+        "type": "minecraft:quarter_negative",
+        "argument": {
+          "type": "minecraft:mul",
+          "argument1": "minecraft:overworld/depth",
+          "argument2": {
+            "type": "minecraft:cache_2d",
+            "argument": "minecraft:overworld/factor"
+          }
+        }
+      }
+    },
+    "final_density": {
+      "type": "minecraft:min",
+      "argument1": {
+        "type": "minecraft:squeeze",
+        "argument": {
+          "type": "minecraft:mul",
+          "argument1": 0.64,
+          "argument2": {
+            "type": "minecraft:interpolated",
+            "argument": {
+              "type": "minecraft:blend_density",
+
+                "argument": {
+                  "type": "minecraft:range_choice",
+                  "input": "minecraft:overworld/sloped_cheese",
+                  "min_inclusive": -1000000,
+                  "max_exclusive": 1.5625,
+                  "when_in_range": {
+                    "type": "minecraft:min",
+                    "argument1": "minecraft:overworld/sloped_cheese",
+                    "argument2": {
+                      "type": "minecraft:mul",
+                      "argument1": 5,
+                      "argument2": "minecraft:overworld/caves/entrances"
+                    }
+                  },
+                  "when_out_of_range": {
+                    "type": "minecraft:max",
+                    "argument1": {
+                      "type": "minecraft:min",
+                      "argument1": {
+                        "type": "minecraft:min",
+                        "argument1": {
+                          "type": "minecraft:add",
+                          "argument1": {
+                            "type": "minecraft:mul",
+                            "argument1": 4,
+                            "argument2": {
+                              "type": "minecraft:square",
+                              "argument": {
+                                "type": "minecraft:noise",
+                                "noise": "minecraft:cave_layer",
+                                "xz_scale": 1,
+                                "y_scale": 8
+                              }
+                            }
+                          },
+                          "argument2": {
+                            "type": "minecraft:add",
+                            "argument1": {
+                              "type": "minecraft:clamp",
+                              "input": {
+                                "type": "minecraft:add",
+                                "argument1": 0.27,
+                                "argument2": {
+                                  "type": "minecraft:noise",
+                                  "noise": "minecraft:cave_cheese",
+                                  "xz_scale": 1,
+                                  "y_scale": 0.6666666666666666
+                                }
+                              },
+                              "min": -1,
+                              "max": 1
+                            },
+                            "argument2": {
+                              "type": "minecraft:clamp",
+                              "input": {
+                                "type": "minecraft:add",
+                                "argument1": 1.5,
+                                "argument2": {
+                                  "type": "minecraft:mul",
+                                  "argument1": -0.64,
+                                  "argument2": "minecraft:overworld/sloped_cheese"
+                                }
+                              },
+                              "min": 0,
+                              "max": 0.5
+                            }
+                          }
+                        },
+                        "argument2": "minecraft:overworld/caves/entrances"
+                      },
+                      "argument2": {
+                        "type": "minecraft:add",
+                        "argument1": "minecraft:overworld/caves/spaghetti_2d",
+                        "argument2": "minecraft:overworld/caves/spaghetti_roughness_function"
+                      }
+                    },
+                    "argument2": {
+                      "type": "minecraft:range_choice",
+                      "input": "minecraft:overworld/caves/pillars",
+                      "min_inclusive": -1000000,
+                      "max_exclusive": 0.03,
+                      "when_in_range": -1000000,
+                      "when_out_of_range": "minecraft:overworld/caves/pillars"
+                    }
+                  }
+                }
+
+            }
+          }
+        }
+      },
+      "argument2": "minecraft:overworld/caves/noodle"
+    },
+    "vein_toggle": {
+      "type": "minecraft:interpolated",
+      "argument": {
+        "type": "minecraft:range_choice",
+        "input": "minecraft:y",
+        "min_inclusive": -60,
+        "max_exclusive": 51,
+        "when_in_range": {
+          "type": "minecraft:noise",
+          "noise": "minecraft:ore_veininess",
+          "xz_scale": 1.5,
+          "y_scale": 1.5
+        },
+        "when_out_of_range": 0
+      }
+    },
+    "vein_ridged": {
+      "type": "minecraft:add",
+      "argument1": -0.07999999821186066,
+      "argument2": {
+        "type": "minecraft:max",
+        "argument1": {
+          "type": "minecraft:abs",
+          "argument": {
+            "type": "minecraft:interpolated",
+            "argument": {
+              "type": "minecraft:range_choice",
+              "input": "minecraft:y",
+              "min_inclusive": -60,
+              "max_exclusive": 51,
+              "when_in_range": {
+                "type": "minecraft:noise",
+                "noise": "minecraft:ore_vein_a",
+                "xz_scale": 4,
+                "y_scale": 4
+              },
+              "when_out_of_range": 0
+            }
+          }
+        },
+        "argument2": {
+          "type": "minecraft:abs",
+          "argument": {
+            "type": "minecraft:interpolated",
+            "argument": {
+              "type": "minecraft:range_choice",
+              "input": "minecraft:y",
+              "min_inclusive": -60,
+              "max_exclusive": 51,
+              "when_in_range": {
+                "type": "minecraft:noise",
+                "noise": "minecraft:ore_vein_b",
+                "xz_scale": 4,
+                "y_scale": 4
+              },
+              "when_out_of_range": 0
+            }
+          }
+        }
+      }
+    },
+    "vein_gap": {
+      "type": "minecraft:noise",
+      "noise": "minecraft:ore_gap",
+      "xz_scale": 1,
+      "y_scale": 1
+    }
+  },
+  "surface_rule": {
+    "type": "minecraft:sequence",
+    "sequence": [
+      {
+        "type": "minecraft:condition",
+        "if_true": {
+          "type": "minecraft:vertical_gradient",
+          "random_name": "minecraft:bedrock_floor",
+          "true_at_and_below": {
+            "above_bottom": 0
+          },
+          "false_at_and_above": {
+            "above_bottom": 5
+          }
+        },
+        "then_run": {
+          "type": "minecraft:block",
+          "result_state": {
+            "Name": "minecraft:bedrock"
+          }
+        }
+      },
+      {
+        "type": "minecraft:condition",
+        "if_true": {
+          "type": "minecraft:biome",
+          "biome_is": [
+            "re8joymod:re8_eforest_biome"
+          ]
+        },
+        "then_run": {
+          "type": "minecraft:sequence",
+          "sequence": [
+            {
+              "type": "minecraft:condition",
+              "if_true": {
+                "type": "minecraft:noise_threshold",
+                "noise": "minecraft:calcite",
+                "min_threshold": -0.0125,
+                "max_threshold": 0.0125
+              },
+              "then_run": {
+                "type": "minecraft:block",
+                "result_state": {
+                  "Name": "re8joymod:wasteland_rock"
+                }
+              }
+            },
+            {
+              "type": "minecraft:condition",
+              "if_true": {
+                "type": "minecraft:steep"
+              },
+              "then_run": {
+                "type": "minecraft:block",
+                "result_state": {
+                  "Name": "re8joymod:wasteland_grass"
+                }
+              }
+            },
+            {
+              "type": "minecraft:condition",
+              "if_true": {
+                "type": "minecraft:stone_depth",
+                "offset": 0,
+                "surface_type": "floor",
+                "add_surface_depth": false,
+                "secondary_depth_range": 0
+              },
+              "then_run": {
+                "type": "minecraft:block",
+                "result_state": {
+                  "Name": "minecraft:grass_block"
+                }
+              }
+            },
+            {
+              "type": "minecraft:condition",
+              "if_true": {
+                "type": "minecraft:stone_depth",
+                "offset": 0,
+                "surface_type": "floor",
+                "add_surface_depth": true,
+                "secondary_depth_range": 0
+              },
+              "then_run": {
+                "type": "minecraft:block",
+                "result_state": {
+                  "Name": "minecraft:smooth_sandstone"
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "minecraft:condition",
+        "if_true": {
+          "type": "minecraft:biome",
+          "biome_is": [
+            "re8joymod:re8_ehills_biome"
+          ]
+        },
+        "then_run": {
+          "type": "minecraft:sequence",
+          "sequence": [
+            {
+              "type": "minecraft:condition",
+              "if_true": {
+                "type": "minecraft:steep"
+              },
+              "then_run": {
+                "type": "minecraft:block",
+                "result_state": {
+                  "Name": "re8joymod:wasteland_rock"
+                }
+              }
+            },
+            {
+              "type": "minecraft:condition",
+              "if_true": {
+                "type": "minecraft:noise_threshold",
+                "noise": "minecraft:surface",
+                "min_threshold": 0.1,
+                "max_threshold": 0.2
+              },
+              "then_run": {
+                "type": "minecraft:condition",
+                "if_true": {
+                  "type": "minecraft:stone_depth",
+                  "offset": 0,
+                  "surface_type": "floor",
+                  "add_surface_depth": true,
+                  "secondary_depth_range": 0
+                },
+                "then_run": {
+                  "type": "minecraft:block",
+                  "result_state": {
+                    "Name": "minecraft:rooted_dirt"
+                  }
+                }
+              }
+            },
+            {
+              "type": "minecraft:condition",
+              "if_true": {
+                "type": "minecraft:noise_threshold",
+                "noise": "minecraft:packed_ice",
+                "min_threshold": 0,
+                "max_threshold": 0.2
+              },
+              "then_run": {
+                "type": "minecraft:condition",
+                "if_true": {
+                  "type": "minecraft:stone_depth",
+                  "offset": 0,
+                  "surface_type": "floor",
+                  "add_surface_depth": true,
+                  "secondary_depth_range": 0
+                },
+                "then_run": {
+                  "type": "minecraft:block",
+                  "result_state": {
+                    "Name": "minecraft:moss_block"
+                  }
+                }
+              }
+            },
+            {
+              "type": "minecraft:condition",
+              "if_true": {
+                "type": "minecraft:noise_threshold",
+                "noise": "minecraft:calcite",
+                "min_threshold": -0.0125,
+                "max_threshold": 0.0125
+              },
+              "then_run": {
+                "type": "minecraft:condition",
+                "if_true": {
+                  "type": "minecraft:stone_depth",
+                  "offset": 0,
+                  "surface_type": "floor",
+                  "add_surface_depth": false,
+                  "secondary_depth_range": 0
+                },
+                "then_run": {
+                  "type": "minecraft:block",
+                  "result_state": {
+                    "Name": "minecraft:mossy_cobblestone"
+                  }
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "minecraft:condition",
+        "if_true": {
+          "type": "minecraft:biome",
+          "biome_is": [
+            "re8joymod:re8_evalley_biome"
+          ]
+        },
+        "then_run": {
+          "type": "minecraft:sequence",
+          "sequence": [
+            {
+              "type": "minecraft:condition",
+              "if_true": {
+                "type": "minecraft:steep"
+              },
+              "then_run": {
+                "type": "minecraft:block",
+                "result_state": {
+                  "Name": "minecraft:stone"
+                }
+              }
+            },
+            {
+              "type": "minecraft:condition",
+              "if_true": {
+                "type": "minecraft:noise_threshold",
+                "noise": "minecraft:calcite",
+                "min_threshold": -0.0125,
+                "max_threshold": 0.0125
+              },
+              "then_run": {
+                "type": "minecraft:condition",
+                "if_true": {
+                  "type": "minecraft:stone_depth",
+                  "offset": 0,
+                  "surface_type": "floor",
+                  "add_surface_depth": false,
+                  "secondary_depth_range": 0
+                },
+                "then_run": {
+                  "type": "minecraft:block",
+                  "result_state": {
+                    "Name": "minecraft:podzol"
+                  }
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "minecraft:condition",
+        "if_true": {
+          "type": "minecraft:biome",
+          "biome_is": [
+            "minecraft:calcite"
+          ]
+        },
+        "then_run": {
+          "type": "minecraft:sequence",
+          "sequence": [
+            {
+              "type": "minecraft:condition",
+              "if_true": {
+                "type": "minecraft:steep"
+              },
+              "then_run": {
+                "type": "minecraft:block",
+                "result_state": {
+                  "Name": "minecraft:smooth_sandstone"
+                }
+              }
+            },
+            {
+              "type": "minecraft:condition",
+              "if_true": {
+                "type": "minecraft:noise_threshold",
+                "noise": "minecraft:calcite",
+                "min_threshold": -0.0125,
+                "max_threshold": 0.0125
+              },
+              "then_run": {
+                "type": "minecraft:condition",
+                "if_true": {
+                  "type": "minecraft:stone_depth",
+                  "offset": 0,
+                  "surface_type": "floor",
+                  "add_surface_depth": false,
+                  "secondary_depth_range": 0
+                },
+                "then_run": {
+                  "type": "minecraft:block",
+                  "result_state": {
+                    "Name": "re8joymod:wasteland_rock"
+                  }
+                }
+              }
+            },
+            {
+              "type": "minecraft:condition",
+              "if_true": {
+                "type": "minecraft:stone_depth",
+                "offset": 0,
+                "surface_type": "floor",
+                "add_surface_depth": false,
+                "secondary_depth_range": 0
+              },
+              "then_run": {
+                "type": "minecraft:block",
+                "result_state": {
+                  "Name": "re8joymod:humus_sand"
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "minecraft:condition",
+        "if_true": {
+          "type": "minecraft:biome",
+          "biome_is": [
+            "re8joymod:re8_edesert_biome"
+          ]
+        },
+        "then_run": {
+          "type": "minecraft:sequence",
+          "sequence": [
+            {
+              "type": "minecraft:condition",
+              "if_true": {
+                "type": "minecraft:steep"
+              },
+              "then_run": {
+                "type": "minecraft:bandlands"
+              }
+            },
+            {
+              "type": "minecraft:condition",
+              "if_true": {
+                "type": "minecraft:noise_threshold",
+                "noise": "minecraft:calcite",
+                "min_threshold": -0.0125,
+                "max_threshold": -0.0125
+              },
+              "then_run": {
+                "type": "minecraft:block",
+                "result_state": {
+                  "Name": "re8joymod:humus_sand"
+                }
+              }
+            },
+            {
+              "type": "minecraft:condition",
+              "if_true": {
+                "type": "minecraft:stone_depth",
+                "offset": 0,
+                "surface_type": "floor",
+                "add_surface_depth": false,
+                "secondary_depth_range": 0
+              },
+              "then_run": {
+                "type": "minecraft:block",
+                "result_state": {
+                  "Name": "re8joymod:humus_sand"
+                }
+              }
+            },
+            {
+              "type": "minecraft:block",
+              "result_state": {
+                "Name": "minecraft:smooth_red_sandstone"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "minecraft:sequence",
+        "sequence": [
+          {
+            "type": "minecraft:condition",
+            "if_true": {
+              "type": "minecraft:biome",
+              "biome_is": [
+                "re8joymod:re8_wasteland_biome",
+                "re8joymod:re8_evalley_biome",
+                "re8joymod:re8_ehills_biome"
+              ]
+            },
+            "then_run": {
+              "type": "minecraft:condition",
+              "if_true": {
+                "type": "minecraft:above_preliminary_surface"
+              },
+              "then_run": {
+                "type": "minecraft:sequence",
+                "sequence": [
+                  {
+                    "type": "minecraft:condition",
+                    "if_true": {
+                      "type": "minecraft:stone_depth",
+                      "offset": 0,
+                      "surface_type": "floor",
+                      "add_surface_depth": false,
+                      "secondary_depth_range": 0
+                    },
+                    "then_run": {
+                      "type": "minecraft:block",
+                      "result_state": {
+                        "Name": "re8joymod:wasteland_grass",
+                        "Properties": {
+                          "snowy": "false"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "type": "minecraft:condition",
+                    "if_true": {
+                      "type": "minecraft:stone_depth",
+                      "offset": 0,
+                      "surface_type": "floor",
+                      "add_surface_depth": true,
+                      "secondary_depth_range": 0
+                    },
+                    "then_run": {
+                      "type": "minecraft:block",
+                      "result_state": {
+                        "Name": "minecraft:dirt"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      },
+      {
+        "type": "minecraft:condition",
+        "if_true": {
+          "type": "minecraft:vertical_gradient",
+          "random_name": "minecraft:deepslate",
+          "true_at_and_below": {
+            "absolute": 0
+          },
+          "false_at_and_above": {
+            "absolute": 8
+          }
+        },
+        "then_run": {
+          "type": "minecraft:block",
+          "result_state": {
+            "Name": "minecraft:deepslate",
+            "Properties": {
+              "axis": "y"
+            }
+          }
+        }
+      }
+    ]
+  }
+}

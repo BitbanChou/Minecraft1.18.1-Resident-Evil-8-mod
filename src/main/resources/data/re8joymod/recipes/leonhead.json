@@ -1,0 +1,28 @@
+{
+    "type": "minecraft:crafting_shaped",
+    
+    "pattern":
+    [
+        "ZDZ",
+        "Z Z",
+        "   "
+    ],
+    
+    "key":
+    {
+        "Z":
+        {
+            "item": "re8joymod:sleather"
+        },
+        "D":
+        {
+            "item": "re8joymod:desolate_grass"
+        }
+    },
+    
+    "result":
+    {
+        "item": "re8joymod:leonhead",
+        "count": 1
+    }
+}

@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/crop",
+  "textures": {
+    "crop": "re8joymod:block/herb_block_stage6"
+  }
+}

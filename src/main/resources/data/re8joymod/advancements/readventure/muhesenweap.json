@@ -1,0 +1,29 @@
+{
+    "display": {
+        "icon": {
+            "item": "re8joymod:muhesenweap"
+        },
+        "title": "Knives Out",
+        "description": "Mutated Heisenberg's Saw."
+    },
+    "parent": "re8joymod:readventure/muheisen",
+    "criteria": {
+        "muhesenweap": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                         "items": [
+              				"re8joymod:muhesenweap"
+            			]
+                    }
+                ]
+            }
+        }
+    },
+    "requirements": [
+    [
+      "muhesenweap"
+    ]
+   ]
+}

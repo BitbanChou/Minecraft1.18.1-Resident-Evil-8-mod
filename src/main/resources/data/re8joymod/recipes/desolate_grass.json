@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+
+  "pattern":
+  [
+    "III",
+    "IMI",
+    "III"
+  ],
+
+  "key":
+  {
+    "I":
+    {
+      "item": "minecraft:dead_bush"
+    },
+    "M":
+    {
+      "item": "re8joymod:machinehearts"
+    }
+  },
+
+  "result":
+  {
+    "item": "re8joymod:desolate_grass",
+    "count": 1
+  }
+}

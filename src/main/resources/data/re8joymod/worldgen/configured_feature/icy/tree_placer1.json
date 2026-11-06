@@ -1,0 +1,32 @@
+{
+  "type": "minecraft:random_selector",
+  "config": {
+    "features": [
+      {
+        "feature": "re8joymod:icy/spruce1",
+        "chance": 0.45
+      },
+      {
+        "feature": "re8joymod:icy/spruce2",
+        "chance": 0.45
+      },
+      {
+        "feature": "re8joymod:icy/spruce_fancy1",
+        "chance": 0.15
+      },
+      {
+        "feature": "re8joymod:icy/spruce_fancy2",
+        "chance": 0.15
+      },
+      {
+        "feature": "re8joymod:icy/spruce_decor1",
+        "chance": 0.15
+      },
+      {
+        "feature": "re8joymod:icy/spruce_decor2",
+        "chance": 0.15
+      }
+    ],
+    "default": "re8joymod:na"
+  }
+}

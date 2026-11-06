@@ -1,0 +1,28 @@
+{
+    "type": "minecraft:crafting_shaped",
+    
+    "pattern":
+    [
+        "ICI",
+        "CIC",
+        "ICI"
+    ],
+    
+    "key":
+    {
+        "I":
+        {
+        	"item": "minecraft:ink_sac"
+        },
+        "C":
+        {
+            "item": "re8joymod:fact_iron_block"
+        }
+    },
+    
+    "result":
+    {
+        "item": "re8joymod:factorywall_block",
+        "count": 4
+    }
+}

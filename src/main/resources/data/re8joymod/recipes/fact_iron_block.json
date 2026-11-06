@@ -1,0 +1,28 @@
+{
+    "type": "minecraft:crafting_shaped",
+    
+    "pattern":
+    [
+        " I ",
+        "IFI",
+        " I "
+    ],
+    
+    "key":
+    {
+        "I":
+        {
+        	"item": "minecraft:iron_nugget"
+        },
+        "F":
+        {
+            "item": "minecraft:diorite"
+        }
+    },
+    
+    "result":
+    {
+        "item": "re8joymod:fact_iron_block",
+        "count": 1
+    }
+}

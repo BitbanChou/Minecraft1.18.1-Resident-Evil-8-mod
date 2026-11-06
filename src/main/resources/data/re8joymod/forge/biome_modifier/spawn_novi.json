@@ -1,0 +1,22 @@
+{
+  "type": "forge:add_spawns",
+  "biomes": [
+    "re8joymod:re8_eforest_biome",
+    "minecraft:desert",
+    "minecraft:plains"
+  ],
+  "spawners":[
+    {
+      "type": "re8joymod:novi",
+      "weight": 15,
+      "minCount": 1,
+      "maxCount": 1
+    },
+    {
+      "type": "re8joymod:stuff",
+      "weight": 5,
+      "minCount": 1,
+      "maxCount": 1
+    }
+  ]
+}

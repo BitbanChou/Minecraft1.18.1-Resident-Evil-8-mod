@@ -1,0 +1,28 @@
+{
+    "type": "minecraft:crafting_shaped",
+    
+    "pattern":
+    [
+        "   ",
+        "IFI",
+        "   "
+    ],
+    
+    "key":
+    {
+        "I":
+        {
+        	"item": "minecraft:ink_sac"
+        },
+        "F":
+        {
+            "item": "minecraft:feather"
+        }
+    },
+    
+    "result":
+    {
+        "item": "re8joymod:blackfeather",
+        "count": 1
+    }
+}

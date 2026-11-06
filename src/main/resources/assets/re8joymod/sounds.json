@@ -1,0 +1,1009 @@
+{
+  "entity.dimi.ambient1": {
+    "category": "entity",
+    "subtitle": "entity.dimi.ambient1.sub",
+    "sounds": [
+      {
+        "name": "re8joymod:entity/dimi/ambient1",
+        "stream": true
+      }
+    ]
+  },
+  "entity.dimi.ambient2": {
+    "category": "entity",
+    "subtitle": "entity.dimi.ambient2.sub",
+    "sounds": [
+      {
+        "name": "re8joymod:entity/dimi/ambient2",
+        "stream": true
+      }
+    ]
+  },
+  "entity.dimi.death2": {
+    "category": "entity",
+    "subtitle": "entity.dimi.death2.sub",
+    "sounds": [
+      {
+        "name": "re8joymod:entity/dimi/death2",
+        "stream": true
+      }
+    ]
+  },
+  "entity.dimi.hurt1": {
+    "category": "entity",
+    "subtitle": "entity.dimi.hurt1.sub",
+    "sounds": [
+      {
+        "name": "re8joymod:entity/dimi/hurt1",
+        "stream": true
+      }
+    ]
+  },
+  "entity.dimi.hurt2": {
+    "category": "entity",
+    "subtitle": "entity.dimi.hurt2.sub",
+    "sounds": [
+      {
+        "name": "re8joymod:entity/dimi/hurt2",
+        "stream": true
+      }
+    ]
+  },
+  "entity.dimi.death1": {
+    "category": "entity",
+    "subtitle": "entity.dimi.death1.sub",
+    "sounds": [{"name": "re8joymod:entity/dimi/death1","stream": true}]
+  },
+  
+  
+  "entity.ethan.ambient1":{
+    "category":"entity",
+    "subtitle" :"entity.ethan.ambient1.sub",
+    "sounds":[{ "name": "re8joymod:entity/ethan/ambient1", "stream":true }]
+  },
+  "entity.ethan.ambient2":{
+    "category":"entity",
+    "subtitle" :"entity.ethan.ambient2.sub",
+    "sounds":[{ "name": "re8joymod:entity/ethan/ambient2", "stream":true }]
+  },
+  "entity.ethan.hurt1":{
+    "category":"entity",
+    "subtitle" :"entity.ethan.hurt1.sub",
+    "sounds":[{ "name": "re8joymod:entity/ethan/hurt1", "stream":true }]
+  },
+  "entity.ethan.hurt2":{
+    "category":"entity",
+    "subtitle" :"entity.ethan.hurt2.sub",
+    "sounds":[{ "name": "re8joymod:entity/ethan/hurt2", "stream":true }]
+  },
+  "entity.ethan.death":{
+    "category":"entity",
+    "subtitle" :"entity.ethan.death.sub",
+    "sounds":[{ "name": "re8joymod:entity/ethan/death", "stream":true }]
+  },
+  
+  "entity.bela.ambient":{
+    "category":"entity",
+    "subtitle" :"entity.bela.ambient.sub",
+    "sounds":[{ "name": "re8joymod:entity/bela/ambient", "stream":true }]
+  },
+  "entity.bela.hurt":{
+    "category":"entity",
+    "subtitle" :"entity.bela.hurt.sub",
+    "sounds":[{ "name": "re8joymod:entity/bela/hurt", "stream":true }]
+  },
+  "entity.bela.death":{
+    "category":"entity",
+    "subtitle" :"entity.bela.death.sub",
+    "sounds":[{ "name": "re8joymod:entity/bela/death", "stream":true }]
+  },
+    "entity.daniela.ambient":{
+    "category":"entity",
+    "subtitle" :"entity.daniela.ambient.sub",
+    "sounds":[{ "name": "re8joymod:entity/daniela/ambient", "stream":true }]
+  },
+  "entity.daniela.ambient2":{
+    "category":"entity",
+    "subtitle" :"entity.daniela.ambient2.sub",
+    "sounds":[{ "name": "re8joymod:entity/daniela/ambient2", "stream":true }]
+  },
+  "entity.daniela.hurt":{
+    "category":"entity",
+    "subtitle" :"entity.daniela.hurt.sub",
+    "sounds":[{ "name": "re8joymod:entity/daniela/hurt", "stream":true }]
+  },
+  "entity.daniela.death":{
+    "category":"entity",
+    "subtitle" :"entity.daniela.death.sub",
+    "sounds":[{ "name": "re8joymod:entity/daniela/death", "stream":true }]
+  },
+
+
+  "entity.cassandra.ambient":{
+    "category":"entity",
+    "subtitle" :"entity.cassandra.ambient.sub",
+    "sounds":[{ "name": "re8joymod:entity/cassandra/ambient", "stream":true }]
+  },
+  "entity.cassandra.hurt":{
+    "category":"entity",
+    "subtitle" :"entity.cassandra.hurt.sub",
+    "sounds":[{ "name": "re8joymod:entity/cassandra/hurt", "stream":true }]
+  },
+  "entity.cassandra.death1":{
+    "category":"entity",
+    "subtitle" :"entity.cassandra.death1.sub",
+    "sounds":[{ "name": "re8joymod:entity/cassandra/death1", "stream":true }]
+  },
+  "entity.cassandra.death2":{
+    "category":"entity",
+    "subtitle" :"entity.cassandra.death2.sub",
+    "sounds":[{ "name": "re8joymod:entity/cassandra/death2", "stream":true }]
+  },
+  
+  "entity.angie.ambient":{
+    "category":"entity",
+    "subtitle" :"entity.angie.ambient.sub",
+    "sounds":[{ "name": "re8joymod:entity/angie/ambient", "stream":true }]
+  },
+  "entity.angie.ambient2":{
+    "category":"entity",
+    "subtitle" :"entity.angie.ambient2.sub",
+    "sounds":[{ "name": "re8joymod:entity/angie/ambient2", "stream":true }]
+  },
+  "entity.angie.hurt":{
+    "category":"entity",
+    "subtitle" :"entity.angie.hurt.sub",
+    "sounds":[{ "name": "re8joymod:entity/angie/hurt", "stream":true }]
+  },
+
+  "entity.doll.ambient":{
+    "category":"entity",
+    "subtitle" :"entity.doll.ambient.sub",
+    "sounds":[{ "name": "re8joymod:entity/doll/ambient", "stream":true }]
+  },
+  "entity.doll.hurt":{
+    "category":"entity",
+    "subtitle" :"entity.doll.hurt.sub",
+    "sounds":[{ "name": "re8joymod:entity/doll/hurt", "stream":true }]
+  },
+  
+  "entity.beibaby.ambient1":{
+    "category":"entity",
+    "subtitle" :"entity.beibaby.ambient1.sub",
+    "sounds":[{ "name": "re8joymod:entity/beibaby/ambient1", "stream":true }]
+  },
+  "entity.beibaby.ambient2":{
+    "category":"entity",
+    "subtitle" :"entity.beibaby.ambient2.sub",
+    "sounds":[{ "name": "re8joymod:entity/beibaby/ambient2", "stream":true }]
+  },
+  "entity.beibaby.hurt":{
+    "category":"entity",
+    "subtitle" :"entity.beibaby.hurt.sub",
+    "sounds":[{ "name": "re8joymod:entity/beibaby/hurt", "stream":true }]
+  },
+  "entity.beibaby.death":{
+    "category":"entity",
+    "subtitle" :"entity.beibaby.death.sub",
+    "sounds":[{ "name": "re8joymod:entity/beibaby/death", "stream":true }]
+  },
+  
+  
+  "entity.bei.ambient":{
+    "category":"entity",
+    "subtitle" :"entity.bei.ambient.sub",
+    "sounds":[{ "name": "re8joymod:entity/bei/ambient", "stream":true }]
+  },
+  "entity.bei.ambient2":{
+    "category":"entity",
+    "subtitle" :"entity.bei.ambient2.sub",
+    "sounds":[{ "name": "re8joymod:entity/bei/ambient2", "stream":true }]
+  },
+  "entity.bei.death1":{
+    "category":"entity",
+    "subtitle" :"entity.bei.death1.sub",
+    "sounds":[{ "name": "re8joymod:entity/bei/death1", "stream":true }]
+  },
+  "entity.bei.hurt":{
+    "category":"entity",
+    "subtitle" :"entity.bei.hurt.sub",
+    "sounds":[{ "name": "re8joymod:entity/bei/hurt", "stream":true }]
+  },
+  "entity.bei.death2":{
+    "category":"entity",
+    "subtitle" :"entity.bei.death2.sub",
+    "sounds":[{ "name": "re8joymod:entity/bei/death2", "stream":true }]
+  },
+
+  "entity.moreau.ambient1":{
+    "category":"entity",
+    "subtitle" :"entity.moreau.ambient1.sub",
+    "sounds":[{ "name": "re8joymod:entity/moreau/ambient1", "stream":true }]
+  },
+  "entity.moreau.ambient2":{
+    "category":"entity",
+    "subtitle" :"entity.moreau.ambient2.sub",
+    "sounds":[{ "name": "re8joymod:entity/moreau/ambient2", "stream":true }]
+  },
+  "entity.moreau.hurt1":{
+    "category":"entity",
+    "subtitle" :"entity.moreau.hurt1.sub",
+    "sounds":[{ "name": "re8joymod:entity/moreau/hurt1", "stream":true }]
+  },
+  "entity.moreau.hurt2":{
+    "category":"entity",
+    "subtitle" :"entity.moreau.hurt2.sub",
+    "sounds":[{ "name": "re8joymod:entity/moreau/hurt2", "stream":true }]
+  },
+  "entity.moreau.death":{
+    "category":"entity",
+    "subtitle" :"entity.moreau.death.sub",
+    "sounds":[{ "name": "re8joymod:entity/moreau/death", "stream":true }]
+  },
+
+  "entity.hesen.ambient1":{
+    "category":"entity",
+    "subtitle" :"entity.hesen.ambient1.sub",
+    "sounds":[{ "name": "re8joymod:entity/hesen/ambient1", "stream":true }]
+  },
+  "entity.hesen.ambient2":{
+    "category":"entity",
+    "subtitle" :"entity.hesen.ambient2.sub",
+    "sounds":[{ "name": "re8joymod:entity/hesen/ambient2", "stream":true }]
+  },
+  "entity.hesen.ambient3":{
+    "category":"entity",
+    "subtitle" :"entity.hesen.ambient3.sub",
+    "sounds":[{ "name": "re8joymod:entity/hesen/ambient3", "stream":true }]
+  },
+  "entity.hesen.hurt1":{
+    "category":"entity",
+    "subtitle" :"entity.hesen.hurt1.sub",
+    "sounds":[{ "name": "re8joymod:entity/hesen/hurt1", "stream":true }]
+  },
+  "entity.hesen.hurt2":{
+    "category":"entity",
+    "subtitle" :"entity.hesen.hurt2.sub",
+    "sounds":[{ "name": "re8joymod:entity/hesen/hurt2", "stream":true }]
+  },
+  "entity.hesen.death":{
+    "category":"entity",
+    "subtitle" :"entity.hesen.death.sub",
+    "sounds":[{ "name": "re8joymod:entity/hesen/death", "stream":true }]
+  },
+
+  "entity.mia.ambient1":{
+    "category":"entity",
+    "subtitle" :"entity.mia.ambient1.sub",
+    "sounds":[{ "name": "re8joymod:entity/mia/ambient1", "stream":true }]
+  },
+  "entity.mia.ambient2":{
+    "category":"entity",
+    "subtitle" :"entity.mia.ambient2.sub",
+    "sounds":[{ "name": "re8joymod:entity/mia/ambient2", "stream":true }]
+  },
+  "entity.mia.hurt":{
+    "category":"entity",
+    "subtitle" :"entity.mia.hurt.sub",
+    "sounds":[{ "name": "re8joymod:entity/mia/hurt", "stream":true }]
+  },
+  "entity.mia.death":{
+    "category":"entity",
+    "subtitle" :"entity.mia.death.sub",
+    "sounds":[{ "name": "re8joymod:entity/mia/death", "stream":true }]
+  },
+
+  "entity.chris.ambient1":{
+    "category":"entity",
+    "subtitle" :"entity.chris.ambient1.sub",
+    "sounds":[{ "name": "re8joymod:entity/chris/ambient1", "stream":true }]
+  },
+  "entity.chris.ambient2":{
+    "category":"entity",
+    "subtitle" :"entity.chris.ambient2.sub",
+    "sounds":[{ "name": "re8joymod:entity/chris/ambient2", "stream":true }]
+  },
+  "entity.chris.ambient3":{
+    "category":"entity",
+    "subtitle" :"entity.chris.ambient3.sub",
+    "sounds":[{ "name": "re8joymod:entity/chris/ambient3", "stream":true }]
+  },
+  "entity.chris.hurt":{
+    "category":"entity",
+    "subtitle" :"entity.chris.hurt.sub",
+    "sounds":[{ "name": "re8joymod:entity/chris/hurt", "stream":true }]
+  },
+  "entity.chris.death":{
+    "category":"entity",
+    "subtitle" :"entity.chris.death.sub",
+    "sounds":[{ "name": "re8joymod:entity/chris/death", "stream":true }]
+  },
+
+  "entity.duke.ambient1":{
+    "category":"entity",
+    "subtitle" :"entity.duke.ambient1.sub",
+    "sounds":[{ "name": "re8joymod:entity/duke/ambient1", "stream":true }]
+  },
+  "entity.duke.ambient2":{
+    "category":"entity",
+    "subtitle" :"entity.duke.ambient2.sub",
+    "sounds":[{ "name": "re8joymod:entity/duke/ambient2", "stream":true }]
+  },
+  "entity.duke.hurt":{
+    "category":"entity",
+    "subtitle" :"entity.duke.hurt.sub",
+    "sounds":[{ "name": "re8joymod:entity/duke/hurt", "stream":true }]
+  },
+  "entity.duke.trade":{
+    "category":"entity",
+    "subtitle" :"entity.duke.trade.sub",
+    "sounds":[{ "name": "re8joymod:entity/duke/trade", "stream":true }]
+  },
+
+  "entity.merchant.merchant1":{
+    "category":"entity",
+    "subtitle" :"entity.merchant.merchant1.sub",
+    "sounds":[{ "name": "re8joymod:entity/merchant/merchant1", "stream":true }]
+  },
+  "entity.merchant.merchant2":{
+    "category":"entity",
+    "subtitle" :"entity.merchant.merchant2.sub",
+    "sounds":[{ "name": "re8joymod:entity/merchant/merchant2", "stream":true }]
+  },
+  "entity.merchant.merchant3":{
+    "category":"entity",
+    "subtitle" :"entity.merchant.merchant3.sub",
+    "sounds":[{ "name": "re8joymod:entity/merchant/merchant3", "stream":true }]
+  },
+  "entity.merchant.trade":{
+    "category":"entity",
+    "subtitle" :"entity.merchant.trade.sub",
+    "sounds":[{ "name": "re8joymod:entity/merchant/trade", "stream":true }]
+  },
+
+  "entity.heisencar.rolling":{
+    "category":"entity",
+    "subtitle" :"entity.heisencar.rolling.sub",
+    "sounds":[{ "name": "re8joymod:entity/heisencar/rolling", "stream":true }]
+  },
+  "entity.heisencar.firing":{
+    "category":"entity",
+    "subtitle" :"entity.heisencar.firing.sub",
+    "sounds":[{ "name": "re8joymod:entity/heisencar/firing", "stream":true }]
+  },
+
+  "entity.miranda.ambient1":{
+    "category":"entity",
+    "subtitle" :"entity.miranda.ambient1.sub",
+    "sounds":[{ "name": "re8joymod:entity/miranda/ambient1", "stream":true }]
+  },
+  "entity.miranda.ambient2":{
+    "category":"entity",
+    "subtitle" :"entity.miranda.ambient2.sub",
+    "sounds":[{ "name": "re8joymod:entity/miranda/ambient2", "stream":true }]
+  },
+  "entity.miranda.ambient3":{
+    "category":"entity",
+    "subtitle" :"entity.miranda.ambient3.sub",
+    "sounds":[{ "name": "re8joymod:entity/miranda/ambient3", "stream":true }]
+  },
+  "entity.miranda.hurt1":{
+    "category":"entity",
+    "subtitle" :"entity.miranda.hurt1.sub",
+    "sounds":[{ "name": "re8joymod:entity/miranda/hurt1", "stream":true }]
+  },
+  "entity.miranda.hurt2":{
+    "category":"entity",
+    "subtitle" :"entity.miranda.hurt2.sub",
+    "sounds":[{ "name": "re8joymod:entity/miranda/hurt2", "stream":true }]
+  },
+  "entity.miranda.death1":{
+    "category":"entity",
+    "subtitle" :"entity.miranda.death1.sub",
+    "sounds":[{ "name": "re8joymod:entity/miranda/death1", "stream":true }]
+  },
+  "entity.miranda.death2":{
+    "category":"entity",
+    "subtitle" :"entity.miranda.death2.sub",
+    "sounds":[{ "name": "re8joymod:entity/miranda/death2", "stream":true }]
+  },
+
+  "entity.rosemary.ambient1":{
+    "category":"entity",
+    "subtitle" :"entity.rosemary.ambient1.sub",
+    "sounds":[{ "name": "re8joymod:entity/rosemary/ambient1", "stream":true }]
+  },
+  "entity.rosemary.ambient2":{
+    "category":"entity",
+    "subtitle" :"entity.rosemary.ambient2.sub",
+    "sounds":[{ "name": "re8joymod:entity/rosemary/ambient2", "stream":true }]
+  },
+  "entity.rosemary.hurt":{
+    "category":"entity",
+    "subtitle" :"entity.rosemary.hurt.sub",
+    "sounds":[{ "name": "re8joymod:entity/rosemary/hurt", "stream":true }]
+  },
+  "entity.rosemary.death1":{
+    "category":"entity",
+    "subtitle" :"entity.rosemary.death1.sub",
+    "sounds":[{ "name": "re8joymod:entity/rosemary/death1", "stream":true }]
+  },
+  "entity.rosemary.death2":{
+    "category":"entity",
+    "subtitle" :"entity.rosemary.death2.sub",
+    "sounds":[{ "name": "re8joymod:entity/rosemary/death2", "stream":true }]
+  },
+  
+  "entity.ada.ambient1": {
+    "category": "entity",
+    "subtitle": "entity.ada.ambient1.sub",
+    "sounds": [
+      {
+        "name": "re8joymod:entity/ada/ambient1",
+        "stream": true
+      }
+    ]
+  },
+  "entity.ada.ambient2": {
+    "category": "entity",
+    "subtitle": "entity.ada.ambient2.sub",
+    "sounds": [
+      {
+        "name": "re8joymod:entity/ada/ambient2",
+        "stream": true
+      }
+    ]
+  },
+  "entity.ada.ambient3": {
+    "category": "entity",
+    "subtitle": "entity.ada.ambient3.sub",
+    "sounds": [
+      {
+        "name": "re8joymod:entity/ada/ambient3",
+        "stream": true
+      }
+    ]
+  },
+  "entity.ada.death": {
+    "category": "entity",
+    "subtitle": "entity.ada.death.sub",
+    "sounds": [
+      {
+        "name": "re8joymod:entity/ada/death",
+        "stream": true
+      }
+    ]
+  },
+  "entity.ada.ada4": {
+    "category": "entity",
+    "subtitle": "entity.ada.ada4.sub",
+    "sounds": [
+      {
+        "name": "re8joymod:entity/ada/ada4",
+        "stream": true
+      }
+    ]
+  },
+  "entity.ada.ada4d": {
+    "category": "entity",
+    "subtitle": "entity.ada.ada4d.sub",
+    "sounds": [
+      {
+        "name": "re8joymod:entity/ada/ada4d",
+        "stream": true
+      }
+    ]
+  },
+  "entity.ada.ada4d2": {
+    "category": "entity",
+    "subtitle": "entity.ada.ada4d2.sub",
+    "sounds": [
+      {
+        "name": "re8joymod:entity/ada/ada4d2",
+        "stream": true
+      }
+    ]
+  },
+  "entity.ada.ada4leon": {
+    "category": "entity",
+    "subtitle": "entity.ada.ada4leon.sub",
+    "sounds": [
+      {
+        "name": "re8joymod:entity/ada/ada4leon",
+        "stream": true
+      }
+    ]
+  },
+  "entity.chief.chiefambient": {
+    "category": "entity",
+    "subtitle": "entity.chief.ambient1.sub",
+    "sounds": [
+      {
+        "name": "re8joymod:entity/chief/ambient1",
+        "stream": true
+      }
+    ]
+  },
+  "entity.chief.ambient2": {
+    "category": "entity",
+    "subtitle": "entity.chief.ambient2.sub",
+    "sounds": [
+      {
+        "name": "re8joymod:entity/chief/ambient2",
+        "stream": true
+      }
+    ]
+  },
+  "entity.chief.death": {
+    "category": "entity",
+    "subtitle": "entity.chief.death.sub",
+    "sounds": [
+      {
+        "name": "re8joymod:entity/chief/death",
+        "stream": true
+      }
+    ]
+  },
+
+  "entity.leon.ambient1": {
+    "category": "entity",
+    "subtitle": "entity.leon.ambient1.sub",
+    "sounds": [
+      {
+        "name": "re8joymod:entity/leon/ambient1",
+        "stream": true
+      }
+    ]
+  },
+  "entity.leon.ambient2": {
+    "category": "entity",
+    "subtitle": "entity.leon.ambient2.sub",
+    "sounds": [
+      {
+        "name": "re8joymod:entity/leon/ambient2",
+        "stream": true
+      }
+    ]
+  },
+  "entity.leon.hurt": {
+    "category": "entity",
+    "subtitle": "entity.leon.hurt.sub",
+    "sounds": [
+      {
+        "name": "re8joymod:entity/leon/hurt",
+        "stream": true
+      }
+    ]
+  },
+  "entity.leon.leonada": {
+    "category": "entity",
+    "subtitle": "entity.leon.leonada.sub",
+    "sounds": [
+      {
+        "name": "re8joymod:entity/leon/leonada",
+        "stream": true
+      }
+    ]
+  },
+  "entity.salazar.ambient1": {
+    "category": "entity",
+    "subtitle": "entity.salazar.ambient1.sub",
+    "sounds": [
+      {
+        "name": "re8joymod:entity/salazar/ambient1",
+        "stream": true
+      }
+    ]
+  },
+  "entity.salazar.ambient2": {
+    "category": "entity",
+    "subtitle": "entity.salazar.ambient2.sub",
+    "sounds": [
+      {
+        "name": "re8joymod:entity/salazar/ambient2",
+        "stream": true
+      }
+    ]
+  },
+  "entity.salazar.ambient3": {
+    "category": "entity",
+    "subtitle": "entity.salazar.ambient3.sub",
+    "sounds": [
+      {
+        "name": "re8joymod:entity/salazar/ambient3",
+        "stream": true
+      }
+    ]
+  },
+
+  "entity.ganado.ambient1": {
+    "category": "entity",
+    "subtitle": "entity.ganado.ambient1.sub",
+    "sounds": [
+      {
+        "name": "re8joymod:entity/ganado/ambient1",
+        "stream": true
+      }
+    ]
+  },
+  "entity.ganado.ambient2": {
+    "category": "entity",
+    "subtitle": "entity.ganado.ambient2.sub",
+    "sounds": [
+      {
+        "name": "re8joymod:entity/ganado/ambient2",
+        "stream": true
+      }
+    ]
+  },
+  "entity.zealot.ambient1": {
+    "category": "entity",
+    "subtitle": "entity.zealot.ambient1.sub",
+    "sounds": [
+      {
+        "name": "re8joymod:entity/zealot/ambient1",
+        "stream": true
+      }
+    ]
+  },
+  "entity.zealot.ambient2": {
+    "category": "entity",
+    "subtitle": "entity.zealot.ambient2.sub",
+    "sounds": [
+      {
+        "name": "re8joymod:entity/zealot/ambient2",
+        "stream": true
+      }
+    ]
+  },
+  "entity.zealot.death": {
+    "category": "entity",
+    "subtitle": "entity.zealot.death.sub",
+    "sounds": [
+      {
+        "name": "re8joymod:entity/zealot/death",
+        "stream": true
+      }
+    ]
+  },
+
+  "entity.krauser.ambient11": {
+    "category": "entity",
+    "subtitle": "entity.krauser.ambient11.sub",
+    "sounds": [
+      {
+        "name": "re8joymod:entity/krauser/ambient11",
+        "stream": true
+      }
+    ]
+  },
+  "entity.krauser.ambient12": {
+    "category": "entity",
+    "subtitle": "entity.krauser.ambient12.sub",
+    "sounds": [
+      {
+        "name": "re8joymod:entity/krauser/ambient12",
+        "stream": true
+      }
+    ]
+  },
+  "entity.krauser.ambient21": {
+    "category": "entity",
+    "subtitle": "entity.krauser.ambient21.sub",
+    "sounds": [
+      {
+        "name": "re8joymod:entity/krauser/ambient21",
+        "stream": true
+      }
+    ]
+  },
+  "entity.krauser.ambient22": {
+    "category": "entity",
+    "subtitle": "entity.krauser.ambient22.sub",
+    "sounds": [
+      {
+        "name": "re8joymod:entity/krauser/ambient22",
+        "stream": true
+      }
+    ]
+  },
+  "entity.krauser.death": {
+    "category": "entity",
+    "subtitle": "entity.krauser.death.sub",
+    "sounds": [
+      {
+        "name": "re8joymod:entity/krauser/death",
+        "stream": true
+      }
+    ]
+  },
+  "entity.krauser.hurt": {
+    "category": "entity",
+    "subtitle": "entity.krauser.hurt.sub",
+    "sounds": [
+      {
+        "name": "re8joymod:entity/krauser/hurt",
+        "stream": true
+      }
+    ]
+  },
+  "entity.krauser.hurt2": {
+    "category": "entity",
+    "subtitle": "entity.krauser.hurt2.sub",
+    "sounds": [
+      {
+        "name": "re8joymod:entity/krauser/hurt2",
+        "stream": true
+      }
+    ]
+  },
+
+  "entity.soldi.ambient": {
+    "category": "entity",
+    "subtitle": "entity.soldi.ambient.sub",
+    "sounds": [
+      {
+        "name": "re8joymod:entity/soldi/ambient",
+        "stream": true
+      }
+    ]
+  },
+  "entity.soldi.ambient2": {
+    "category": "entity",
+    "subtitle": "entity.soldi.ambient2.sub",
+    "sounds": [
+      {
+        "name": "re8joymod:entity/soldi/ambient2",
+        "stream": true
+      }
+    ]
+  },
+
+  "entity.saddler.ambient1": {
+    "category": "entity",
+    "subtitle": "entity.saddler.ambient1.sub",
+    "sounds": [
+      {
+        "name": "re8joymod:entity/saddler/ambient1",
+        "stream": true
+      }
+    ]
+  },
+  "entity.saddler.ambient2": {
+    "category": "entity",
+    "subtitle": "entity.saddler.ambient2.sub",
+    "sounds": [
+      {
+        "name": "re8joymod:entity/saddler/ambient2",
+        "stream": true
+      }
+    ]
+  },
+  "entity.saddler.death": {
+    "category": "entity",
+    "subtitle": "entity.saddler.death.sub",
+    "sounds": [
+      {
+        "name": "re8joymod:entity/saddler/death",
+        "stream": true
+      }
+    ]
+  },
+  "entity.ash.ambient1": {
+    "category": "entity",
+    "subtitle": "entity.ash.ambient1.sub",
+    "sounds": [
+      {
+        "name": "re8joymod:entity/ash/ambient1",
+        "stream": true
+      }
+    ]
+  },
+  "entity.ash.ambient2": {
+    "category": "entity",
+    "subtitle": "entity.ash.ambient2.sub",
+    "sounds": [
+      {
+        "name": "re8joymod:entity/ash/ambient2",
+        "stream": true
+      }
+    ]
+  },
+  "entity.ash.ambient3": {
+    "category": "entity",
+    "subtitle": "entity.ash.ambient3.sub",
+    "sounds": [
+      {
+        "name": "re8joymod:entity/ash/ambient3",
+        "stream": true
+      }
+    ]
+  },
+
+  "entity.ash.hurt1": {
+    "category": "entity",
+    "subtitle": "entity.ash.hurt1.sub",
+    "sounds": [
+      {
+        "name": "re8joymod:entity/ash/hurt1",
+        "stream": true
+      }
+    ]
+  },
+  "entity.ash.hurt2": {
+    "category": "entity",
+    "subtitle": "entity.ash.hurt2.sub",
+    "sounds": [
+      {
+        "name": "re8joymod:entity/ash/hurt2",
+        "stream": true
+      }
+    ]
+  },
+  "entity.luis.ambient1": {
+    "category": "entity",
+    "subtitle": "entity.luis.ambient1.sub",
+    "sounds": [
+      {
+        "name": "re8joymod:entity/luis/ambient1",
+        "stream": true
+      }
+    ]
+  },
+  "entity.luis.ambient2": {
+    "category": "entity",
+    "subtitle": "entity.luis.ambient2.sub",
+    "sounds": [
+      {
+        "name": "re8joymod:entity/luis/ambient2",
+        "stream": true
+      }
+    ]
+  },
+  "entity.luis.death": {
+    "category": "entity",
+    "subtitle": "entity.luis.death.sub",
+    "sounds": [
+      {
+        "name": "re8joymod:entity/luis/death",
+        "stream": true
+      }
+    ]
+  },
+
+  "entity.gm79.gm79pro":{
+    "category":"entity",
+    "subtitle" :"entity.gm79.gm79pro.sub",
+    "sounds":[{ "name": "re8joymod:entity/gm79/gm79pro", "stream":true }]
+  },
+  "entity.gm79.chainsaw":{
+    "category":"entity",
+    "subtitle" :"entity.gm79.chainsaw.sub",
+    "sounds":[{ "name": "re8joymod:entity/gm79/chainsaw", "stream":true }]
+  },
+  "entity.m1851.f2rifle":{
+    "category":"entity",
+    "subtitle" :"entity.m1851.f2rifle.sub",
+    "sounds":[{ "name": "re8joymod:entity/m1851/f2rifle", "stream":true }]
+  },
+  "entity.m1851.rifle":{
+    "category":"entity",
+    "subtitle" :"entity.m1851.rifle.sub",
+    "sounds":[{ "name": "re8joymod:entity/m1851/rifle", "stream":true }]
+  },
+  "entity.m1851.m1851":{
+    "category":"entity",
+    "subtitle" :"entity.m1851.m1851.sub",
+    "sounds":[{ "name": "re8joymod:entity/m1851/m1851", "stream":true }]
+  },
+  "entity.klee.ambient1": {
+    "category": "entity",
+    "subtitle": "entity.klee.ambient1.sub",
+    "sounds": [
+      {
+        "name": "re8joymod:entity/klee/ambient1",
+        "stream": true
+      }
+    ]
+  },
+  "entity.klee.ambient2": {
+    "category": "entity",
+    "subtitle": "entity.klee.ambient2.sub",
+    "sounds": [
+      {
+        "name": "re8joymod:entity/klee/ambient2",
+        "stream": true
+      }
+    ]
+  },
+  "entity.klee.attack": {
+    "category": "entity",
+    "subtitle": "entity.klee.attack.sub",
+    "sounds": [
+      {
+        "name": "re8joymod:entity/klee/attack",
+        "stream": true
+      }
+    ]
+  },
+  "entity.klee.attack2": {
+    "category": "entity",
+    "subtitle": "entity.klee.attack2.sub",
+    "sounds": [
+      {
+        "name": "re8joymod:entity/klee/attack2",
+        "stream": true
+      }
+    ]
+  },
+  "entity.klee.bengbeng": {
+    "category": "entity",
+    "subtitle": "entity.klee.bengbeng.sub",
+    "sounds": [
+      {
+        "name": "re8joymod:entity/klee/bengbeng",
+        "stream": true
+      }
+    ]
+  },
+  "entity.klee.bengbeng2": {
+    "category": "entity",
+    "subtitle": "entity.klee.bengbeng2.sub",
+    "sounds": [
+      {
+        "name": "re8joymod:entity/klee/bengbeng2",
+        "stream": true
+      }
+    ]
+  },
+  "entity.klee.honghong": {
+    "category": "entity",
+    "subtitle": "entity.klee.honghong.sub",
+    "sounds": [
+      {
+        "name": "re8joymod:entity/klee/honghong",
+        "stream": true
+      }
+    ]
+  },
+  "entity.klee.honghong2": {
+    "category": "entity",
+    "subtitle": "entity.klee.honghong2.sub",
+    "sounds": [
+      {
+        "name": "re8joymod:entity/klee/honghong2",
+        "stream": true
+      }
+    ]
+  },
+  "entity.klee.death1": {
+    "category": "entity",
+    "subtitle": "entity.klee.death1.sub",
+    "sounds": [
+      {
+        "name": "re8joymod:entity/klee/death1",
+        "stream": true
+      }
+    ]
+  },
+  "entity.klee.death2": {
+    "category": "entity",
+    "subtitle": "entity.klee.death2.sub",
+    "sounds": [
+      {
+        "name": "re8joymod:entity/klee/death2",
+        "stream": true
+      }
+    ]
+  },
+  "entity.klee.hurt": {
+    "category": "entity",
+    "subtitle": "entity.klee.hurt.sub",
+    "sounds": [
+      {
+        "name": "re8joymod:entity/klee/hurt",
+        "stream": true
+      }
+    ]
+  }
+}

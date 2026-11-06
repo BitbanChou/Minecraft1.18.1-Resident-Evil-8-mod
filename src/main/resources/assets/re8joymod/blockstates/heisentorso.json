@@ -1,0 +1,8 @@
+{
+"variants":{
+"facing=north":{"model":"re8joymod:block/heisentorso"},
+"facing=east":{"model":"re8joymod:block/heisentorso","y":90},
+"facing=south":{"model":"re8joymod:block/heisentorso","y":180},
+"facing=west":{"model":"re8joymod:block/heisentorso","y":270}
+}
+}

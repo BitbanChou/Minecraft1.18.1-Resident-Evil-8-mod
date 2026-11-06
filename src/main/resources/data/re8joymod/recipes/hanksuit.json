@@ -1,0 +1,28 @@
+{
+    "type": "minecraft:crafting_shaped",
+    
+    "pattern":
+    [
+        "B B",
+        "ZBZ",
+        "ZZZ"
+    ],
+    
+    "key":
+    {
+        "Z":
+        {
+            "item": "re8joymod:sleather"
+        },
+        "B":
+        {
+            "item": "minecraft:black_dye"
+        }
+    },
+    
+    "result":
+    {
+        "item": "re8joymod:hanksuit",
+        "count": 1
+    }
+}

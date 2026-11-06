@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:huge_fungus",
+  "config": {
+    "hat_state": {
+      "Properties": {
+        "axis": "y"
+      },
+      "Name": "minecraft:bubble_coral_block"
+    },
+    "decor_state": {
+      "Name": "re8joymod:mutamycete_block"
+    },
+    "planted": false,
+    "valid_base_block": {
+      "Name": "minecraft:snow_block"
+    },
+    "stem_state": {
+      "Properties": {
+        "axis": "y"
+      },
+      "Name": "minecraft:prismarine"
+    },
+    "replaceable_blocks": {
+      "type": "minecraft:true"
+    }
+  }
+}
