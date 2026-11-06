@@ -1,5 +1,5 @@
-# Minecraft1.18.1-Resident-Evil-8-mod
-Minecraft 1.18.1 Resident Evil 8 mod project
+# Minecraft1.20.1-Resident-Evil-8&4-mod
+Minecraft 1.20.1 Resident Evil 8&4 mod project
 
 ### You should open this project in eclipse.
-### Your Java version should be Java17.
+### Your Java version should be Java21.
