@@ -2,6 +2,7 @@ package com.joy187.re8joymod.entity;
 
 
 import com.joy187.re8joymod.init.EntityInit;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -92,7 +93,45 @@ public class EntityFly extends Vex implements GeoEntity {
         fly.dimiSwarm = true;
         fly.setTarget(target);
         fly.setNoGravity(true);
+        // Invulnerable so killing the fly cannot soft-lock Lady D out of her body.
+        fly.setInvulnerable(true);
         return fly;
+    }
+
+    private void restoreDimiIfNeeded() {
+        if (!this.dimiSwarm || this.level().isClientSide) {
+            return;
+        }
+        // Clear first so discard()/remove() re-entry cannot recurse.
+        this.dimiSwarm = false;
+        if (this.owner instanceof EntityRe8Dimi dimi && dimi.isInFlyForm()) {
+            dimi.exitFlyForm(this.getX(), this.getY(), this.getZ());
+        }
+    }
+
+    /** Used by Lady D restore so discard() does not try to restore again. */
+    void clearDimiSwarmFlag() {
+        this.dimiSwarm = false;
+    }
+
+    @Override
+    public boolean hurt(DamageSource source, float amount) {
+        if (this.dimiSwarm) {
+            return false;
+        }
+        return super.hurt(source, amount);
+    }
+
+    @Override
+    public void die(DamageSource source) {
+        this.restoreDimiIfNeeded();
+        super.die(source);
+    }
+
+    @Override
+    public void remove(RemovalReason reason) {
+        this.restoreDimiIfNeeded();
+        super.remove(reason);
     }
 
     public void setLifetimeTicks(int ticks) {
@@ -145,8 +184,8 @@ public class EntityFly extends Vex implements GeoEntity {
                 }
             }
             if (this.lifetime <= 0) {
-                if (this.dimiSwarm && this.owner instanceof EntityRe8Dimi dimi) {
-                    dimi.exitFlyForm(this.getX(), this.getY(), this.getZ());
+                if (this.dimiSwarm) {
+                    this.restoreDimiIfNeeded();
                 } else if (this.owner != null) {
                     LivingEntity convertedEntity = null;
                     if (this.owner instanceof EntityDaniela) convertedEntity = this.convertTo(EntityInit.BELA.get(), false);
