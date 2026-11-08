@@ -83,14 +83,46 @@ public class EntityDimi2 extends Monster implements GeoEntity {
     public static final int STATE_DIVE = 5;
     public static final int STATE_FLYUP = 6;
 
+    /** Surface targets only — never chase fish / submerged mobs into drowning. */
     private static final Predicate<LivingEntity> LIVING_ENTITY_SELECTOR =
-            e -> e.getMobType() != MobType.UNDEAD && e.attackable();
+            e -> e.getMobType() != MobType.UNDEAD
+                    && e.getMobType() != MobType.WATER
+                    && e.attackable()
+                    && isSurfaceTarget(e);
+
+    private static final Predicate<LivingEntity> PLAYER_SURFACE_SELECTOR =
+            e -> e instanceof Player && isSurfaceTarget(e);
+
+    private static boolean isSurfaceTarget(LivingEntity e) {
+        // Eyes under water / fully submerged → ignore.
+        if (e.isUnderWater()) {
+            return false;
+        }
+        // Body deep in fluid with no air above feet → treat as underwater prey.
+        if (e.isInWaterOrBubble() && !e.level().getFluidState(e.blockPosition().above(2)).isEmpty()) {
+            return false;
+        }
+        return true;
+    }
+
+    private static boolean isBreakableIce(BlockState state) {
+        return state.is(Blocks.ICE)
+                || state.is(Blocks.PACKED_ICE)
+                || state.is(Blocks.BLUE_ICE)
+                || state.is(Blocks.FROSTED_ICE);
+    }
 
     public EntityDimi2(EntityType<? extends Monster> type, Level level) {
         super(type, level);
         this.xpReward = 70;
         this.moveControl = new FlyingMoveControl(this, 18, true);
         this.setNoGravity(true);
+    }
+
+    @Override
+    public boolean canBreatheUnderwater() {
+        // Safety net if she still dips into water while escaping.
+        return true;
     }
 
     public static AttributeSupplier.Builder prepareAttributes() {
@@ -126,9 +158,9 @@ public class EntityDimi2 extends Monster implements GeoEntity {
         this.goalSelector.addGoal(7, new LookAtPlayerGoal(this, Player.class, 16.0F));
         this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
 
-        // mustSee=false so high-altitude Dimi still locks ground players.
+        // mustSee=false so high-altitude Dimi still locks ground players; skip submerged.
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
-        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, 10, false, false, null));
+        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, 10, false, false, PLAYER_SURFACE_SELECTOR));
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, LivingEntity.class, 10, false, false, LIVING_ENTITY_SELECTOR));
     }
 
@@ -194,9 +226,54 @@ public class EntityDimi2 extends Monster implements GeoEntity {
     public void aiStep() {
         super.aiStep();
         this.fallDistance = 0.0F;
-        // Soft hover so she never sinks while idle.
-        if (this.getCombatState() == STATE_IDLE && this.getDeltaMovement().y < -0.08D) {
+        this.setAirSupply(this.getMaxAirSupply());
+
+        // Drop targets that went underwater so she does not dive-chase into lakes.
+        LivingEntity cur = this.getTarget();
+        if (cur != null && !isSurfaceTarget(cur)) {
+            this.setTarget(null);
+            if (this.getCombatState() != STATE_IDLE) {
+                this.setCombatState(STATE_IDLE);
+            }
+        }
+
+        if (this.isInWaterOrBubble()) {
+            this.escapeWater();
+        }
+
+        // Soft hover so she never sinks while idle (air only).
+        if (!this.isInWaterOrBubble()
+                && this.getCombatState() == STATE_IDLE
+                && this.getDeltaMovement().y < -0.08D) {
             this.setDeltaMovement(this.getDeltaMovement().x, -0.02D, this.getDeltaMovement().z);
+        }
+    }
+
+    /** Burst upward out of water and smash nearby ice so she cannot get sealed under. */
+    private void escapeWater() {
+        this.setNoGravity(true);
+        this.setDeltaMovement(this.getDeltaMovement().x * 0.4D, 0.85D, this.getDeltaMovement().z * 0.4D);
+        this.hasImpulse = true;
+        this.getNavigation().stop();
+        this.breakIceAround(BlockPos.containing(this.getX(), this.getY() + 1.0D, this.getZ()), 2);
+        // Also clear ice at head / above so she can exit frozen lakes.
+        this.breakIceAround(this.blockPosition().above(2), 2);
+    }
+
+    private void breakIceAround(BlockPos center, int radius) {
+        if (this.level().isClientSide) {
+            return;
+        }
+        for (int dx = -radius; dx <= radius; dx++) {
+            for (int dy = -1; dy <= radius; dy++) {
+                for (int dz = -radius; dz <= radius; dz++) {
+                    BlockPos p = center.offset(dx, dy, dz);
+                    BlockState state = this.level().getBlockState(p);
+                    if (isBreakableIce(state)) {
+                        this.level().destroyBlock(p, true, this);
+                    }
+                }
+            }
         }
     }
 
@@ -397,10 +474,19 @@ public class EntityDimi2 extends Monster implements GeoEntity {
         BlockState blockAbove = this.level().getBlockState(abovePos);
 
         if (block.getBlock() != Blocks.AIR && !block.hasBlockEntity() && !blockAbove.blocksMotion()) {
-            EntityFallingBlock fallingBlockEntity = new EntityFallingBlock(
-                    this.level(), hitX + 0.5, hitY + 1.0, hitZ + 0.5, block, 10);
-            fallingBlockEntity.push(0.0, 0.25 + this.getRandom().nextGaussian() * 0.18, 0.0);
-            this.level().addFreshEntity(fallingBlockEntity);
+            // Ice / packed ice / blue ice: actually destroy so smash opens the surface.
+            if (!this.level().isClientSide && isBreakableIce(block)) {
+                this.level().destroyBlock(pos, true, this);
+            } else {
+                EntityFallingBlock fallingBlockEntity = new EntityFallingBlock(
+                        this.level(), hitX + 0.5, hitY + 1.0, hitZ + 0.5, block, 10);
+                fallingBlockEntity.push(0.0, 0.25 + this.getRandom().nextGaussian() * 0.18, 0.0);
+                this.level().addFreshEntity(fallingBlockEntity);
+            }
+        }
+        // Also crack ice above the smash column (frozen lake lids).
+        if (!this.level().isClientSide && isBreakableIce(blockAbove)) {
+            this.level().destroyBlock(abovePos, true, this);
         }
 
         AABB selection = new AABB(px - 0.55, minY, pz - 0.55, px + 0.55, maxY, pz + 0.55);
@@ -608,7 +694,7 @@ public class EntityDimi2 extends Monster implements GeoEntity {
                 return;
             }
             Player nearest = this.mob.level().getNearestPlayer(this.mob, 48.0D);
-            if (nearest != null && !nearest.isCreative() && !nearest.isSpectator()) {
+            if (nearest != null && !nearest.isCreative() && !nearest.isSpectator() && isSurfaceTarget(nearest)) {
                 this.mob.setTarget(nearest);
                 return;
             }
