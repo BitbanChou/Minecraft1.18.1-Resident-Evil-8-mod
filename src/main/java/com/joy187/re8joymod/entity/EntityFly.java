@@ -67,6 +67,21 @@ public class EntityFly extends Vex implements GeoEntity {
         return new EntityFly(EntityInit.FLY.get(), level, owner, ownerHealth, lifetime, posX, posY, posZ);
     }
 
+    /** Dimi2 fly-breath swarm: short-lived flies that chase a target, no sister conversion. */
+    public static EntityFly createBreathSwarm(Level level, LivingEntity target, double x, double y, double z, int lifetime) {
+        EntityFly fly = new EntityFly(EntityInit.FLY.get(), level);
+        fly.moveTo(x, y, z, level.getRandom().nextFloat() * 360.0F, 0.0F);
+        fly.owner = null;
+        fly.lifetime = lifetime;
+        fly.setTarget(target);
+        fly.setNoGravity(true);
+        return fly;
+    }
+
+    public void setLifetimeTicks(int ticks) {
+        this.lifetime = ticks;
+    }
+
     // 准备生物属性
     public static AttributeSupplier.Builder prepareAttributes() {
         return Monster.createMonsterAttributes()
@@ -100,7 +115,18 @@ public class EntityFly extends Vex implements GeoEntity {
         // 检查存活时间
         if (this.lifetime > 0) {
             this.lifetime--;
-            if(this.lifetime%6==0) this.getDeltaMovement().add(0,0.1,0);
+            if (this.lifetime % 6 == 0) {
+                this.setDeltaMovement(this.getDeltaMovement().add(0.0, 0.08, 0.0));
+            }
+            // Home toward current target so breath swarm actually travels.
+            LivingEntity chase = this.getTarget();
+            if (chase != null && chase.isAlive()) {
+                Vec3 to = chase.position().add(0.0, chase.getBbHeight() * 0.4, 0.0).subtract(this.position());
+                if (to.lengthSqr() > 0.01) {
+                    Vec3 n = to.normalize().scale(0.45);
+                    this.setDeltaMovement(this.getDeltaMovement().scale(0.6).add(n));
+                }
+            }
             if (this.lifetime <= 0) {
                 // 存活时间结束，转化为 owner 并恢复血量
                 if (this.owner != null) {
