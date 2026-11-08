@@ -41,11 +41,10 @@ public class RenderRe8Dimi extends GeoEntityRenderer<EntityRe8Dimi> {
 
     @Override
     public void render(EntityRe8Dimi animatable,float entityYaw, float partialTick, PoseStack stack, MultiBufferSource bufferSource, int packedLight) {
-//        if(animatable.isBaby()) {
-//            stack.scale(0.4F, 0.4F, 0.4F);
-//        } else {
-//            stack.scale(0.8F, 0.8F, 0.8F);
-//        }
+        // Fully hide Lady D while she is in fly form — only the Fly entity should show.
+        if (animatable.isInFlyForm() || animatable.isInvisible()) {
+            return;
+        }
     	stack.scale(1.2F, 1.2F, 1.2F);
 
         this.animatable = animatable;
