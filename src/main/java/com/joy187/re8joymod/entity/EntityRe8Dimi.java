@@ -82,12 +82,23 @@ public class EntityRe8Dimi extends Ravager implements GeoEntity{
 
     private final ServerBossEvent bossInfo = (ServerBossEvent)(new ServerBossEvent(this.getDisplayName(), BossEvent.BossBarColor.PURPLE, BossEvent.BossBarOverlay.PROGRESS)).setDarkenScreen(true);
     private static final EntityDataAccessor<Integer> DATA_ID_INV = SynchedEntityData.defineId(EntityRe8Dimi.class, EntityDataSerializers.INT);
-	public static final EntityDataAccessor<Integer> STATE = SynchedEntityData.defineId(EntityRe8Dimi.class,
+    public static final EntityDataAccessor<Integer> STATE = SynchedEntityData.defineId(EntityRe8Dimi.class,
 			EntityDataSerializers.INT);
+    public static final int STATE_IDLE = 0;
+    public static final int STATE_ATTACK = 1;
+    public static final int STATE_ATTACK2 = 2;
+    public static final int STATE_FLY = 3;
+    private static final int FLY_DURATION = 60; // 3 seconds
     private static final Predicate<LivingEntity> LIVING_ENTITY_SELECTOR = (p_31504_) -> {
         return p_31504_.getMobType() != MobType.UNDEAD && p_31504_.attackable();
      };
     public int attr = 0,raise=0;
+    /** Completed attack/attack2 cycles toward next fly form. */
+    private int hitCount = 0;
+    /** Next fly form after this many hits (rolled 5–7). */
+    private int flyThreshold = 5;
+    @Nullable
+    private EntityFly activeFly;
 
     public EntityRe8Dimi(EntityType<? extends Ravager> type, Level worldIn) {
         super(type, worldIn);
@@ -95,6 +106,50 @@ public class EntityRe8Dimi extends Ravager implements GeoEntity{
         this.isNonBoss();
         this.isSunSensitive();
         this.setPathfindingMalus(BlockPathTypes.LAVA, 8.0F);
+        this.rollFlyThreshold();
+    }
+
+    private void rollFlyThreshold() {
+        this.flyThreshold = 5 + this.random.nextInt(3); // 5–7
+    }
+
+    public boolean isInFlyForm() {
+        return this.getAttckingState() == STATE_FLY;
+    }
+
+    /** Become a fly for 3s: hide Lady D, spawn chase fly with DoT, then restore. */
+    public void enterFlyForm(LivingEntity target) {
+        if (this.level().isClientSide || this.isInFlyForm() || target == null || !target.isAlive()) {
+            return;
+        }
+        this.setAttackingState(STATE_FLY);
+        this.setInvisible(true);
+        this.setInvulnerable(true);
+        this.setNoGravity(true);
+        this.setDeltaMovement(Vec3.ZERO);
+        this.getNavigation().stop();
+        this.ejectPassengers();
+        EntityFly fly = EntityFly.createDimiSwarm(this.level(), this, target, FLY_DURATION);
+        this.level().addFreshEntity(fly);
+        this.activeFly = fly;
+        this.playSound(SoundEvents.BEE_LOOP, 1.4F, 0.7F);
+        this.hitCount = 0;
+        this.rollFlyThreshold();
+    }
+
+    /** Called by EntityFly when the 3s swarm ends. */
+    public void exitFlyForm(double x, double y, double z) {
+        if (this.level().isClientSide) {
+            return;
+        }
+        this.activeFly = null;
+        this.moveTo(x, y, z);
+        this.setInvisible(false);
+        this.setInvulnerable(false);
+        this.setNoGravity(false);
+        this.setAttackingState(STATE_IDLE);
+        this.setDeltaMovement(Vec3.ZERO);
+        this.playSound(SoundEvents.ENDERMAN_TELEPORT, 1.0F, 1.2F);
     }
 
    
@@ -251,12 +306,20 @@ public class EntityRe8Dimi extends Ravager implements GeoEntity{
 	                this.heal(1.5F*ran.nextFloat());
 	        }
 	
-	        if(this.getHealth() >= 0.1F && this.getHealth()<=10.0F)
-	        {
-	            this.convertTo(EntityInit.DIMI2.get(),true);
-	        }
-	
-	        this.bossInfo.setProgress(this.getHealth() / this.getMaxHealth());        	
+        if (!this.isInFlyForm() && this.getHealth() >= 0.1F && this.getHealth() <= 10.0F) {
+            this.convertTo(EntityInit.DIMI2.get(), true);
+        }
+
+        // Keep boss bar / target while hidden as fly; bail if fly was removed early.
+        if (this.isInFlyForm()) {
+            if (this.activeFly == null || !this.activeFly.isAlive()) {
+                this.exitFlyForm(this.getX(), this.getY(), this.getZ());
+            } else if (this.getTarget() != null) {
+                this.activeFly.setTarget(this.getTarget());
+            }
+        }
+
+        this.bossInfo.setProgress(this.getHealth() / this.getMaxHealth());
         }
 
     //}
@@ -284,31 +347,36 @@ public class EntityRe8Dimi extends Ravager implements GeoEntity{
     }
 
     private <E extends GeoAnimatable> PlayState predicate(AnimationState<E> event) {
+        if (this.isInFlyForm() || this.isInvisible()) {
+            return PlayState.STOP;
+        }
         if (event.isMoving()) {
             event.setAndContinue(RawAnimation.begin().thenPlay("animation.dimi.walk"));
             return PlayState.CONTINUE;
         }
         Random ran = new Random();
         int co = ran.nextInt(30);
-        if(co==1) {
+        if (co == 1) {
         	event.setAndContinue(RawAnimation.begin().thenPlay("animation.dimi.idle2"));
             return PlayState.CONTINUE;
         }
-        
         event.setAndContinue(RawAnimation.begin().thenPlay("animation.dimi.idle"));
         return PlayState.CONTINUE;
     }
     
 	private <E extends GeoAnimatable> PlayState predicate1(AnimationState<E> event) {
-		if (this.entityData.get(STATE) == 1 && !(this.dead || this.getHealth() < 0.01 || this.isDeadOrDying())) {
+		if (this.dead || this.getHealth() < 0.01 || this.isDeadOrDying() || this.isInFlyForm()) {
+			return PlayState.STOP;
+		}
+		if (this.entityData.get(STATE) == STATE_ATTACK) {
 			event.setAndContinue(RawAnimation.begin().thenPlay("animation.dimi.attack"));
 			return PlayState.CONTINUE;
 		}
-		if (this.entityData.get(STATE) == 2 && !(this.dead || this.getHealth() < 0.01 || this.isDeadOrDying())) {
+		if (this.entityData.get(STATE) == STATE_ATTACK2) {
 			event.setAndContinue(RawAnimation.begin().thenPlay("animation.dimi.attack2"));
 			return PlayState.CONTINUE;
 		}
-		return PlayState.CONTINUE;
+		return PlayState.STOP;
 	}
 	
     @Override
@@ -347,7 +415,11 @@ public class EntityRe8Dimi extends Ravager implements GeoEntity{
         }
 
         public boolean canUse() {
-             return this.parentEntity.getTarget() != null;
+             return this.parentEntity.getTarget() != null && !this.parentEntity.isInFlyForm();
+        }
+
+        public boolean canContinueToUse() {
+             return this.canUse();
         }
 
         public void start() {
@@ -359,50 +431,39 @@ public class EntityRe8Dimi extends Ravager implements GeoEntity{
         public void stop() {
              super.stop();
              this.parentEntity.setAggressive(false);
-             this.parentEntity.setAttackingState(0);
+             if (!this.parentEntity.isInFlyForm()) {
+                 this.parentEntity.setAttackingState(STATE_IDLE);
+             }
              this.attackTimer = -1;
         }
 
         public void tick() {
              LivingEntity livingentity = this.parentEntity.getTarget();
-             if (livingentity!=null && this.parentEntity.hasLineOfSight(livingentity)) {
-                  Level world = this.parentEntity.level();
+             if (livingentity != null && this.parentEntity.hasLineOfSight(livingentity)) {
                   ++this.attackTimer;
-                  this.parentEntity.attr=attackTimer;
-                  Random rand = new Random();
-                  Vec3 vector3d = this.parentEntity.getViewVector(1.0F);
-                  double d0 = Math.min(livingentity.getY(), livingentity.getY());
-                  double d1 = Math.max(livingentity.getY(), livingentity.getY()) + 1.0D;
-                  double d2 = livingentity.getX() - (this.parentEntity.getX() + vector3d.x * 2.0D);
-                  double d3 = livingentity.getY(0.5D) - (0.5D + this.parentEntity.getY(0.5D));
-                  double d4 = livingentity.getZ() - (this.parentEntity.getZ() + vector3d.z * 2.0D);
-                  float f = (float) Mth.atan2(livingentity.getZ() - parentEntity.getZ(),
-                          livingentity.getX() - parentEntity.getX());
-
+                  this.parentEntity.attr = attackTimer;
 
                   if (this.attackTimer == 10) {
-                      if((this.parentEntity.getHealth() > 40 && this.parentEntity.getHealth()<55) ||
-                              (this.parentEntity.getHealth() > 105 && this.parentEntity.getHealth()<120) ||
-                              (this.parentEntity.getHealth() > 75 && this.parentEntity.getHealth()<90) ||
-                              (this.parentEntity.getHealth() > 60 && this.parentEntity.getHealth()<70) ||
-                              (this.parentEntity.getHealth()> 20 && this.parentEntity.getHealth()<35)){
-                          this.parentEntity.setAttackingState(1);
+                      if ((this.parentEntity.getHealth() > 40 && this.parentEntity.getHealth() < 55) ||
+                              (this.parentEntity.getHealth() > 105 && this.parentEntity.getHealth() < 120) ||
+                              (this.parentEntity.getHealth() > 75 && this.parentEntity.getHealth() < 90) ||
+                              (this.parentEntity.getHealth() > 60 && this.parentEntity.getHealth() < 70) ||
+                              (this.parentEntity.getHealth() > 20 && this.parentEntity.getHealth() < 35)) {
+                          this.parentEntity.setAttackingState(STATE_ATTACK);
                           this.parentEntity.getNavigation().moveTo(livingentity, 0.8D);
                           if (!livingentity.hasPassenger(this.parentEntity) && !(livingentity instanceof EnderDragon)
-                                  && livingentity.getBbWidth() < 1.81F){
+                                  && livingentity.getBbWidth() < 1.81F) {
                               livingentity.stopRiding();
                               livingentity.startRiding(this.parentEntity, true);
                           }
-                      }
-                      else{
+                      } else {
                           this.parentEntity.getNavigation().stop();
-                          this.parentEntity.setAttackingState(2);
+                          this.parentEntity.setAttackingState(STATE_ATTACK2);
                       }
                   }
 
-                  if(this.attackTimer==20 && this.parentEntity.getAttckingState()==2){
-                      for(int l = 1; l < 20; l++)
-                      {
+                  if (this.attackTimer == 20 && this.parentEntity.getAttckingState() == STATE_ATTACK2) {
+                      for (int l = 1; l < 20; l++) {
                           this.parentEntity.blockSmashAttack(l, 3F, 1.5F, 150, 1.5F, 0.15F, 1.0F);
                           this.parentEntity.blockSmashAttack(l, 3F, -1.5F, 150, 1.5F, 0.2F, 1.0F);
                           this.parentEntity.blockSmashAttack(l, 3F, 2.5F, 150, 1.5F, 0.15F, 1.0F);
@@ -412,41 +473,29 @@ public class EntityRe8Dimi extends Ravager implements GeoEntity{
                           this.parentEntity.blockSmashAttack(l, 3F, 4.5F, 150, 1.5F, 0.15F, 1.0F);
                           this.parentEntity.blockSmashAttack(l, 3F, -4.5F, 150, 1.5F, 0.2F, 1.0F);
                       }
-
                   }
 
-                 if(this.attackTimer>20 && this.attackTimer<24 && this.parentEntity.getAttckingState()==2){
+                 if (this.attackTimer > 20 && this.attackTimer < 24 && this.parentEntity.getAttckingState() == STATE_ATTACK2) {
                      this.parentEntity.roar();
                  }
 
-                 if(this.attackTimer==40 && this.parentEntity.random.nextInt(100)<20){
-                    for(int i=0;i<3;i++) this.parentEntity.transformToBat(livingentity);
-                 }
-
                  if (this.attackTimer == 45) {
-                       this.parentEntity.setAttackingState(0);
+                       this.parentEntity.setAttackingState(STATE_IDLE);
                        this.parentEntity.raise++;
+                       this.parentEntity.hitCount++;
                        this.attackTimer = -5;
+                       if (this.parentEntity.hitCount >= this.parentEntity.flyThreshold) {
+                           this.parentEntity.enterFlyForm(livingentity);
+                       }
                   }
                   this.parentEntity.lookAt(livingentity, 30.0F, 30.0F);
 
-             } 
-             else if (this.attackTimer > 0) {
+             } else if (this.attackTimer > 0) {
                   --this.attackTimer;
              }
-             //System.out.println(this.parentEntity.attackAnim);
         }
 
    }
-
-    public void transformToBat(LivingEntity target) {
-        // 变身为蝙蝠的逻辑
-        //this.convertTo(EntityInit.FLY.get(),false);
-        EntityFly f = EntityFly.create(this.level(),null,10,100,this.getX(),this.getY(),this.getZ());
-        f.moveTo(this.getX(), this.getY()+0.3, this.getZ()); // 移动到当前位置
-        f.setTarget(target);
-        this.level().addFreshEntity(f);
-    }
 
     @Override
     public void positionRider(Entity passenger, MoveFunction moveFunction) {
@@ -493,9 +542,12 @@ public class EntityRe8Dimi extends Ravager implements GeoEntity{
                     this.disableShield((LivingEntity)entity, shieldbreakticks);
                 }
                 else{
-                    boolean flag = ((LivingEntity)entity).hurt(damageSources().mobAttack(this), (float)(this.getAttributeValue(Attributes.ATTACK_DAMAGE) * (double)damage + (double)(((LivingEntity)entity).getMaxHealth() * hpdamage)));
-                    if(flag)
-                        ((LivingEntity)entity).setDeltaMovement(((LivingEntity)entity).getDeltaMovement().add(0.0, airborne*0.2, 0.0));
+                boolean flag = ((LivingEntity)entity).hurt(damageSources().mobAttack(this), (float)(this.getAttributeValue(Attributes.ATTACK_DAMAGE) * (double)damage + (double)(((LivingEntity)entity).getMaxHealth() * hpdamage)));
+                if (flag) {
+                    LivingEntity hit = (LivingEntity) entity;
+                    hit.setDeltaMovement(hit.getDeltaMovement().add(0.0, airborne * 0.35, 0.0));
+                    hit.knockback(1.35F + airborne * 0.25F, this.getX() - hit.getX(), this.getZ() - hit.getZ());
+                }
                 }
 
             }
