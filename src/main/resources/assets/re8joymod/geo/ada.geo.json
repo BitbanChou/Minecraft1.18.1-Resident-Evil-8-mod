@@ -45,12 +45,6 @@
 					]
 				},
 				{
-					"name": "leftfront",
-					"parent": "LeftArm",
-					"pivot": [6, 18, -1],
-					"rotation": [-27.5, 0, 0]
-				},
-				{
 					"name": "RightArm",
 					"parent": "rose",
 					"pivot": [-5, 22, 0],
