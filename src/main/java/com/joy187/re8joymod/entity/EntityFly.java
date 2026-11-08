@@ -40,12 +40,15 @@ public class EntityFly extends Vex implements GeoEntity {
     private int lifetime;
     double X,Y,Z; // 存活时间（以 ticks 为单位）
     private float ownerHealth; // 所有者的初始血量
+    /** Lady D phase: chase target, DoT, then return control to EntityRe8Dimi. */
+    private boolean dimiSwarm;
 
 
     public EntityFly(EntityType<? extends Vex> type, Level worldIn) {
         super(type, worldIn);
         this.xpReward = 20;
         this.lifetime=100;
+        this.dimiSwarm = false;
     }
 
     // 自定义构造函数，传入 owner、血量和存活时间
@@ -73,6 +76,20 @@ public class EntityFly extends Vex implements GeoEntity {
         fly.moveTo(x, y, z, level.getRandom().nextFloat() * 360.0F, 0.0F);
         fly.owner = null;
         fly.lifetime = lifetime;
+        fly.dimiSwarm = false;
+        fly.setTarget(target);
+        fly.setNoGravity(true);
+        return fly;
+    }
+
+    /** Re8Dimi fly form: one fly for ~3s, DoT on target, then restore Lady D. */
+    public static EntityFly createDimiSwarm(Level level, EntityRe8Dimi dimi, LivingEntity target, int lifetime) {
+        EntityFly fly = new EntityFly(EntityInit.FLY.get(), level);
+        fly.moveTo(dimi.getX(), dimi.getY() + 1.2D, dimi.getZ(), dimi.getYRot(), 0.0F);
+        fly.owner = dimi;
+        fly.ownerHealth = dimi.getHealth();
+        fly.lifetime = lifetime;
+        fly.dimiSwarm = true;
         fly.setTarget(target);
         fly.setNoGravity(true);
         return fly;
@@ -128,33 +145,44 @@ public class EntityFly extends Vex implements GeoEntity {
                 }
             }
             if (this.lifetime <= 0) {
-                // 存活时间结束，转化为 owner 并恢复血量
-                if (this.owner != null) {
-//                    this.owner.setHealth(this.ownerHealth); // 恢复 owner 的血量
-//                    this.owner.teleportTo(this.getX(), this.getY(), this.getZ()); // 将 owner 传送到当前位置
-//                    this.convertTo(this.owner.getType(),false);
+                if (this.dimiSwarm && this.owner instanceof EntityRe8Dimi dimi) {
+                    dimi.exitFlyForm(this.getX(), this.getY(), this.getZ());
+                } else if (this.owner != null) {
                     LivingEntity convertedEntity = null;
-                    if(this.owner instanceof EntityDaniela) convertedEntity = this.convertTo(EntityInit.BELA.get(), false);
-                    else if(this.owner instanceof EntityCassandra)  convertedEntity = this.convertTo(EntityInit.CASSANDRA.get(), false);
-                    else if(this.owner instanceof EntityBela)  convertedEntity = this.convertTo(EntityInit.DANIELA.get(), false);
+                    if (this.owner instanceof EntityDaniela) convertedEntity = this.convertTo(EntityInit.BELA.get(), false);
+                    else if (this.owner instanceof EntityCassandra) convertedEntity = this.convertTo(EntityInit.CASSANDRA.get(), false);
+                    else if (this.owner instanceof EntityBela) convertedEntity = this.convertTo(EntityInit.DANIELA.get(), false);
                     if (convertedEntity != null) {
-                        convertedEntity.setHealth(this.ownerHealth); // 恢复 owner 的血量
-                        convertedEntity.moveTo(this.X, this.Y, this.Z); // 移动到当前位置
+                        convertedEntity.setHealth(this.ownerHealth);
+                        convertedEntity.moveTo(this.X, this.Y, this.Z);
                         this.level().addFreshEntity(convertedEntity);
                     }
                 }
-                this.discard(); // 移除当前生物
+                this.discard();
                 return;
+            }
+
+            // Lady D swarm: continuous damage while chasing.
+            if (this.dimiSwarm && this.tickCount % 8 == 0) {
+                LivingEntity chase = this.getTarget();
+                if (chase != null && chase.isAlive() && this.distanceTo(chase) < 2.4D) {
+                    float dmg = 2.5F + chase.getMaxHealth() * 0.015F;
+                    chase.hurt(this.damageSources().mobAttack(this.owner != null ? this.owner : this), dmg);
+                }
             }
         }
 
         // 目标选择逻辑
         if (this.getTarget() == null || this.getTarget().isDeadOrDying()) {
-            for (LivingEntity livingentity : this.level().getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(30), WARLOCK_AREA)) {
-                if (livingentity != this.owner) {
-                    this.setTarget(livingentity);
-                } else {
-                    this.setTarget(null);
+            if (this.dimiSwarm && this.owner instanceof EntityRe8Dimi dimi && dimi.getTarget() != null) {
+                this.setTarget(dimi.getTarget());
+            } else {
+                for (LivingEntity livingentity : this.level().getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(30), WARLOCK_AREA)) {
+                    if (livingentity != this.owner) {
+                        this.setTarget(livingentity);
+                    } else {
+                        this.setTarget(null);
+                    }
                 }
             }
         }
