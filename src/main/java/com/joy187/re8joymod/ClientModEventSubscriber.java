@@ -152,7 +152,8 @@ public class ClientModEventSubscriber extends ModEventSubscriber{
         event.registerEntityRenderer(EntityInit.LUIS.get(), RenderLuis::new);
         event.registerEntityRenderer(EntityInit.SADDLER2.get(), RenderSaddler2::new);
         event.registerEntityRenderer(EntityInit.BRUTE.get(), RenderBrute::new);
-
+        event.registerEntityRenderer(EntityInit.CHAOS_FIREBALL.get(),
+                ctx -> new net.minecraft.client.renderer.entity.ThrownItemRenderer<>(ctx, 3.0F, true));
         event.registerEntityRenderer(EntityInit.KLEE.get(), RenderKlee::new);
         event.registerEntityRenderer(EntityInit.BOMB.get(), RenderBomb::new);
         event.registerEntityRenderer(EntityInit.JUMPBOMB.get(), RenderJumpBomb::new);
