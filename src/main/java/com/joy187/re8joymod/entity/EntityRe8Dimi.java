@@ -83,15 +83,21 @@ public class EntityRe8Dimi extends Ravager implements GeoEntity{
     private final ServerBossEvent bossInfo = (ServerBossEvent)(new ServerBossEvent(this.getDisplayName(), BossEvent.BossBarColor.PURPLE, BossEvent.BossBarOverlay.PROGRESS)).setDarkenScreen(true);
     private static final EntityDataAccessor<Integer> DATA_ID_INV = SynchedEntityData.defineId(EntityRe8Dimi.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Integer> STATE = SynchedEntityData.defineId(EntityRe8Dimi.class,
-            EntityDataSerializers.INT);
+			EntityDataSerializers.INT);
     public static final int STATE_IDLE = 0;
     public static final int STATE_ATTACK = 1;
     public static final int STATE_ATTACK2 = 2;
     public static final int STATE_FLY = 3;
     private static final int FLY_DURATION = 60; // 3 seconds
+    /** animation.dimi.attack = 1.5s → 30 ticks */
+    private static final int ATTACK1_LENGTH = 30;
+    /** animation.dimi.attack2 = 0.75s → 15 ticks */
+    private static final int ATTACK2_LENGTH = 15;
+    private static final int ATTACK_COOLDOWN_MIN = 28;
+    private static final int ATTACK_COOLDOWN_MAX = 40;
     private static final Predicate<LivingEntity> LIVING_ENTITY_SELECTOR = (p_31504_) -> {
         return p_31504_.getMobType() != MobType.UNDEAD && p_31504_.attackable();
-    };
+     };
     public int attr = 0,raise=0;
     /** Completed attack/attack2 cycles toward next fly form. */
     private int hitCount = 0;
@@ -117,7 +123,7 @@ public class EntityRe8Dimi extends Ravager implements GeoEntity{
         return this.getAttckingState() == STATE_FLY;
     }
 
-    /** Become a fly for 3s: hide Lady D, spawn chase fly with DoT, then restore. */
+    /** Become a fly for 3s: Lady D fully disappears, fly chases, then she reappears. */
     public void enterFlyForm(LivingEntity target) {
         if (this.level().isClientSide || this.isInFlyForm() || target == null || !target.isAlive()) {
             return;
@@ -126,10 +132,17 @@ public class EntityRe8Dimi extends Ravager implements GeoEntity{
         this.setInvisible(true);
         this.setInvulnerable(true);
         this.setNoGravity(true);
+        this.noPhysics = true;
         this.setDeltaMovement(Vec3.ZERO);
         this.getNavigation().stop();
         this.ejectPassengers();
+        double spawnX = this.getX();
+        double spawnY = this.getY() + 1.2D;
+        double spawnZ = this.getZ();
+        // Park body out of the way so only the fly is visible/interactable.
+        this.setPos(spawnX, this.getY() - 64.0D, spawnZ);
         EntityFly fly = EntityFly.createDimiSwarm(this.level(), this, target, FLY_DURATION);
+        fly.moveTo(spawnX, spawnY, spawnZ);
         this.level().addFreshEntity(fly);
         this.activeFly = fly;
         this.playSound(SoundEvents.BEE_LOOP, 1.4F, 0.7F);
@@ -137,47 +150,70 @@ public class EntityRe8Dimi extends Ravager implements GeoEntity{
         this.rollFlyThreshold();
     }
 
-    /** Called by EntityFly when the 3s swarm ends. */
+    /** Called by EntityFly when the 3s swarm ends — Lady D reappears at the fly. */
     public void exitFlyForm(double x, double y, double z) {
         if (this.level().isClientSide) {
             return;
         }
         this.activeFly = null;
-        this.moveTo(x, y, z);
+        this.noPhysics = false;
+        this.setNoGravity(false);
         this.setInvisible(false);
         this.setInvulnerable(false);
-        this.setNoGravity(false);
         this.setAttackingState(STATE_IDLE);
+        this.moveTo(x, Math.max(y, this.level().getMinBuildHeight() + 1), z);
         this.setDeltaMovement(Vec3.ZERO);
         this.playSound(SoundEvents.ENDERMAN_TELEPORT, 1.0F, 1.2F);
+        if (this.level() instanceof net.minecraft.server.level.ServerLevel server) {
+            server.sendParticles(ParticleTypes.SMOKE, x, y + 1.0, z, 20, 0.4, 0.6, 0.4, 0.02);
+            server.sendParticles(ParticleTypes.CLOUD, x, y + 1.0, z, 12, 0.3, 0.4, 0.3, 0.01);
+        }
     }
 
+    @Override
+    public boolean isPickable() {
+        return !this.isInFlyForm() && super.isPickable();
+    }
 
+    @Override
+    public boolean isPushable() {
+        return !this.isInFlyForm() && super.isPushable();
+    }
+
+    @Override
+    public boolean canBeCollidedWith() {
+        return !this.isInFlyForm() && super.canBeCollidedWith();
+    }
+
+   
     protected boolean isSunSensitive() {
         return true;
     }
-
+    
     public void aiStep() {
+        if (this.isInFlyForm()) {
+            // Stay parked while the fly is out; don't run normal ravager AI particles.
+            this.setDeltaMovement(Vec3.ZERO);
+            return;
+        }
         super.aiStep();
         Random ran = new Random();
         int co = ran.nextInt(4);
-        if(co==1)
-        {
-            //this.level().addParticle(ParticleTypes.ASH, this.getX(), this.getY(), this.getZ(), this.position().x, this.position().y, this.position().z);
-            for (int i = 0; i < 10; i++)
-            {
-                float deltaOmega = 1.0f * i;//ModConfig.DEBUG_CONF.HALO_OMEGA;
-                Vec3 pos = new Vec3(this.position().x + 1 * Math.sin(0 + deltaOmega),  this.position().y + 0.1f * this.random.nextFloat(), this.position().z + 1 * Math.cos(0 + deltaOmega));
-                //this.level().spawnParticle(particleTypes, pos.x, pos.y, pos.z, 0,0,0);
-                this.level().addParticle(ParticleTypes.EFFECT, pos.x, pos.y, pos.z, this.random.nextGaussian()*0.07,0.1,this.random.nextGaussian()*0.07);
+        if (co == 1) {
+            for (int i = 0; i < 10; i++) {
+                float deltaOmega = 1.0f * i;
+                Vec3 pos = new Vec3(this.position().x + 1 * Math.sin(0 + deltaOmega),
+                        this.position().y + 0.1f * this.random.nextFloat(),
+                        this.position().z + 1 * Math.cos(0 + deltaOmega));
+                this.level().addParticle(ParticleTypes.EFFECT, pos.x, pos.y, pos.z,
+                        this.random.nextGaussian() * 0.07, 0.1, this.random.nextGaussian() * 0.07);
             }
         }
 
-        if(this.attr>=15 && this.attr<=20 && this.getAttckingState()==2){
-            this.level().addParticle(ParticleTypes.SWEEP_ATTACK, this.position().x, this.position().y+1D, this.position().z, this.random.nextGaussian()*0.07,0.1,this.random.nextGaussian()*0.07);
+        if (this.attr >= 8 && this.attr <= 12 && this.getAttckingState() == STATE_ATTACK2) {
+            this.level().addParticle(ParticleTypes.SWEEP_ATTACK, this.position().x, this.position().y + 1D,
+                    this.position().z, this.random.nextGaussian() * 0.07, 0.1, this.random.nextGaussian() * 0.07);
         }
-
-
     }
 
     public static AttributeSupplier.Builder prepareAttributes() {
@@ -247,7 +283,7 @@ public class EntityRe8Dimi extends Ravager implements GeoEntity{
         return  SoundInit.ENTITY_DIMI_AMBIENT2.get();
         //return SoundEvents.ZOMBIE_AMBIENT;
     }
-    //
+//
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
         Random ran = new Random();
@@ -258,10 +294,10 @@ public class EntityRe8Dimi extends Ravager implements GeoEntity{
         }
         return SoundInit.ENTITY_DIMI_HURT2.get();
     }
-
+    
     public int getInvulnerableTicks() {
         return 200;
-    }
+     }
 
     protected float getStandingEyeHeight(Pose p_213348_1_, EntityDimensions p_213348_2_) {
         return 3F;
@@ -270,7 +306,7 @@ public class EntityRe8Dimi extends Ravager implements GeoEntity{
     public void setInvulnerableTicks(int p_82215_1_) {
         this.entityData.set(DATA_ID_INV, p_82215_1_);
     }
-
+     
     public void readAdditionalSaveData(CompoundTag p_70037_1_) {
         super.readAdditionalSaveData(p_70037_1_);
         this.setInvulnerableTicks(p_70037_1_.getInt("Invul"));
@@ -286,26 +322,26 @@ public class EntityRe8Dimi extends Ravager implements GeoEntity{
     }
 
     protected void customServerAiStep() {
-
-        super.customServerAiStep();
-
-        if(this.isSunSensitive()){
-            this.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 20*10,1,true,true));
-        }
-
-        Random ran = new Random();
-        if(this.getHealth() >= 20.0F && this.getHealth()<=30.0F)
-        {
-            for(int i=0;i<5;i++)
-                this.heal(1.0F*ran.nextFloat());
-        }
-
-        if(this.getHealth() >= 60.0F && this.getHealth()<=65.0F)
-        {
-            for(int i=0;i<4;i++)
-                this.heal(1.5F*ran.nextFloat());
-        }
-
+    	
+	        super.customServerAiStep();
+	
+	        if(this.isSunSensitive()){
+	            this.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 20*10,1,true,true));
+	        }
+	
+	        Random ran = new Random();
+	        if(this.getHealth() >= 20.0F && this.getHealth()<=30.0F)
+	        {
+	            for(int i=0;i<5;i++)
+	                this.heal(1.0F*ran.nextFloat());
+	        }
+	
+	        if(this.getHealth() >= 60.0F && this.getHealth()<=65.0F)
+	        {
+	            for(int i=0;i<4;i++)
+	                this.heal(1.5F*ran.nextFloat());
+	        }
+	
         if (!this.isInFlyForm() && this.getHealth() >= 0.1F && this.getHealth() <= 10.0F) {
             this.convertTo(EntityInit.DIMI2.get(), true);
         }
@@ -313,14 +349,19 @@ public class EntityRe8Dimi extends Ravager implements GeoEntity{
         // Keep boss bar / target while hidden as fly; bail if fly was removed early.
         if (this.isInFlyForm()) {
             if (this.activeFly == null || !this.activeFly.isAlive()) {
-                this.exitFlyForm(this.getX(), this.getY(), this.getZ());
+                LivingEntity t = this.getTarget();
+                if (t != null && t.isAlive()) {
+                    this.exitFlyForm(t.getX(), t.getY(), t.getZ());
+                } else {
+                    this.exitFlyForm(this.getX(), this.getY() + 64.0D, this.getZ());
+                }
             } else if (this.getTarget() != null) {
                 this.activeFly.setTarget(this.getTarget());
             }
         }
 
         this.bossInfo.setProgress(this.getHealth() / this.getMaxHealth());
-    }
+        }
 
     //}
 
@@ -328,9 +369,9 @@ public class EntityRe8Dimi extends Ravager implements GeoEntity{
         this.setInvulnerableTicks(220);
         this.bossInfo.setProgress(0.0F);
         this.setHealth(this.getMaxHealth() / 3.0F);
-    }
+     }
 
-
+  
     public boolean isNonBoss()
     {
         return false;
@@ -357,145 +398,185 @@ public class EntityRe8Dimi extends Ravager implements GeoEntity{
         Random ran = new Random();
         int co = ran.nextInt(30);
         if (co == 1) {
-            event.setAndContinue(RawAnimation.begin().thenPlay("animation.dimi.idle2"));
+        	event.setAndContinue(RawAnimation.begin().thenPlay("animation.dimi.idle2"));
             return PlayState.CONTINUE;
         }
         event.setAndContinue(RawAnimation.begin().thenPlay("animation.dimi.idle"));
         return PlayState.CONTINUE;
     }
-
-    private <E extends GeoAnimatable> PlayState predicate1(AnimationState<E> event) {
-        if (this.dead || this.getHealth() < 0.01 || this.isDeadOrDying() || this.isInFlyForm()) {
-            return PlayState.STOP;
-        }
-        if (this.entityData.get(STATE) == STATE_ATTACK) {
-            event.setAndContinue(RawAnimation.begin().thenPlay("animation.dimi.attack"));
-            return PlayState.CONTINUE;
-        }
-        if (this.entityData.get(STATE) == STATE_ATTACK2) {
-            event.setAndContinue(RawAnimation.begin().thenPlay("animation.dimi.attack2"));
-            return PlayState.CONTINUE;
-        }
-        return PlayState.STOP;
-    }
-
+    
+	private <E extends GeoAnimatable> PlayState predicate1(AnimationState<E> event) {
+		if (this.dead || this.getHealth() < 0.01 || this.isDeadOrDying() || this.isInFlyForm()) {
+			return PlayState.STOP;
+		}
+		if (this.entityData.get(STATE) == STATE_ATTACK) {
+			event.setAndContinue(RawAnimation.begin().thenPlay("animation.dimi.attack"));
+			return PlayState.CONTINUE;
+		}
+		if (this.entityData.get(STATE) == STATE_ATTACK2) {
+			event.setAndContinue(RawAnimation.begin().thenPlay("animation.dimi.attack2"));
+			return PlayState.CONTINUE;
+		}
+		return PlayState.STOP;
+	}
+	
     @Override
-    public void registerControllers(AnimatableManager.ControllerRegistrar data) {
-        data.add(new AnimationController(this, "controller",
-                0, this::predicate));
-        data.add(new AnimationController(this, "controller1",
-                0, this::predicate1));
-    }
+	public void registerControllers(AnimatableManager.ControllerRegistrar data) {
+        data.add(new AnimationController<>(this, "controller", 2, this::predicate));
+        data.add(new AnimationController<>(this, "controller1", 1, this::predicate1));
+	}
 
-    @Override
+	@Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return this.factory;
     }
+	
+	public int getAttckingState() {
+		return this.entityData.get(STATE);
+	}
+	
+	public void setAttackingState(int time) {
+		this.entityData.set(STATE, time);
+	}
 
-    public int getAttckingState() {
-        return this.entityData.get(STATE);
-    }
-
-    public void setAttackingState(int time) {
-        this.entityData.set(STATE, time);
-    }
-
-    @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(STATE, 0);
-    }
-
+	@Override
+	protected void defineSynchedData() {
+		super.defineSynchedData();
+		this.entityData.define(STATE, 0);
+	}
+	
     static class AttackGoal extends Goal {
         private final EntityRe8Dimi parentEntity;
-        protected int attackTimer = 0;
+        /** Ticks since current skill started (1 = first active tick). 0 = not in skill. */
+        private int skillTimer = 0;
+        private int cooldown = 16;
+        private int chosen = STATE_IDLE;
 
         public AttackGoal(EntityRe8Dimi mob) {
-            this.parentEntity = mob;
+             this.parentEntity = mob;
         }
 
         public boolean canUse() {
-            return this.parentEntity.getTarget() != null && !this.parentEntity.isInFlyForm();
+             return this.parentEntity.getTarget() != null && !this.parentEntity.isInFlyForm();
         }
 
         public boolean canContinueToUse() {
-            return this.canUse();
+             return this.canUse();
         }
 
         public void start() {
-            super.start();
-            this.parentEntity.setAggressive(true);
+             super.start();
+             this.parentEntity.setAggressive(true);
+             this.cooldown = 12;
+             this.skillTimer = 0;
+             this.chosen = STATE_IDLE;
         }
 
         @Override
         public void stop() {
-            super.stop();
-            this.parentEntity.setAggressive(false);
-            if (!this.parentEntity.isInFlyForm()) {
-                this.parentEntity.setAttackingState(STATE_IDLE);
-            }
-            this.attackTimer = -1;
+             super.stop();
+             this.parentEntity.setAggressive(false);
+             if (!this.parentEntity.isInFlyForm()) {
+                 this.parentEntity.setAttackingState(STATE_IDLE);
+             }
+             this.skillTimer = 0;
+             this.chosen = STATE_IDLE;
+             this.parentEntity.attr = 0;
         }
 
         public void tick() {
-            LivingEntity livingentity = this.parentEntity.getTarget();
-            if (livingentity != null && this.parentEntity.hasLineOfSight(livingentity)) {
-                ++this.attackTimer;
-                this.parentEntity.attr = attackTimer;
+             LivingEntity livingentity = this.parentEntity.getTarget();
+             if (livingentity == null || !livingentity.isAlive()) {
+                 return;
+             }
+             this.parentEntity.lookAt(livingentity, 30.0F, 30.0F);
 
-                if (this.attackTimer == 10) {
-                    if ((this.parentEntity.getHealth() > 40 && this.parentEntity.getHealth() < 55) ||
-                            (this.parentEntity.getHealth() > 105 && this.parentEntity.getHealth() < 120) ||
-                            (this.parentEntity.getHealth() > 75 && this.parentEntity.getHealth() < 90) ||
-                            (this.parentEntity.getHealth() > 60 && this.parentEntity.getHealth() < 70) ||
-                            (this.parentEntity.getHealth() > 20 && this.parentEntity.getHealth() < 35)) {
-                        this.parentEntity.setAttackingState(STATE_ATTACK);
-                        this.parentEntity.getNavigation().moveTo(livingentity, 0.8D);
-                        if (!livingentity.hasPassenger(this.parentEntity) && !(livingentity instanceof EnderDragon)
-                                && livingentity.getBbWidth() < 1.81F) {
-                            livingentity.stopRiding();
-                            livingentity.startRiding(this.parentEntity, true);
-                        }
-                    } else {
-                        this.parentEntity.getNavigation().stop();
-                        this.parentEntity.setAttackingState(STATE_ATTACK2);
-                    }
-                }
+             if (this.cooldown > 0) {
+                 --this.cooldown;
+                 if (this.parentEntity.distanceTo(livingentity) > 3.5D) {
+                     this.parentEntity.getNavigation().moveTo(livingentity, 1.0D);
+                 }
+                 return;
+             }
 
-                if (this.attackTimer == 20 && this.parentEntity.getAttckingState() == STATE_ATTACK2) {
-                    for (int l = 1; l < 20; l++) {
-                        this.parentEntity.blockSmashAttack(l, 3F, 1.5F, 150, 1.5F, 0.15F, 1.0F);
-                        this.parentEntity.blockSmashAttack(l, 3F, -1.5F, 150, 1.5F, 0.2F, 1.0F);
-                        this.parentEntity.blockSmashAttack(l, 3F, 2.5F, 150, 1.5F, 0.15F, 1.0F);
-                        this.parentEntity.blockSmashAttack(l, 3F, -2.5F, 150, 1.5F, 0.15F, 1.0F);
-                        this.parentEntity.blockSmashAttack(l, 3F, 3.5F, 150, 1.5F, 0.2F, 1.0F);
-                        this.parentEntity.blockSmashAttack(l, 3F, -3.5F, 150, 1.5F, 0.15F, 1.0F);
-                        this.parentEntity.blockSmashAttack(l, 3F, 4.5F, 150, 1.5F, 0.15F, 1.0F);
-                        this.parentEntity.blockSmashAttack(l, 3F, -4.5F, 150, 1.5F, 0.2F, 1.0F);
-                    }
-                }
+             if (this.chosen == STATE_IDLE) {
+                 this.beginSkill(livingentity);
+                 return;
+             }
 
-                if (this.attackTimer > 20 && this.attackTimer < 24 && this.parentEntity.getAttckingState() == STATE_ATTACK2) {
-                    this.parentEntity.roar();
-                }
+             ++this.skillTimer;
+             this.parentEntity.attr = this.skillTimer;
 
-                if (this.attackTimer == 45) {
-                    this.parentEntity.setAttackingState(STATE_IDLE);
-                    this.parentEntity.raise++;
-                    this.parentEntity.hitCount++;
-                    this.attackTimer = -5;
-                    if (this.parentEntity.hitCount >= this.parentEntity.flyThreshold) {
-                        this.parentEntity.enterFlyForm(livingentity);
-                    }
-                }
-                this.parentEntity.lookAt(livingentity, 30.0F, 30.0F);
+             if (this.chosen == STATE_ATTACK) {
+                 this.tickAttack1(livingentity);
+             } else if (this.chosen == STATE_ATTACK2) {
+                 this.tickAttack2(livingentity);
+             }
+        }
 
-            } else if (this.attackTimer > 0) {
-                --this.attackTimer;
+        private void beginSkill(LivingEntity livingentity) {
+            float hp = this.parentEntity.getHealth();
+            boolean grabWindow = (hp > 40 && hp < 55) || (hp > 105 && hp < 120)
+                    || (hp > 75 && hp < 90) || (hp > 60 && hp < 70) || (hp > 20 && hp < 35);
+            if (grabWindow && this.parentEntity.distanceTo(livingentity) < 4.5D) {
+                this.chosen = STATE_ATTACK;
+            } else {
+                this.chosen = STATE_ATTACK2;
+            }
+            this.skillTimer = 0;
+            this.parentEntity.attr = 0;
+            this.parentEntity.setAttackingState(this.chosen);
+            if (this.chosen == STATE_ATTACK2) {
+                this.parentEntity.getNavigation().stop();
+            } else {
+                this.parentEntity.getNavigation().moveTo(livingentity, 0.85D);
             }
         }
 
-    }
+        private void tickAttack1(LivingEntity livingentity) {
+            // Grab early in the 1.5s anim; bite near the end (tick 25 of 30).
+            if (this.skillTimer == 6) {
+                if (!livingentity.hasPassenger(this.parentEntity) && !(livingentity instanceof EnderDragon)
+                        && livingentity.getBbWidth() < 1.81F) {
+                    livingentity.stopRiding();
+                    livingentity.startRiding(this.parentEntity, true);
+                }
+            }
+            if (this.skillTimer >= ATTACK1_LENGTH) {
+                this.finishSkill(livingentity);
+            }
+        }
+
+        private void tickAttack2(LivingEntity livingentity) {
+            // Impact ~0.5s into 0.75s anim (tick 10).
+            if (this.skillTimer == 10) {
+                for (int l = 1; l < 14; l++) {
+                    this.parentEntity.blockSmashAttack(l, 3F, 1.5F, 150, 1.5F, 0.15F, 1.0F);
+                    this.parentEntity.blockSmashAttack(l, 3F, -1.5F, 150, 1.5F, 0.2F, 1.0F);
+                    this.parentEntity.blockSmashAttack(l, 3F, 2.8F, 150, 1.5F, 0.15F, 1.0F);
+                    this.parentEntity.blockSmashAttack(l, 3F, -2.8F, 150, 1.5F, 0.15F, 1.0F);
+                }
+                this.parentEntity.roar();
+            }
+            if (this.skillTimer >= ATTACK2_LENGTH + 2) {
+                this.finishSkill(livingentity);
+            }
+        }
+
+        private void finishSkill(LivingEntity livingentity) {
+            this.parentEntity.setAttackingState(STATE_IDLE);
+            this.parentEntity.raise++;
+            this.parentEntity.hitCount++;
+            this.parentEntity.attr = 0;
+            this.chosen = STATE_IDLE;
+            this.skillTimer = 0;
+            this.cooldown = ATTACK_COOLDOWN_MIN
+                    + this.parentEntity.getRandom().nextInt(ATTACK_COOLDOWN_MAX - ATTACK_COOLDOWN_MIN + 1);
+            if (this.parentEntity.hitCount >= this.parentEntity.flyThreshold) {
+                this.parentEntity.enterFlyForm(livingentity);
+            }
+        }
+   }
 
     @Override
     public void positionRider(Entity passenger, MoveFunction moveFunction) {
@@ -514,8 +595,9 @@ public class EntityRe8Dimi extends Ravager implements GeoEntity{
             double extraZ = radius * Mth.cos(angle);
             double extraY = raiseUp;
             passenger.setPos(this.getX() + extraX, this.getY() + extraY, this.getZ() + extraZ);
+            // Bite near end of attack anim (skillTimer ~25 of 30).
             if (this.attr == 25) {
-                passenger.hurt(damageSources().mobAttack(this), ((LivingEntity)passenger).getMaxHealth()*0.25F);
+                passenger.hurt(damageSources().mobAttack(this), ((LivingEntity) passenger).getMaxHealth() * 0.25F);
                 passenger.stopRiding();
             }
         }
@@ -542,12 +624,12 @@ public class EntityRe8Dimi extends Ravager implements GeoEntity{
                     this.disableShield((LivingEntity)entity, shieldbreakticks);
                 }
                 else{
-                    boolean flag = ((LivingEntity)entity).hurt(damageSources().mobAttack(this), (float)(this.getAttributeValue(Attributes.ATTACK_DAMAGE) * (double)damage + (double)(((LivingEntity)entity).getMaxHealth() * hpdamage)));
-                    if (flag) {
-                        LivingEntity hit1 = (LivingEntity) entity;
-                        hit1.setDeltaMovement(hit1.getDeltaMovement().add(0.0, airborne * 0.35, 0.0));
-                        hit1.knockback(1.35F + airborne * 0.25F, this.getX() - hit1.getX(), this.getZ() - hit1.getZ());
-                    }
+                boolean flag = ((LivingEntity)entity).hurt(damageSources().mobAttack(this), (float)(this.getAttributeValue(Attributes.ATTACK_DAMAGE) * (double)damage + (double)(((LivingEntity)entity).getMaxHealth() * hpdamage)));
+                if (flag) {
+                    LivingEntity hit = (LivingEntity) entity;
+                    hit.setDeltaMovement(hit.getDeltaMovement().add(0.0, airborne * 0.35, 0.0));
+                    hit.knockback(1.35F + airborne * 0.25F, this.getX() - hit.getX(), this.getZ() - hit.getZ());
+                }
                 }
 
             }
