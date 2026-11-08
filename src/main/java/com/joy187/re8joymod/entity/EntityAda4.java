@@ -1,6 +1,9 @@
 package com.joy187.re8joymod.entity;
 
+import java.util.ArrayList;
 import java.util.EnumSet;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Random;
 import java.util.function.Predicate;
 
@@ -70,11 +73,20 @@ public class EntityAda4 extends EntityChris {
     private int vaultCooldown;
     private int meleeIndex;
 
-    /** Temporary gun-vault cobweb — auto-clears so Ada4 is not permanently stuck. */
-    private BlockPos tempWebPos;
-    private int tempWebTicks;
+    /** Temporary cobwebs (shoot / gun_vault) — auto-clear so nothing stays forever. */
+    private final List<TempWeb> tempWebs = new ArrayList<>();
 
     private static final Predicate<Entity> ADA_AREA = Entity::isAlive;
+
+    private static final class TempWeb {
+        final BlockPos pos;
+        int ticksLeft;
+
+        TempWeb(BlockPos pos, int ticksLeft) {
+            this.pos = pos.immutable();
+            this.ticksLeft = ticksLeft;
+        }
+    }
 
     public EntityAda4(EntityType<? extends IronGolem> type, Level worldIn) {
         super(type, worldIn);
@@ -115,12 +127,7 @@ public class EntityAda4 extends EntityChris {
         if (this.vaultCooldown > 0) {
             --this.vaultCooldown;
         }
-        if (this.tempWebTicks > 0) {
-            --this.tempWebTicks;
-            if (this.tempWebTicks <= 0) {
-                this.clearTempWeb();
-            }
-        }
+        this.tickTempWebs();
         if (this.getHealth() >= 10.0F && this.getHealth() <= 20.0F) {
             this.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 20, 1, false, true));
         } else if (this.getHealth() < 8.0F) {
@@ -134,13 +141,36 @@ public class EntityAda4 extends EntityChris {
         return false;
     }
 
-    private void clearTempWeb() {
-        if (!this.level().isClientSide && this.tempWebPos != null
-                && this.level().getBlockState(this.tempWebPos).is(Blocks.COBWEB)) {
-            this.level().setBlock(this.tempWebPos, Blocks.AIR.defaultBlockState(), 3);
+    private void tickTempWebs() {
+        if (this.level().isClientSide || this.tempWebs.isEmpty()) {
+            return;
         }
-        this.tempWebPos = null;
-        this.tempWebTicks = 0;
+        Iterator<TempWeb> it = this.tempWebs.iterator();
+        while (it.hasNext()) {
+            TempWeb web = it.next();
+            --web.ticksLeft;
+            if (web.ticksLeft <= 0) {
+                if (this.level().getBlockState(web.pos).is(Blocks.COBWEB)) {
+                    this.level().setBlock(web.pos, Blocks.AIR.defaultBlockState(), 3);
+                }
+                it.remove();
+            }
+        }
+    }
+
+    /** Place a timed cobweb; always registered for auto-removal. */
+    private void placeTempWeb(BlockPos candidate, int lifeTicks) {
+        BlockPos place = null;
+        if (this.level().getBlockState(candidate).isAir()) {
+            place = candidate.immutable();
+        } else if (this.level().getBlockState(candidate.above()).isAir()) {
+            place = candidate.above().immutable();
+        }
+        if (place == null) {
+            return;
+        }
+        this.level().setBlock(place, Blocks.COBWEB.defaultBlockState(), 3);
+        this.tempWebs.add(new TempWeb(place, lifeTicks));
     }
 
     private boolean isInFrontCone(LivingEntity entity, float halfAngleDeg) {
@@ -231,10 +261,10 @@ public class EntityAda4 extends EntityChris {
     }
 
     /**
-     * Local retreat for shoot: scan a 5×5×5 cube around Ada and pick a nearby
-     * standable block slightly away from the target (no long-range teleport).
+     * Shoot step-back: only scan adjacent 3×3×3 (radius 1), same-ish floor.
+     * Never teleport farther than ~1.25 blocks — closed rooms stay fightable.
      */
-    private BlockPos findLocalRetreat(LivingEntity target, int radius) {
+    private BlockPos findLocalRetreat(LivingEntity target) {
         BlockPos origin = this.blockPosition();
         Vec3 away = this.awayFrom(target);
         double curDist = this.distanceTo(target);
@@ -242,34 +272,28 @@ public class EntityAda4 extends EntityChris {
         BlockPos best = null;
         double bestScore = Double.NEGATIVE_INFINITY;
 
-        for (int dx = -radius; dx <= radius; dx++) {
-            for (int dy = -radius; dy <= radius; dy++) {
-                for (int dz = -radius; dz <= radius; dz++) {
+        for (int dx = -1; dx <= 1; dx++) {
+            for (int dy = -1; dy <= 1; dy++) {
+                for (int dz = -1; dz <= 1; dz++) {
                     if (dx == 0 && dy == 0 && dz == 0) {
                         continue;
                     }
+                    // Keep it tightly local: at most 1 block on each axis.
                     BlockPos feet = origin.offset(dx, dy, dz);
                     if (!this.isStandableFeet(feet)) {
                         continue;
                     }
-                    double selfDist = Math.sqrt(dx * dx + dy * dy + dz * dz);
-                    if (selfDist < 1.0D || selfDist > radius + 0.1D) {
-                        continue;
-                    }
                     Vec3 center = Vec3.atBottomCenterOf(feet);
-                    double toTarget = center.distanceTo(target.position());
-                    // Prefer a small step away, never dive closer into melee.
-                    if (toTarget + 0.35D < curDist) {
+                    if (center.distanceTo(this.position()) > 1.35D) {
                         continue;
                     }
-                    Vec3 step = center.subtract(this.position());
-                    Vec3 stepFlat = new Vec3(step.x, 0.0, step.z);
-                    double awayAlign = 0.0;
-                    if (stepFlat.lengthSqr() > 1.0E-4) {
-                        awayAlign = stepFlat.normalize().dot(away);
+                    double toTarget = center.distanceTo(target.position());
+                    if (toTarget + 0.2D < curDist) {
+                        continue;
                     }
-                    // Slight preference for away + mid distance within the cube.
-                    double score = awayAlign * 3.0 + Math.min(toTarget - curDist, 2.5) - Math.abs(dy) * 0.35;
+                    Vec3 stepFlat = new Vec3(center.x - this.getX(), 0.0, center.z - this.getZ());
+                    double awayAlign = stepFlat.lengthSqr() > 1.0E-4 ? stepFlat.normalize().dot(away) : 0.0;
+                    double score = awayAlign * 2.0 + (toTarget - curDist) - Math.abs(dy) * 0.5;
                     if (score > bestScore) {
                         bestScore = score;
                         best = feet;
@@ -280,19 +304,25 @@ public class EntityAda4 extends EntityChris {
         return best;
     }
 
-    /** Soft local hop used by shoot — stays inside rooms. */
+    /** Tiny local step for shoot — no long teleport, no Heightmap roof pops. */
     private void retreatNearby(LivingEntity target) {
-        BlockPos spot = this.findLocalRetreat(target, 2); // 5×5×5
-        if (spot == null) {
-            // Nowhere to go: tiny in-place shuffle only, no leap out of the room.
-            this.moveAlong(this.awayFrom(target), 0.25D);
+        this.getNavigation().stop();
+        this.setDeltaMovement(Vec3.ZERO);
+        BlockPos spot = this.findLocalRetreat(target);
+        if (spot != null) {
+            double dx = spot.getX() + 0.5D - this.getX();
+            double dy = spot.getY() - this.getY();
+            double dz = spot.getZ() + 0.5D - this.getZ();
+            // Walk/push into the cell instead of hard teleporting across the room.
+            this.move(MoverType.SELF, new Vec3(dx, dy, dz));
+            this.setDeltaMovement(Vec3.ZERO);
+            this.hasImpulse = true;
+            this.resetFallDistance();
             return;
         }
-        this.getNavigation().stop();
-        this.teleportTo(spot.getX() + 0.5D, spot.getY(), spot.getZ() + 0.5D);
+        // Nowhere standable: micro shuffle only.
+        this.moveAlong(this.awayFrom(target), 0.2D);
         this.setDeltaMovement(Vec3.ZERO);
-        this.hasImpulse = true;
-        this.resetFallDistance();
     }
 
     private void fireBullet() {
@@ -304,19 +334,14 @@ public class EntityAda4 extends EntityChris {
         this.playSound(SoundInit.M1851.get(), 1.2F, 1.3F);
     }
 
-    /** 20% spider-web shot: slow target and plant cobweb at their feet. */
+    /** 20% spider-web shot: slow target and plant a short-lived cobweb. */
     private void fireWebShot(LivingEntity target) {
         EntityBOWShoot bullet = new EntityBOWShoot(this.level(), this);
         bullet.shootFromRotation(this, this.getXRot(), this.getYRot(), 0.0F, 1.8F, 1.2F);
         bullet.damage = 2.5D;
         this.level().addFreshEntity(bullet);
 
-        BlockPos at = target.blockPosition();
-        if (this.level().getBlockState(at).isAir()) {
-            this.level().setBlock(at, Blocks.COBWEB.defaultBlockState(), 3);
-        } else if (this.level().getBlockState(at.above()).isAir()) {
-            this.level().setBlock(at.above(), Blocks.COBWEB.defaultBlockState(), 3);
-        }
+        this.placeTempWeb(target.blockPosition(), 40); // ~2s then auto-clear
         target.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 80, 2, false, true));
         target.addEffect(new MobEffectInstance(MobEffects.DIG_SLOWDOWN, 60, 1, false, true));
         this.playSound(SoundEvents.SPIDER_AMBIENT, 1.0F, 1.4F);
@@ -354,18 +379,7 @@ public class EntityAda4 extends EntityChris {
 
     /** Place a short-lived cobweb to sell the grappling-hook catch (~1.5s). */
     private void placeGrappleWeb(BlockPos feet) {
-        this.clearTempWeb();
-        BlockPos place = null;
-        if (this.level().getBlockState(feet).isAir()) {
-            place = feet.immutable();
-        } else if (this.level().getBlockState(feet.above()).isAir()) {
-            place = feet.above().immutable();
-        }
-        if (place != null) {
-            this.level().setBlock(place, Blocks.COBWEB.defaultBlockState(), 3);
-            this.tempWebPos = place;
-            this.tempWebTicks = 30; // temporary only — auto remove
-        }
+        this.placeTempWeb(feet, 30);
         this.playSound(SoundEvents.SPIDER_STEP, 0.9F, 1.35F);
     }
 
