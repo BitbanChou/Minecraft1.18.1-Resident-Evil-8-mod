@@ -15,6 +15,10 @@ public class EntityInit {
 
     public static final DeferredRegister<EntityType<?>> ENTITY_TYPES = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES,
             Main.MOD_ID);
+    public static final RegistryObject<EntityType<EntityChaosFireball>> CHAOS_FIREBALL = ENTITY_TYPES.register("chaos_fireball",
+            () -> EntityType.Builder.<EntityChaosFireball>of(EntityChaosFireball::new, MobCategory.MISC)
+                    .sized(1.0F, 1.0F).setTrackingRange(4).updateInterval(10)
+                    .build(new ResourceLocation(Main.MOD_ID, "chaos_fireball").toString()));
 
 //    public static final RegistryObject<EntityType<EntitySamca>> SAMCA = ENTITY_TYPES.register("samca",
 //            () -> EntityType.Builder.of(EntitySamca::new, MobCategory.MONSTER).sized(1f,1.8f).setTrackingRange(20)
