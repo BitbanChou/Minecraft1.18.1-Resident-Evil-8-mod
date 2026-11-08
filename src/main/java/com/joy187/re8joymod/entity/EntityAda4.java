@@ -7,6 +7,7 @@ import java.util.function.Predicate;
 import com.joy187.re8joymod.init.SoundInit;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -69,6 +70,10 @@ public class EntityAda4 extends EntityChris {
     private int vaultCooldown;
     private int meleeIndex;
 
+    /** Temporary gun-vault cobweb — auto-clears so Ada4 is not permanently stuck. */
+    private BlockPos tempWebPos;
+    private int tempWebTicks;
+
     private static final Predicate<Entity> ADA_AREA = Entity::isAlive;
 
     public EntityAda4(EntityType<? extends IronGolem> type, Level worldIn) {
@@ -106,8 +111,15 @@ public class EntityAda4 extends EntityChris {
     @Override
     protected void customServerAiStep() {
         super.customServerAiStep();
+        this.fallDistance = 0.0F;
         if (this.vaultCooldown > 0) {
             --this.vaultCooldown;
+        }
+        if (this.tempWebTicks > 0) {
+            --this.tempWebTicks;
+            if (this.tempWebTicks <= 0) {
+                this.clearTempWeb();
+            }
         }
         if (this.getHealth() >= 10.0F && this.getHealth() <= 20.0F) {
             this.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 20, 1, false, true));
@@ -115,6 +127,20 @@ public class EntityAda4 extends EntityChris {
             this.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 20, 1, false, true));
             this.addEffect(new MobEffectInstance(MobEffects.INVISIBILITY, 20, 0, false, false));
         }
+    }
+
+    @Override
+    public boolean causeFallDamage(float fallDistance, float multiplier, DamageSource source) {
+        return false;
+    }
+
+    private void clearTempWeb() {
+        if (!this.level().isClientSide && this.tempWebPos != null
+                && this.level().getBlockState(this.tempWebPos).is(Blocks.COBWEB)) {
+            this.level().setBlock(this.tempWebPos, Blocks.AIR.defaultBlockState(), 3);
+        }
+        this.tempWebPos = null;
+        this.tempWebTicks = 0;
     }
 
     private boolean isInFrontCone(LivingEntity entity, float halfAngleDeg) {
@@ -184,6 +210,91 @@ public class EntityAda4 extends EntityChris {
         this.hasImpulse = true;
     }
 
+    /** Feet pos is standable: solid floor + two air cells for body. */
+    private boolean isStandableFeet(BlockPos feet) {
+        BlockPos ground = feet.below();
+        if (!this.level().getBlockState(ground).isFaceSturdy(this.level(), ground, Direction.UP)) {
+            return false;
+        }
+        if (!this.level().getBlockState(feet).getCollisionShape(this.level(), feet).isEmpty()) {
+            return false;
+        }
+        if (!this.level().getBlockState(feet.above()).getCollisionShape(this.level(), feet.above()).isEmpty()) {
+            return false;
+        }
+        // Keep collision box clear so we don't clip into walls in tight rooms.
+        AABB probe = this.getBoundingBox().move(
+                feet.getX() + 0.5D - this.getX(),
+                feet.getY() - this.getY(),
+                feet.getZ() + 0.5D - this.getZ());
+        return this.level().noCollision(this, probe);
+    }
+
+    /**
+     * Local retreat for shoot: scan a 5×5×5 cube around Ada and pick a nearby
+     * standable block slightly away from the target (no long-range teleport).
+     */
+    private BlockPos findLocalRetreat(LivingEntity target, int radius) {
+        BlockPos origin = this.blockPosition();
+        Vec3 away = this.awayFrom(target);
+        double curDist = this.distanceTo(target);
+
+        BlockPos best = null;
+        double bestScore = Double.NEGATIVE_INFINITY;
+
+        for (int dx = -radius; dx <= radius; dx++) {
+            for (int dy = -radius; dy <= radius; dy++) {
+                for (int dz = -radius; dz <= radius; dz++) {
+                    if (dx == 0 && dy == 0 && dz == 0) {
+                        continue;
+                    }
+                    BlockPos feet = origin.offset(dx, dy, dz);
+                    if (!this.isStandableFeet(feet)) {
+                        continue;
+                    }
+                    double selfDist = Math.sqrt(dx * dx + dy * dy + dz * dz);
+                    if (selfDist < 1.0D || selfDist > radius + 0.1D) {
+                        continue;
+                    }
+                    Vec3 center = Vec3.atBottomCenterOf(feet);
+                    double toTarget = center.distanceTo(target.position());
+                    // Prefer a small step away, never dive closer into melee.
+                    if (toTarget + 0.35D < curDist) {
+                        continue;
+                    }
+                    Vec3 step = center.subtract(this.position());
+                    Vec3 stepFlat = new Vec3(step.x, 0.0, step.z);
+                    double awayAlign = 0.0;
+                    if (stepFlat.lengthSqr() > 1.0E-4) {
+                        awayAlign = stepFlat.normalize().dot(away);
+                    }
+                    // Slight preference for away + mid distance within the cube.
+                    double score = awayAlign * 3.0 + Math.min(toTarget - curDist, 2.5) - Math.abs(dy) * 0.35;
+                    if (score > bestScore) {
+                        bestScore = score;
+                        best = feet;
+                    }
+                }
+            }
+        }
+        return best;
+    }
+
+    /** Soft local hop used by shoot — stays inside rooms. */
+    private void retreatNearby(LivingEntity target) {
+        BlockPos spot = this.findLocalRetreat(target, 2); // 5×5×5
+        if (spot == null) {
+            // Nowhere to go: tiny in-place shuffle only, no leap out of the room.
+            this.moveAlong(this.awayFrom(target), 0.25D);
+            return;
+        }
+        this.getNavigation().stop();
+        this.teleportTo(spot.getX() + 0.5D, spot.getY(), spot.getZ() + 0.5D);
+        this.setDeltaMovement(Vec3.ZERO);
+        this.hasImpulse = true;
+        this.resetFallDistance();
+    }
+
     private void fireBullet() {
         EntityBOWShoot bullet = new EntityBOWShoot(this.level(), this);
         bullet.shootFromRotation(this, this.getXRot(), this.getYRot(), 0.0F, 2.6F, 0.7F);
@@ -231,40 +342,125 @@ public class EntityAda4 extends EntityChris {
         this.leapAlong(away, 0.9D, 0.85D);
     }
 
-    private void teleportToHighGround(LivingEntity target, double horizontal) {
-        Vec3 away = this.awayFrom(target);
-        // Prefer lateral high ground around Ada rather than pure back-line.
-        double yaw = Math.atan2(away.z, away.x) + (this.getRandom().nextBoolean() ? 0.7 : -0.7);
-        Vec3 side = new Vec3(Math.cos(yaw), 0.0, Math.sin(yaw)).normalize();
-        Vec3 dest = this.position().add(side.scale(horizontal));
+    private boolean hasCeilingAbove(BlockPos feet, int maxUp) {
+        for (int i = 1; i <= maxUp; i++) {
+            BlockPos up = feet.above(i);
+            if (this.level().getBlockState(up).isFaceSturdy(this.level(), up, Direction.DOWN)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
-        int bestY = Integer.MIN_VALUE;
+    /** Place a short-lived cobweb to sell the grappling-hook catch (~1.5s). */
+    private void placeGrappleWeb(BlockPos feet) {
+        this.clearTempWeb();
+        BlockPos place = null;
+        if (this.level().getBlockState(feet).isAir()) {
+            place = feet.immutable();
+        } else if (this.level().getBlockState(feet.above()).isAir()) {
+            place = feet.above().immutable();
+        }
+        if (place != null) {
+            this.level().setBlock(place, Blocks.COBWEB.defaultBlockState(), 3);
+            this.tempWebPos = place;
+            this.tempWebTicks = 30; // temporary only — auto remove
+        }
+        this.playSound(SoundEvents.SPIDER_STEP, 0.9F, 1.35F);
+    }
+
+    /**
+     * Prefer a nearby indoor ceiling cling spot (air under sturdy ceiling)
+     * so vault works in enclosed rooms instead of only outdoor roofs.
+     */
+    private BlockPos findCeilingCling(LivingEntity target, int radius) {
+        BlockPos origin = this.blockPosition();
+        Vec3 away = this.awayFrom(target);
         BlockPos best = null;
-        for (int r = 3; r <= 8; r++) {
-            for (int a = 0; a < 8; a++) {
-                double ang = yaw + (a * Math.PI / 4.0);
-                double x = this.getX() + Math.cos(ang) * r;
-                double z = this.getZ() + Math.sin(ang) * r;
-                int groundY = this.level().getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, (int) Math.floor(x), (int) Math.floor(z));
-                // Prefer positions clearly above current footing.
-                if (groundY > this.getY() + 2.0 && groundY > bestY) {
-                    bestY = groundY;
-                    best = BlockPos.containing(x, groundY, z);
+        double bestScore = Double.NEGATIVE_INFINITY;
+
+        for (int dx = -radius; dx <= radius; dx++) {
+            for (int dy = 1; dy <= radius + 1; dy++) {
+                for (int dz = -radius; dz <= radius; dz++) {
+                    BlockPos feet = origin.offset(dx, dy, dz);
+                    if (!this.isStandableFeet(feet) && !this.level().getBlockState(feet).isAir()) {
+                        continue;
+                    }
+                    // Need body space + a real ceiling within 3 blocks above head.
+                    if (!this.level().getBlockState(feet).getCollisionShape(this.level(), feet).isEmpty()) {
+                        continue;
+                    }
+                    if (!this.level().getBlockState(feet.above()).getCollisionShape(this.level(), feet.above()).isEmpty()) {
+                        continue;
+                    }
+                    if (!this.hasCeilingAbove(feet, 3)) {
+                        continue;
+                    }
+                    // Prefer higher + slightly away from target.
+                    Vec3 center = Vec3.atBottomCenterOf(feet);
+                    Vec3 stepFlat = new Vec3(center.x - this.getX(), 0.0, center.z - this.getZ());
+                    double awayAlign = stepFlat.lengthSqr() > 1.0E-4 ? stepFlat.normalize().dot(away) : 0.0;
+                    double score = dy * 2.5 + awayAlign * 1.5;
+                    if (score > bestScore) {
+                        bestScore = score;
+                        best = feet;
+                    }
                 }
             }
         }
-        if (best == null) {
-            int groundY = this.level().getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
-                    (int) Math.floor(dest.x), (int) Math.floor(dest.z));
-            best = BlockPos.containing(dest.x, Math.max(groundY, this.getY() + 3.0), dest.z);
+        return best;
+    }
+
+    private void teleportToHighGround(LivingEntity target, double horizontal) {
+        Vec3 away = this.awayFrom(target);
+        double yaw = Math.atan2(away.z, away.x) + (this.getRandom().nextBoolean() ? 0.7 : -0.7);
+        Vec3 dest = this.position().add(new Vec3(Math.cos(yaw), 0.0, Math.sin(yaw)).scale(horizontal));
+
+        boolean ceilingCling = false;
+        BlockPos best = this.findCeilingCling(target, 5);
+        int bestY;
+
+        if (best != null) {
             bestY = best.getY();
+            ceilingCling = true;
+        } else {
+            bestY = Integer.MIN_VALUE;
+            best = null;
+            for (int r = 3; r <= 8; r++) {
+                for (int a = 0; a < 8; a++) {
+                    double ang = yaw + (a * Math.PI / 4.0);
+                    double x = this.getX() + Math.cos(ang) * r;
+                    double z = this.getZ() + Math.sin(ang) * r;
+                    int groundY = this.level().getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+                            (int) Math.floor(x), (int) Math.floor(z));
+                    if (groundY > this.getY() + 2.0 && groundY > bestY) {
+                        bestY = groundY;
+                        best = BlockPos.containing(x, groundY, z);
+                    }
+                }
+            }
+            if (best == null) {
+                int groundY = this.level().getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+                        (int) Math.floor(dest.x), (int) Math.floor(dest.z));
+                best = BlockPos.containing(dest.x, Math.max(groundY, this.getY() + 3.0), dest.z);
+                bestY = best.getY();
+            }
         }
+
         this.getNavigation().stop();
         this.teleportTo(best.getX() + 0.5, bestY + 0.1, best.getZ() + 0.5);
-        this.setDeltaMovement(0.0, 0.15, 0.0);
+        this.setDeltaMovement(0.0, 0.05, 0.0);
         this.hasImpulse = true;
         this.resetFallDistance();
         this.playSound(SoundEvents.ENDERMAN_TELEPORT, 0.7F, 1.4F);
+
+        BlockPos landed = this.blockPosition();
+        // Ceiling / high cling: plant cobweb so the gun-hook "sticks".
+        if (ceilingCling || this.hasCeilingAbove(landed, 3)) {
+            this.placeGrappleWeb(landed);
+            // Brief hang feel only — web itself expires; no long slow that traps her.
+            this.addEffect(new MobEffectInstance(MobEffects.SLOW_FALLING, 35, 0, false, false));
+        }
     }
 
     @Override
@@ -505,12 +701,12 @@ public class EntityAda4 extends EntityChris {
             }
         }
 
-        /** Back away, then shoot (20% web). Synced to shoot (~1.25s). */
+        /** Local step-back then shoot (20% web). Synced to shoot (~1.25s). */
         private void tickShoot(LivingEntity target) {
             this.ada.getNavigation().stop();
-            if (this.timer <= 8) {
-                this.ada.moveAlong(this.ada.awayFrom(target), 0.55D);
-                this.ada.leapAlong(this.ada.awayFrom(target), 0.35D, 0.12D);
+            // One short nearby hop inside a 5×5×5 standable scan — no multi-tick leap.
+            if (this.timer == 2) {
+                this.ada.retreatNearby(target);
             }
             if (this.timer == 14) {
                 this.ada.fireOrWeb(target);
