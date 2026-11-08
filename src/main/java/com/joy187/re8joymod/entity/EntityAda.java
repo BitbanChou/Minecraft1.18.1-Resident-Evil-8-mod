@@ -42,14 +42,14 @@ import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 /**
- * Ada combat states:
- * 0 idle
- * 1 melee punch (double fists) -> animation.ada.attack
- * 2 melee right kick -> animation.ada.attack2
- * 3 dash left + left kick -> animation.ada.attack2
- * 4 ranged bullet -> animation.ada.attack
- * 5 grapple escape + heal -> animation.ada.attack2
- * 6 rush after escape -> animation.ada.walk / attack
+ * Ada combat states (each skill has its own animation):
+ * 0 idle / walk
+ * 1 melee punch -> animation.ada.melee_punch
+ * 2 melee right kick -> animation.ada.melee_kick_r
+ * 3 dash left + left kick -> animation.ada.melee_dash_kick
+ * 4 ranged bullet -> animation.ada.ranged
+ * 5 grapple escape + heal (30% when hp < 25%) -> animation.ada.grapple_escape
+ * 6 rush after escape -> animation.ada.rush
  */
 public class EntityAda extends EntityChris {
     private final AnimatableInstanceCache factory = GeckoLibUtil.createInstanceCache(this);
@@ -201,16 +201,28 @@ public class EntityAda extends EntityChris {
         }
         int state = this.getAttckingState();
         switch (state) {
-            case STATE_PUNCH, STATE_RANGED -> {
-                event.setAndContinue(RawAnimation.begin().thenPlay("animation.ada.attack"));
+            case STATE_PUNCH -> {
+                event.setAndContinue(RawAnimation.begin().thenPlay("animation.ada.melee_punch"));
                 return PlayState.CONTINUE;
             }
-            case STATE_KICK, STATE_DASH_KICK, STATE_GRAPPLE -> {
-                event.setAndContinue(RawAnimation.begin().thenPlay("animation.ada.attack2"));
+            case STATE_KICK -> {
+                event.setAndContinue(RawAnimation.begin().thenPlay("animation.ada.melee_kick_r"));
+                return PlayState.CONTINUE;
+            }
+            case STATE_DASH_KICK -> {
+                event.setAndContinue(RawAnimation.begin().thenPlay("animation.ada.melee_dash_kick"));
+                return PlayState.CONTINUE;
+            }
+            case STATE_RANGED -> {
+                event.setAndContinue(RawAnimation.begin().thenPlay("animation.ada.ranged"));
+                return PlayState.CONTINUE;
+            }
+            case STATE_GRAPPLE -> {
+                event.setAndContinue(RawAnimation.begin().thenPlay("animation.ada.grapple_escape"));
                 return PlayState.CONTINUE;
             }
             case STATE_RUSH -> {
-                event.setAndContinue(RawAnimation.begin().thenLoop("animation.ada.walk"));
+                event.setAndContinue(RawAnimation.begin().thenLoop("animation.ada.rush"));
                 return PlayState.CONTINUE;
             }
             default -> {
@@ -283,10 +295,14 @@ public class EntityAda extends EntityChris {
                 return;
             }
 
-            // Pick new skill
+            // Low HP escape: 30% chance when ready (failed rolls get a short defer CD).
             if (this.ada.getHealth() < this.ada.getMaxHealth() * 0.25F && this.ada.escapeCooldown <= 0) {
-                this.beginSkill(STATE_GRAPPLE);
-                return;
+                if (this.ada.getRandom().nextFloat() < 0.30F) {
+                    this.beginSkill(STATE_GRAPPLE);
+                    return;
+                }
+                // Avoid re-rolling every tick into near-100% trigger.
+                this.ada.escapeCooldown = 20 * 3;
             }
 
             if (dist > 8.0D) {
@@ -341,7 +357,7 @@ public class EntityAda extends EntityChris {
             }
         }
 
-        /** Double punch: hits at ~0.4s and ~0.9s of attack anim (1.5s). */
+        /** Double punch — synced to melee_punch (1.5s). */
         private void tickPunch(LivingEntity target) {
             if (this.timer == 8 || this.timer == 18) {
                 this.ada.dealMeleeHit(target, 5.0F, 2.4F);
@@ -351,9 +367,9 @@ public class EntityAda extends EntityChris {
             }
         }
 
-        /** Right kick: impact around 0.7s of attack2. */
+        /** Right kick — synced to melee_kick_r (1.4s, impact ~0.55s). */
         private void tickKick(LivingEntity target) {
-            if (this.timer == 14) {
+            if (this.timer == 11) {
                 this.ada.dealMeleeHit(target, 7.0F, 2.6F);
             }
             if (this.timer >= 28) {
@@ -361,7 +377,7 @@ public class EntityAda extends EntityChris {
             }
         }
 
-        /** Strafe to target's left, then left kick. */
+        /** Strafe to target's left, then left kick — synced to melee_dash_kick (2.0s). */
         private void tickDashKick(LivingEntity target) {
             if (this.timer <= 12) {
                 Vec3 toTarget = target.position().subtract(this.ada.position()).normalize();
@@ -373,7 +389,7 @@ public class EntityAda extends EntityChris {
             } else {
                 this.ada.getNavigation().stop();
             }
-            if (this.timer == 28) {
+            if (this.timer == 24) {
                 this.ada.dealMeleeHit(target, 8.0F, 2.8F);
             }
             if (this.timer >= 40) {
@@ -381,9 +397,10 @@ public class EntityAda extends EntityChris {
             }
         }
 
+        /** Ranged — synced to ranged (1.1s, fire ~0.45s). */
         private void tickRanged(LivingEntity target) {
             this.ada.getNavigation().stop();
-            if (this.timer == 12) {
+            if (this.timer == 9) {
                 this.ada.fireBullet();
             }
             if (this.timer >= 22) {
