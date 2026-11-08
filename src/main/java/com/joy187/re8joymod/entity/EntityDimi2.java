@@ -288,14 +288,16 @@ package com.joy187.re8joymod.entity;
 		import net.minecraft.sounds.SoundSource;
 		import net.minecraft.util.Mth;
 		import net.minecraft.world.BossEvent;
+		import net.minecraft.world.damagesource.DamageSource;
 		import net.minecraft.world.entity.*;
 		import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 		import net.minecraft.world.entity.ai.attributes.Attributes;
 		import net.minecraft.world.entity.ai.control.MoveControl;
 		import net.minecraft.world.entity.ai.goal.FloatGoal;
+		import net.minecraft.world.entity.ai.goal.Goal;
 		import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
 		import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
-		import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
+		import java.util.EnumSet;
 		import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 		import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 		import net.minecraft.world.entity.boss.wither.WitherBoss;
@@ -331,17 +333,20 @@ public class EntityDimi2 extends WitherBoss implements GeoEntity {
 			SynchedEntityData.defineId(EntityDimi2.class, EntityDataSerializers.INT);
 	private static final EntityDataAccessor<Boolean> ISSKILL =
 			SynchedEntityData.defineId(EntityDimi2.class, EntityDataSerializers.BOOLEAN);
-	public static final AnimationState attackAnimationState = new AnimationState();
-	public static final AnimationState attackAnimationState2 = new AnimationState();
-	public static final AnimationState attackAnimationState3 = new AnimationState();
-	public static final AnimationState attackAnimationState4 = new AnimationState();
-	public static final AnimationState attackAnimationState5 = new AnimationState();
-	private boolean isAscending = false; // 是否正在升空
-	private boolean isDescending = false; // 是否正在落下
-	private double targetY; // 目标高度
+	// Must be per-entity — static states made every Dimi2 share one animation lock.
+	public final AnimationState attackAnimationState = new AnimationState();
+	public final AnimationState attackAnimationState2 = new AnimationState();
+	public final AnimationState attackAnimationState3 = new AnimationState();
+	public final AnimationState attackAnimationState4 = new AnimationState();
+	public final AnimationState attackAnimationState5 = new AnimationState();
+	private boolean isAscending = false;
+	private boolean isDescending = false;
+	private boolean skillLocked = false; // replace setNoAi so travel still applies
+	private double targetY;
+	private Vec3 diveAim = Vec3.ZERO;
 
 	public int attackAnimationTimeout = 30;
-	private Vec3 originalMotion = Vec3.ZERO; // 保存原始速度
+	private Vec3 originalMotion = Vec3.ZERO;
 
 	public AnimationState[] getAnimations() {
 		return new AnimationState[]{attackAnimationState, attackAnimationState2, attackAnimationState3, attackAnimationState4, attackAnimationState5};
@@ -356,6 +361,8 @@ public class EntityDimi2 extends WitherBoss implements GeoEntity {
 		this.xpReward = 70;
 		this.isNonBoss();
 		this.moveControl = new MoveHelperController(this);
+		// Fly anim alone never moves the entity — need real aerial travel.
+		this.setNoGravity(true);
 	}
 
 	public static AttributeSupplier.Builder prepareAttributes() {
@@ -370,12 +377,9 @@ public class EntityDimi2 extends WitherBoss implements GeoEntity {
 	protected void registerGoals() {
 		super.registerGoals();
 		this.goalSelector.addGoal(0, new FloatGoal(this));
-		//this.goalSelector.addGoal(2, new CustomMeleeAttackGoal(this, 1.0D));
-//        this.goalSelector.addGoal(1, new EntityTyrantdd.AttackGoal());
-
+		this.goalSelector.addGoal(2, new AerialChaseGoal(this));
 		this.goalSelector.addGoal(3, new LookAtPlayerGoal(this, Player.class, 8.0F));
 		this.goalSelector.addGoal(7, new RandomLookAroundGoal(this));
-		this.goalSelector.addGoal(5, new WaterAvoidingRandomStrollGoal(this, 0.8D));
 		this.addBehaviourGoals();
 	}
 
@@ -396,167 +400,173 @@ public class EntityDimi2 extends WitherBoss implements GeoEntity {
 	public void tick() {
 		super.tick();
 		this.setYRot(this.yBodyRot);
-		// 更新Boss信息条
-		//this.bossInfo.setProgress(this.getHealth() / this.getMaxHealth());
+		this.fallDistance = 0.0F;
+
+		if (this.level().isClientSide) {
+			return;
+		}
+
 		LivingEntity target = this.getTarget();
-		// 确保技能仅在服务器端运行，并且怪物存活
-		if (target != null) {
-			if (this.distanceToSqr(target) <= 64.0D) { // 检查目标是否在范围内
-				if(this.attackAnimationTimeout==50){
-					this.setNoAi(true);
-					this.originalMotion = this.getDeltaMovement(); // 保存当前速度
-					int t = this.random.nextInt(6);
-					if (t % 6 == 5) {
-						// 决定使用哪个技能
-						attackAnimationState5.start(this.tickCount);
-						this.setPuGong(5);
-						this.isAscending = true;
-					}
-					else if (t % 6 == 4 || t % 6 == 0) {
-						// 决定使用哪个技能
-						attackAnimationState4.start(this.tickCount);
-						this.setPuGong(4);
-					}
-					else if (t % 6 == 3) {
-						// 决定使用哪个技能
-						attackAnimationState3.start(this.tickCount);
-						this.setPuGong(3);
-					}
-					else if(t % 6 == 2){
-						this.setPuGong(2);
-						attackAnimationState2.start(this.tickCount);
-					}
-					else {
-						this.setPuGong(1);
-						attackAnimationState.start(this.tickCount);
-					}
-
-					//System.out.println(this.isPuGong());
+		if (target != null && this.distanceToSqr(target) <= 256.0D) {
+			if (this.attackAnimationTimeout == 50) {
+				this.skillLocked = true;
+				this.originalMotion = this.getDeltaMovement();
+				int t = this.random.nextInt(6);
+				if (t == 5) {
+					// Sky dive
+					attackAnimationState5.start(this.tickCount);
+					this.setPuGong(5);
+					this.isAscending = true;
+					this.isDescending = false;
+					this.targetY = Math.max(this.getY(), target.getY()) + 10.0D;
+					this.diveAim = target.position();
+				} else if (t == 4 || t == 0) {
+					// Fly breath (EntityFly swarm)
+					attackAnimationState4.start(this.tickCount);
+					this.setPuGong(4);
+				} else if (t == 3) {
+					attackAnimationState3.start(this.tickCount);
+					this.setPuGong(3);
+				} else if (t == 2) {
+					this.setPuGong(2);
+					attackAnimationState2.start(this.tickCount);
+				} else {
+					this.setPuGong(1);
+					attackAnimationState.start(this.tickCount);
 				}
-				//System.out.println(this.attackAnimationTimeout);
-//                if(this.isPuGong()!=0){
-//                    this.setMotion(Vec3.ZERO); // 设置速度为 0
-//                }
-				if(this.attackAnimationTimeout==40  && this.isPuGong()==2) {
+			}
+
+			if (this.isPuGong() == 2) {
+				if (this.attackAnimationTimeout == 40 || this.attackAnimationTimeout == 35
+						|| this.attackAnimationTimeout == 28 || this.attackAnimationTimeout == 23
+						|| this.attackAnimationTimeout == 14 || this.attackAnimationTimeout == 8
+						|| this.attackAnimationTimeout == -7 || this.attackAnimationTimeout == -13) {
 					this.performSkill("attack02", target);
-					this.getDeltaMovement().add(this.getRandom().nextFloat()*2,1,this.getRandom().nextFloat()*2);
+					this.nudgeInAir(target);
 				}
+			}
 
-				if(this.attackAnimationTimeout==35  && this.isPuGong()==2) {
-					this.performSkill("attack02", target);
-					this.getDeltaMovement().add(this.getRandom().nextFloat()*-2,-1,this.getRandom().nextFloat()*-2);
-				}
-
-				if(this.attackAnimationTimeout==28 && this.isPuGong()==2) {
-					this.performSkill("attack02", target);
-					this.getDeltaMovement().add(this.getRandom().nextFloat()*2,1,this.getRandom().nextFloat()*-2);
-				}
-
-
-				if(this.attackAnimationTimeout==23 && this.isPuGong()==2) {
-					this.performSkill("attack02", target);
-					this.getDeltaMovement().add(this.getRandom().nextFloat()*-2,-1,this.getRandom().nextFloat()*2);
-				}
-
-				if(this.attackAnimationTimeout==14 && this.isPuGong()==2) {
-					this.performSkill("attack02", target);
-					this.getDeltaMovement().add(this.getRandom().nextFloat()*-2,1,this.getRandom().nextFloat()*-2);
-				}
-
-				if(this.attackAnimationTimeout==8 && this.isPuGong()==2) {
-					this.performSkill("attack02", target);
-					this.getDeltaMovement().add(this.getRandom().nextFloat()*-2,-1,this.getRandom().nextFloat()*-2);
-				}
-
-				if(this.attackAnimationTimeout==-7 && this.isPuGong()==2) {
-					this.performSkill("attack02", target);
-					this.getDeltaMovement().add(this.getRandom().nextFloat()*2,1,this.getRandom().nextFloat()*-2);
-				}
-
-				if(this.attackAnimationTimeout==-13 && this.isPuGong()==2) {
-					this.performSkill("attack02", target);
-					this.getDeltaMovement().add(this.getRandom().nextFloat()*-2,-1,this.getRandom().nextFloat()*2);
-				}
-
-				if(this.attackAnimationTimeout==20 && this.isPuGong()==3) {
+			if (this.isPuGong() == 3) {
+				if (this.attackAnimationTimeout == 20 || this.attackAnimationTimeout == -5) {
 					this.performSkill("attack03", target);
 				}
+			}
 
-				if(this.attackAnimationTimeout==-5 && this.isPuGong()==3) {
-					this.performSkill("attack03", target);
+			// Fly breath: open mouth then spray EntityFly stream
+			if (this.isPuGong() == 4) {
+				if (this.attackAnimationTimeout == 35 || this.attackAnimationTimeout == 25
+						|| this.attackAnimationTimeout == 15 || this.attackAnimationTimeout == 5) {
+					this.spawnFlyBreath(target);
 				}
+			}
 
-				if(this.attackAnimationTimeout==-5 && this.isPuGong()==4) {
-					this.performSkill("attack04", target);
-				}
-
-				if(this.attackAnimationTimeout==30 && this.isPuGong()==5) {
-					this.targetY = this.getY() + 6.0; // 设置目标高度
-					this.isAscending=true;
-					this.isDescending=false;
+			if (this.isPuGong() == 5) {
+				if (this.attackAnimationTimeout == 40) {
+					this.targetY = Math.max(this.getY(), target.getY()) + 10.0D;
+					this.diveAim = target.position();
+					this.isAscending = true;
+					this.isDescending = false;
 					this.performSkill("attack05r", target);
 				}
-
-				if(this.attackAnimationTimeout==10 && this.isPuGong()==5) {
-					this.isAscending=false;
-					this.isDescending=true;
+				if (this.attackAnimationTimeout == 18) {
+					this.isAscending = false;
+					this.isDescending = true;
+					this.diveAim = target.position();
 					this.performSkill("attack05d", target);
 				}
 			}
 		}
 
 		this.attackAnimationTimeout--;
-		if(this.attackAnimationTimeout<=-20){
+		if (this.attackAnimationTimeout <= -20) {
 			this.setPuGong(0);
 			attackAnimationState.stop();
 			attackAnimationState2.stop();
 			attackAnimationState3.stop();
 			attackAnimationState4.stop();
 			attackAnimationState5.stop();
-			this.attackAnimationTimeout=60;
-			this.setMotion(this.originalMotion); // 恢复速度
-			this.setNoAi(false);
-			this.isAscending=false;
-			this.isDescending=false;
-			this.setTarget(null);
+			this.attackAnimationTimeout = 55;
+			this.setMotion(this.originalMotion);
+			this.skillLocked = false;
+			this.isAscending = false;
+			this.isDescending = false;
+			// Keep target — clearing it every cycle made combat feel empty.
 		}
 
+		// Ascend for real (bone animation alone never changes world position).
 		if (this.isAscending) {
-			double currentY = this.getY();
-			if (currentY < this.targetY) {
-				// 计算升空速度
-				double speed = 6.0 / 20; // 1 秒内升到 4 米高（20 ticks）
-				this.setDeltaMovement(0, speed, 0);
+			LivingEntity t = this.getTarget();
+			double aimX = t != null ? t.getX() : this.diveAim.x;
+			double aimZ = t != null ? t.getZ() : this.diveAim.z;
+			Vec3 to = new Vec3(aimX - this.getX(), this.targetY - this.getY(), aimZ - this.getZ());
+			if (to.y > 0.4D || to.horizontalDistanceSqr() > 1.0D) {
+				Vec3 n = to.normalize().scale(0.55D);
+				this.setDeltaMovement(n.x, Math.max(0.35D, n.y), n.z);
+				this.hasImpulse = true;
 			} else {
-				this.isAscending = false; // 停止升空
-				this.setDeltaMovement(0, 0, 0); // 停止运动
-
-				// 延迟 0.5 秒后开始下落
-				this.level().getServer().execute(() -> {
-					if (this.isAlive()) {
-						this.isDescending = true; // 开始下落
-					}
-				});
+				this.isAscending = false;
+				this.setDeltaMovement(Vec3.ZERO);
 			}
 		}
 
-		// 下落阶段
+		// Dive toward the target's world position.
 		if (this.isDescending) {
-			double currentY = this.getY();
-			if (currentY > this.getY() - 4.0) {
-				// 计算下落速度
-				double speed = -4.0 / 10; // 0.5 秒内落到地面（10 ticks）
-				this.setDeltaMovement(0, speed, 0);
+			LivingEntity t = this.getTarget();
+			Vec3 aim = t != null ? t.position() : this.diveAim;
+			Vec3 to = aim.subtract(this.position());
+			double dist = to.length();
+			if (dist > 2.2D) {
+				Vec3 n = to.normalize().scale(1.15D);
+				this.setDeltaMovement(n);
+				this.hasImpulse = true;
 			} else {
-				this.isDescending = false; // 停止下落
-				this.setDeltaMovement(0, 0, 0); // 停止运动
+				this.isDescending = false;
+				this.setDeltaMovement(Vec3.ZERO);
+				this.performSubSkill1();
+				this.performSubSkill2();
+				if (t != null) {
+					t.hurt(this.damageSources().mobAttack(this), 18.0F);
+					t.knockback(1.2F, this.getX() - t.getX(), this.getZ() - t.getZ());
+				}
+			}
+		}
+	}
 
-				// 触发子技能
-				performSubSkill1();
-				performSubSkill2();
+	private void nudgeInAir(LivingEntity target) {
+		Vec3 to = target.position().subtract(this.position());
+		if (to.lengthSqr() < 1.0E-4) {
+			return;
+		}
+		Vec3 n = to.normalize();
+		float s = 0.45F + this.random.nextFloat() * 0.35F;
+		this.setDeltaMovement(n.x * s, 0.15D + this.random.nextFloat() * 0.25D, n.z * s);
+		this.hasImpulse = true;
+	}
+
+	/** Dragon fly-breath: spray EntityFly using fly geo/texture toward the target. */
+	private void spawnFlyBreath(LivingEntity target) {
+		this.playSound(SoundEvents.BEE_LOOP_AGGRESSIVE, 1.4F, 0.7F + this.random.nextFloat() * 0.4F);
+		this.playSound(SoundEvents.ENDER_DRAGON_GROWL, 0.7F, 1.4F);
+		Vec3 mouth = this.position().add(0.0, this.getBbHeight() * 0.55, 0.0).add(this.getLookAngle().scale(2.5));
+		Vec3 dir = target.position().add(0.0, target.getBbHeight() * 0.4, 0.0).subtract(mouth).normalize();
+
+		if (this.level() instanceof ServerLevel server) {
+			for (int i = 0; i < 8; i++) {
+				server.sendParticles(ParticleTypes.SMOKE,
+						mouth.x, mouth.y, mouth.z, 2, 0.2, 0.15, 0.2, 0.01);
 			}
 		}
 
+		for (int i = 0; i < 4; i++) {
+			double ox = (this.random.nextDouble() - 0.5) * 1.2;
+			double oy = (this.random.nextDouble() - 0.5) * 0.8;
+			double oz = (this.random.nextDouble() - 0.5) * 1.2;
+			EntityFly fly = EntityFly.createBreathSwarm(this.level(), target,
+					mouth.x + ox, mouth.y + oy, mouth.z + oz, 70 + this.random.nextInt(30));
+			fly.setDeltaMovement(dir.x * 0.9 + ox * 0.05, dir.y * 0.9 + 0.05, dir.z * 0.9 + oz * 0.05);
+			fly.hasImpulse = true;
+			this.level().addFreshEntity(fly);
+		}
 	}
 
 	// 假设的方法用于执行技能，这里只是伪代码示例
@@ -896,44 +906,24 @@ public class EntityDimi2 extends WitherBoss implements GeoEntity {
 
 	public static <T extends EntityDimi2 & GeoAnimatable> AnimationController<T> genericAttackAnimation(T animatable, RawAnimation attackAnimation) {
 		return new AnimationController<>(animatable, "Attack", 0, event -> {
-			if (animatable.isPuGong()!=0)
-			{
-//				if (attackAnimationState.isStarted() && !(animatable.dead || animatable.getHealth() < 0.01 || animatable.isDeadOrDying())) {
-//					event.setAnimation(RawAnimation.begin().thenPlay("attack"));
-//					attackAnimationState.stop();
-//					//return PlayState.CONTINUE;
-//				}
-				if (attackAnimationState2.isStarted() && !(animatable.dead || animatable.getHealth() < 0.01 || animatable.isDeadOrDying())) {
-					event.setAnimation(RawAnimation.begin().thenPlay("animation.dimi2.attack2"));
-					attackAnimationState2.stop();
-					//return PlayState.CONTINUE;
-				}
-				if (attackAnimationState3.isStarted() && !(animatable.dead || animatable.getHealth() < 0.01 || animatable.isDeadOrDying())) {
-					event.setAnimation(RawAnimation.begin().thenPlay("animation.dimi2.attack3"));
-					attackAnimationState3.stop();
-					//return PlayState.CONTINUE;
-				}
-//				if (attackAnimationState4.isStarted() && !(animatable.dead || animatable.getHealth() < 0.01 || animatable.isDeadOrDying())) {
-//					event.setAnimation(RawAnimation.begin().thenPlay("attack4"));
-//					attackAnimationState4.stop();
-//					//return PlayState.CONTINUE;
-//				}
-				if (attackAnimationState5.isStarted() && !(animatable.dead || animatable.getHealth() < 0.01 || animatable.isDeadOrDying())) {
-					event.setAnimation(RawAnimation.begin().thenPlay("animation.dimi2.attack5"));
-					attackAnimationState5.stop();
-					//return PlayState.CONTINUE;
+			if (animatable.dead || animatable.getHealth() < 0.01 || animatable.isDeadOrDying()) {
+				return PlayState.STOP;
+			}
+			int skill = animatable.isPuGong();
+			if (skill == 0) {
+				return PlayState.STOP;
+			}
+			// Drive by synced skill id so clients keep playing for the full window.
+			switch (skill) {
+				case 1 -> event.setAndContinue(RawAnimation.begin().thenPlay("animation.dimi2.attack2"));
+				case 2 -> event.setAndContinue(RawAnimation.begin().thenPlay("animation.dimi2.attack2"));
+				case 3 -> event.setAndContinue(RawAnimation.begin().thenPlay("animation.dimi2.attack3"));
+				case 4 -> event.setAndContinue(RawAnimation.begin().thenPlay("animation.dimi2.breath"));
+				case 5 -> event.setAndContinue(RawAnimation.begin().thenPlay("animation.dimi2.dive"));
+				default -> {
+					return PlayState.STOP;
 				}
 			}
-//            else if(animatable.isSkill())
-//            {
-//
-//            }
-//            else if(animatable.isSonic())
-//            {
-//
-//            }
-			event.getController().forceAnimationReset();
-
 			return PlayState.CONTINUE;
 		});
 	}
@@ -1030,6 +1020,37 @@ public class EntityDimi2 extends WitherBoss implements GeoEntity {
 		return this.level().getEntitiesOfClass(LivingEntity.class, area);
 	}
 
+	/** Keeps Dimi2 in the air and actually chasing — fly anim alone never moves world pos. */
+	static class AerialChaseGoal extends Goal {
+		private final EntityDimi2 mob;
+
+		AerialChaseGoal(EntityDimi2 mob) {
+			this.mob = mob;
+			this.setFlags(EnumSet.of(Flag.MOVE));
+		}
+
+		@Override
+		public boolean canUse() {
+			return this.mob.getTarget() != null && this.mob.getTarget().isAlive() && !this.mob.skillLocked;
+		}
+
+		@Override
+		public boolean canContinueToUse() {
+			return this.canUse();
+		}
+
+		@Override
+		public void tick() {
+			LivingEntity target = this.mob.getTarget();
+			if (target == null) {
+				return;
+			}
+			double hoverY = target.getY() + 3.5D + Math.sin(this.mob.tickCount * 0.08D) * 0.6D;
+			this.mob.getMoveControl().setWantedPosition(target.getX(), hoverY, target.getZ(), 1.15D);
+			this.mob.getLookControl().setLookAt(target, 30.0F, 30.0F);
+		}
+	}
+
 	static class MoveHelperController extends MoveControl {
 		private final EntityDimi2 parentEntity;
 		private int courseChangeCooldown;
@@ -1040,21 +1061,29 @@ public class EntityDimi2 extends WitherBoss implements GeoEntity {
 		}
 
 		public void tick() {
+			if (this.parentEntity.skillLocked && (this.parentEntity.isAscending || this.parentEntity.isDescending)) {
+				return; // dive/ascend code owns velocity this tick
+			}
 			if (this.operation == Operation.MOVE_TO) {
 				if (this.courseChangeCooldown-- <= 0) {
 					this.courseChangeCooldown += this.parentEntity.getRandom().nextInt(5) + 2;
 					Vec3 vector3d = new Vec3(this.wantedX - this.parentEntity.getX(),
 							this.wantedY - this.parentEntity.getY(), this.wantedZ - this.parentEntity.getZ());
 					double d0 = vector3d.length();
+					if (d0 < 0.5D) {
+						this.operation = Operation.WAIT;
+						return;
+					}
 					vector3d = vector3d.normalize();
-					if (this.canReach(vector3d, Mth.ceil(d0))) {
-						this.parentEntity
-								.setDeltaMovement(this.parentEntity.getDeltaMovement().add(vector3d.scale(0.1D)));
+					if (this.canReach(vector3d, Mth.ceil(Math.min(d0, 8.0D)))) {
+						// Stronger than 0.1 so chase is visible in-world.
+						this.parentEntity.setDeltaMovement(
+								this.parentEntity.getDeltaMovement().add(vector3d.scale(0.28D)));
+						this.parentEntity.hasImpulse = true;
 					} else {
 						this.operation = Operation.WAIT;
 					}
 				}
-
 			}
 		}
 
@@ -1070,6 +1099,11 @@ public class EntityDimi2 extends WitherBoss implements GeoEntity {
 
 			return true;
 		}
+	}
+
+	@Override
+	public boolean causeFallDamage(float fallDistance, float multiplier, DamageSource source) {
+		return false;
 	}
 
 	@Override
