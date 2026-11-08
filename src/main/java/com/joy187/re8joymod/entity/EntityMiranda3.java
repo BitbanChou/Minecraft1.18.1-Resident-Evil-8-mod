@@ -36,7 +36,6 @@ import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.LargeFireball;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
@@ -242,7 +241,7 @@ public class EntityMiranda3 extends Monster implements GeoEntity {
         }
     }
 
-    /** Tracking blaze fireball aimed at the target's current position (pseudo-homing via re-aim). */
+    /** Chaos fireball — 20% of target max HP on hit. */
     private void shootChaosFireball(LivingEntity target, double sideOffset) {
         Vec3 from = this.position().add(0.0, this.getBbHeight() * 0.7, 0.0);
         Vec3 right = this.getLookAngle().yRot((float) Math.PI / 2F).normalize().scale(sideOffset);
@@ -252,12 +251,11 @@ public class EntityMiranda3 extends Monster implements GeoEntity {
             aim = this.getLookAngle();
         }
         aim = aim.normalize();
-        // Slight predictive lead.
         Vec3 lead = aim.add(target.getDeltaMovement().scale(0.35));
         if (lead.lengthSqr() > 1.0E-4) {
             aim = lead.normalize();
         }
-        LargeFireball ball = new LargeFireball(this.level(), this, aim.x, aim.y, aim.z, 2);
+        EntityChaosFireball ball = new EntityChaosFireball(this.level(), this, aim.x, aim.y, aim.z);
         ball.setPos(from.x, from.y, from.z);
         this.level().addFreshEntity(ball);
         this.playSound(SoundEvents.GHAST_SHOOT, 1.4F, 0.7F + this.random.nextFloat() * 0.3F);
@@ -277,7 +275,7 @@ public class EntityMiranda3 extends Monster implements GeoEntity {
         float yawOff = (this.random.nextFloat() - 0.5F) * spreadDeg * ((float) Math.PI / 180F);
         float pitchOff = (this.random.nextFloat() - 0.5F) * spreadDeg * 0.5F * ((float) Math.PI / 180F);
         aim = aim.yRot(yawOff).xRot(pitchOff);
-        LargeFireball ball = new LargeFireball(this.level(), this, aim.x, aim.y, aim.z, 1);
+        EntityChaosFireball ball = new EntityChaosFireball(this.level(), this, aim.x, aim.y, aim.z);
         ball.setPos(from.x, from.y, from.z);
         this.level().addFreshEntity(ball);
     }
@@ -377,7 +375,7 @@ public class EntityMiranda3 extends Monster implements GeoEntity {
         return this.random.nextBoolean() ? SoundInit.ENTITY_MIRA_HURT1.get() : SoundInit.ENTITY_MIRA_HURT2.get();
     }
 
-    /** Descend / press surface targets. */
+    /** Descend / press surface targets — keep altitude low like Dimi2. */
     static class HuntGoal extends Goal {
         private final EntityMiranda3 mob;
         private int retarget;
@@ -390,6 +388,11 @@ public class EntityMiranda3 extends Monster implements GeoEntity {
         @Override
         public boolean canUse() {
             return this.mob.getCombatState() == STATE_IDLE;
+        }
+
+        @Override
+        public boolean canContinueToUse() {
+            return this.canUse();
         }
 
         @Override
@@ -407,13 +410,18 @@ public class EntityMiranda3 extends Monster implements GeoEntity {
                 }
             }
             this.mob.getLookControl().setLookAt(target, 40.0F, 40.0F);
-            double engageY = target.getY() + 3.0D;
             double dy = this.mob.getY() - target.getY();
-            if (dy > 6.0D) {
-                this.mob.flyToward(new Vec3(target.getX(), engageY, target.getZ()), 1.0D);
+            double dist = this.mob.distanceTo(target);
+            double engageY = target.getY() + Math.min(2.4D, Math.max(1.2D, target.getBbHeight()));
+            if (dy > 5.0D) {
+                this.mob.flyToward(new Vec3(target.getX(), engageY, target.getZ()), 1.1D);
+            } else if (dist > 4.0D) {
+                this.mob.flyToward(new Vec3(target.getX(), engageY, target.getZ()), 0.9D);
+                this.mob.getNavigation().moveTo(target.getX(), engageY, target.getZ(), 1.55D);
             } else {
-                this.mob.flyToward(new Vec3(target.getX(), engageY, target.getZ()), 0.7D);
-                this.mob.getNavigation().moveTo(target.getX(), engageY, target.getZ(), 1.4D);
+                double ang = this.mob.tickCount * 0.15D;
+                Vec3 side = new Vec3(Math.cos(ang) * 2.2, 0.0, Math.sin(ang) * 2.2);
+                this.mob.flyToward(target.position().add(side.x, engageY - target.getY(), side.z), 0.5D);
             }
         }
 
@@ -433,11 +441,13 @@ public class EntityMiranda3 extends Monster implements GeoEntity {
         private int timer;
         private int chosen;
         private int cooldown;
+        private int idlePressure;
         private Vec3 diveAim = Vec3.ZERO;
         private double soarY;
 
         MirandaCombatGoal(EntityMiranda3 mira) {
             this.mira = mira;
+            // LOOK only — leave MOVE free so HuntGoal can keep pressing.
             this.setFlags(EnumSet.of(Flag.LOOK));
         }
 
@@ -455,7 +465,8 @@ public class EntityMiranda3 extends Monster implements GeoEntity {
         public void start() {
             this.timer = 0;
             this.chosen = STATE_IDLE;
-            this.cooldown = 10;
+            this.cooldown = 8;
+            this.idlePressure = 0;
             this.mira.setAggressive(true);
         }
 
@@ -466,6 +477,7 @@ public class EntityMiranda3 extends Monster implements GeoEntity {
             this.mira.setNoGravity(true);
             this.chosen = STATE_IDLE;
             this.timer = 0;
+            this.idlePressure = 0;
         }
 
         @Override
@@ -486,27 +498,40 @@ public class EntityMiranda3 extends Monster implements GeoEntity {
             this.mira.lookAtTarget(target);
             double dist = this.mira.distanceTo(target);
             double dy = this.mira.getY() - target.getY();
-            if (dist > 5.0D || dy > 4.0D) {
-                this.mira.flyToward(new Vec3(target.getX(), target.getY() + 3.0D, target.getZ()), 0.7D);
+            // Always close distance even during cooldown — don't park in the sky.
+            if (dist > 6.0D || dy > 3.5D) {
+                double engageY = target.getY() + 1.8D;
+                this.mira.flyToward(new Vec3(target.getX(), engageY, target.getZ()),
+                        dy > 6.0D ? 1.15D : 0.8D);
             }
 
             if (this.cooldown > 0) {
                 --this.cooldown;
+                ++this.idlePressure;
+                if (this.idlePressure >= 30 && dy > 2.5D) {
+                    this.idlePressure = 0;
+                    this.begin(STATE_DIVE);
+                }
                 return;
             }
-            if (dist > 36.0D) {
+
+            this.idlePressure = 0;
+
+            // Far away: still attack instead of waiting.
+            if (dist > 32.0D) {
+                this.begin(dy > 4.0D ? STATE_DIVE : STATE_ORBS);
                 return;
             }
 
             float hp = this.mira.getHealth() / this.mira.getMaxHealth();
             int roll = this.mira.getRandom().nextInt(100);
-            if (hp < 0.45F && roll < 28) {
+            if (hp < 0.45F && roll < 32) {
                 this.begin(STATE_BARRAGE);
-            } else if (dy > 3.5D && roll < 50) {
+            } else if (dy > 3.0D && roll < 55) {
                 this.begin(STATE_DIVE);
-            } else if (roll < 38) {
+            } else if (roll < 42) {
                 this.begin(STATE_DIVE);
-            } else if (roll < 72) {
+            } else if (roll < 74) {
                 this.begin(STATE_ORBS);
             } else if (hp < 0.7F) {
                 this.begin(STATE_BARRAGE);
@@ -523,9 +548,10 @@ public class EntityMiranda3 extends Monster implements GeoEntity {
             LivingEntity t = this.mira.getTarget();
             if (t != null) {
                 this.diveAim = t.position();
-                this.soarY = Math.max(this.mira.getY(), t.getY()) + 7.0D;
+                // Short windup lift — avoid climbing too high before dive.
+                this.soarY = Math.max(this.mira.getY(), t.getY()) + 3.5D;
             } else {
-                this.soarY = this.mira.getY() + 7.0D;
+                this.soarY = this.mira.getY() + 3.5D;
             }
             this.mira.playSound(SoundEvents.ENDER_DRAGON_FLAP, 1.4F, 1.1F);
         }
@@ -535,7 +561,8 @@ public class EntityMiranda3 extends Monster implements GeoEntity {
             this.timer = 0;
             this.mira.setCombatState(STATE_IDLE);
             this.mira.setNoGravity(true);
-            this.cooldown = 12 + this.mira.getRandom().nextInt(12);
+            this.cooldown = 8 + this.mira.getRandom().nextInt(8);
+            this.idlePressure = 0;
         }
 
         private void run(LivingEntity target) {
@@ -600,9 +627,9 @@ public class EntityMiranda3 extends Monster implements GeoEntity {
          * Anim ~3.0s → 60 ticks. Charge 0-16, spray 17-55.
          */
         private void tickBarrage(LivingEntity target) {
-            // Hold near target's aerial center.
-            Vec3 center = new Vec3(target.getX(), target.getY() + 6.0D, target.getZ());
-            this.mira.flyToward(center, 0.45D);
+            // Hold above target, but not so high that chase pressure is lost.
+            Vec3 center = new Vec3(target.getX(), target.getY() + 3.8D, target.getZ());
+            this.mira.flyToward(center, 0.55D);
 
             if (this.timer <= 16) {
                 this.mira.spawnOrbChargeParticles(10);
