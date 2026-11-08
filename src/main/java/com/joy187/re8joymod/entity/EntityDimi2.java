@@ -96,9 +96,9 @@ public class EntityDimi2 extends Monster implements GeoEntity {
     public static AttributeSupplier.Builder prepareAttributes() {
         return Monster.createMonsterAttributes()
                 .add(Attributes.MAX_HEALTH, 350.0D)
-                .add(Attributes.MOVEMENT_SPEED, 0.45D)
-                .add(Attributes.FLYING_SPEED, 0.85D)
-                .add(Attributes.FOLLOW_RANGE, 40.0D)
+                .add(Attributes.MOVEMENT_SPEED, 0.55D)
+                .add(Attributes.FLYING_SPEED, 1.15D)
+                .add(Attributes.FOLLOW_RANGE, 56.0D)
                 .add(Attributes.ARMOR, 9.0D)
                 .add(Attributes.ATTACK_DAMAGE, 12.0D);
     }
@@ -122,13 +122,14 @@ public class EntityDimi2 extends Monster implements GeoEntity {
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new FloatGoal(this));
         this.goalSelector.addGoal(1, new DimiCombatGoal(this));
-        this.goalSelector.addGoal(2, new AerialHoverGoal(this));
-        this.goalSelector.addGoal(7, new LookAtPlayerGoal(this, Player.class, 12.0F));
+        this.goalSelector.addGoal(2, new GroundHuntGoal(this));
+        this.goalSelector.addGoal(7, new LookAtPlayerGoal(this, Player.class, 16.0F));
         this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
 
+        // mustSee=false so high-altitude Dimi still locks ground players.
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
-        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, true));
-        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, LivingEntity.class, 0, false, false, LIVING_ENTITY_SELECTOR));
+        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, 10, false, false, null));
+        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, LivingEntity.class, 10, false, false, LIVING_ENTITY_SELECTOR));
     }
 
     @Override
@@ -166,8 +167,12 @@ public class EntityDimi2 extends Monster implements GeoEntity {
                 this.move(MoverType.SELF, this.getDeltaMovement());
                 this.setDeltaMovement(this.getDeltaMovement().scale(0.5D));
             } else {
-                float friction = 0.91F;
-                this.moveRelative(0.05F, travelVector);
+                // Gravity must apply when noGravity is off (attack2 ground bounces).
+                if (!this.isNoGravity()) {
+                    this.setDeltaMovement(this.getDeltaMovement().add(0.0, -0.08D, 0.0));
+                }
+                float friction = this.onGround() && !this.isNoGravity() ? 0.6F : 0.91F;
+                this.moveRelative(this.isNoGravity() ? 0.05F : 0.02F, travelVector);
                 this.move(MoverType.SELF, this.getDeltaMovement());
                 this.setDeltaMovement(this.getDeltaMovement().scale(friction));
             }
@@ -204,6 +209,42 @@ public class EntityDimi2 extends Monster implements GeoEntity {
         this.setDeltaMovement(this.getDeltaMovement().scale(0.35D).add(n));
         this.hasImpulse = true;
         this.move(MoverType.SELF, this.getDeltaMovement());
+    }
+
+    /** True if standing on / very close to solid ground (for bounce skills). */
+    private boolean isTouchingGround() {
+        if (this.onGround()) {
+            return true;
+        }
+        BlockPos below = BlockPos.containing(this.getX(), this.getBoundingBox().minY - 0.35D, this.getZ());
+        return this.level().getBlockState(below).isFaceSturdy(this.level(), below, Direction.UP)
+                && this.getBoundingBox().minY - below.getY() <= 1.15D;
+    }
+
+    /** Ground-bounce AoE used by attack2. */
+    private void groundBounceHit(LivingEntity prefer) {
+        this.playSound(SoundEvents.HOGLIN_ATTACK, 1.3F, 0.55F);
+        this.playSound(SoundEvents.GENERIC_EXPLODE, 0.55F, 1.35F);
+        AABB box = this.getBoundingBox().inflate(4.5D, 2.0D, 4.5D);
+        for (LivingEntity e : this.level().getEntitiesOfClass(LivingEntity.class, box, LIVING_ENTITY_SELECTOR)) {
+            if (e == this || this.isAlliedTo(e)) {
+                continue;
+            }
+            e.hurt(this.damageSources().mobAttack(this), 12.0F);
+            e.setDeltaMovement(e.getDeltaMovement().add(0.0, 0.55, 0.0));
+            e.addEffect(new MobEffectInstance(MobEffects.WITHER, 60, 0, false, true));
+        }
+        if (prefer != null && prefer.isAlive() && this.distanceTo(prefer) <= 5.5D) {
+            prefer.hurt(this.damageSources().mobAttack(this), 6.0F);
+        }
+        // Small local smash debris for the bounce.
+        this.blockSmashAttack(1, 2.5F, 0.0F, 40, 0.9F, 0.06F, 0.55F);
+        this.blockSmashAttack(2, 2.5F, 1.5F, 40, 0.9F, 0.06F, 0.55F);
+        this.blockSmashAttack(2, 2.5F, -1.5F, 40, 0.9F, 0.06F, 0.55F);
+        if (this.level() instanceof ServerLevel server) {
+            server.sendParticles(ParticleTypes.CLOUD, this.getX(), this.getY(), this.getZ(), 18, 1.8, 0.2, 1.8, 0.03);
+            server.sendParticles(ParticleTypes.SWEEP_ATTACK, this.getX(), this.getY() + 0.4, this.getZ(), 3, 1.2, 0.1, 1.2, 0);
+        }
     }
 
     private void lookAtTarget(LivingEntity target) {
@@ -503,18 +544,22 @@ public class EntityDimi2 extends Monster implements GeoEntity {
         return SoundInit.ENTITY_DIMI_HURT2.get();
     }
 
-    /** Hover / chase while idle — real FlyingPathNavigation, not wither AI. */
-    static class AerialHoverGoal extends Goal {
+    /**
+     * Actively hunt ground targets: descend toward them instead of parking high forever.
+     * Uses direct flyToward so movement is not stuck waiting on pathfinding alone.
+     */
+    static class GroundHuntGoal extends Goal {
         private final EntityDimi2 mob;
+        private int retargetClock;
 
-        AerialHoverGoal(EntityDimi2 mob) {
+        GroundHuntGoal(EntityDimi2 mob) {
             this.mob = mob;
-            this.setFlags(EnumSet.of(Flag.MOVE));
+            this.setFlags(EnumSet.of(Flag.MOVE, Flag.LOOK));
         }
 
         @Override
         public boolean canUse() {
-            return this.mob.getCombatState() == STATE_IDLE && this.mob.getTarget() != null;
+            return this.mob.getCombatState() == STATE_IDLE;
         }
 
         @Override
@@ -524,13 +569,65 @@ public class EntityDimi2 extends Monster implements GeoEntity {
 
         @Override
         public void tick() {
+            if (++this.retargetClock >= 20) {
+                this.retargetClock = 0;
+                this.ensureTarget();
+            }
+
             LivingEntity target = this.mob.getTarget();
-            if (target == null) {
+            if (target == null || !target.isAlive()) {
+                this.ensureTarget();
+                target = this.mob.getTarget();
+                if (target == null) {
+                    return;
+                }
+            }
+
+            this.mob.getLookControl().setLookAt(target, 40.0F, 40.0F);
+            double dy = this.mob.getY() - target.getY();
+            double dist = this.mob.distanceTo(target);
+
+            // Stay low and press in — hover ceiling ~2.2 above target head.
+            double engageY = target.getY() + Math.min(2.2D, Math.max(1.0D, target.getBbHeight()));
+            if (dy > 5.0D) {
+                // Too high: force descend hard toward the ground target.
+                this.mob.flyToward(new Vec3(target.getX(), engageY, target.getZ()), 1.05D);
+            } else if (dist > 4.0D) {
+                this.mob.flyToward(new Vec3(target.getX(), engageY, target.getZ()), 0.85D);
+                this.mob.getNavigation().moveTo(target.getX(), engageY, target.getZ(), 1.6D);
+            } else {
+                // Close: circle slightly but keep altitude low.
+                double ang = this.mob.tickCount * 0.15D;
+                Vec3 side = new Vec3(Math.cos(ang) * 2.0, 0.0, Math.sin(ang) * 2.0);
+                this.mob.flyToward(target.position().add(side.x, engageY - target.getY(), side.z), 0.45D);
+            }
+        }
+
+        private void ensureTarget() {
+            if (this.mob.getTarget() != null && this.mob.getTarget().isAlive()) {
                 return;
             }
-            double hoverY = target.getY() + 4.0D + Math.sin(this.mob.tickCount * 0.07D) * 0.8D;
-            this.mob.getNavigation().moveTo(target.getX(), hoverY, target.getZ(), 1.25D);
-            this.mob.getLookControl().setLookAt(target, 30.0F, 30.0F);
+            Player nearest = this.mob.level().getNearestPlayer(this.mob, 48.0D);
+            if (nearest != null && !nearest.isCreative() && !nearest.isSpectator()) {
+                this.mob.setTarget(nearest);
+                return;
+            }
+            LivingEntity best = null;
+            double bestDist = 48.0D;
+            for (LivingEntity e : this.mob.level().getEntitiesOfClass(LivingEntity.class,
+                    this.mob.getBoundingBox().inflate(48.0D), LIVING_ENTITY_SELECTOR)) {
+                if (e == this.mob || this.mob.isAlliedTo(e)) {
+                    continue;
+                }
+                double d = this.mob.distanceTo(e);
+                if (d < bestDist) {
+                    bestDist = d;
+                    best = e;
+                }
+            }
+            if (best != null) {
+                this.mob.setTarget(best);
+            }
         }
     }
 
@@ -543,13 +640,17 @@ public class EntityDimi2 extends Monster implements GeoEntity {
         private int timer;
         private int chosen;
         private int cooldown;
+        private int idlePressure;
+        private int bounceCount;
+        private int lastBounceTick;
         private Vec3 diveAim = Vec3.ZERO;
         private double soarY;
         private double flyupAngle;
 
         DimiCombatGoal(EntityDimi2 dimi) {
             this.dimi = dimi;
-            this.setFlags(EnumSet.of(Flag.MOVE, Flag.LOOK));
+            // LOOK only — leave MOVE free so GroundHuntGoal can keep pressing.
+            this.setFlags(EnumSet.of(Flag.LOOK));
         }
 
         @Override
@@ -566,7 +667,8 @@ public class EntityDimi2 extends Monster implements GeoEntity {
         public void start() {
             this.timer = 0;
             this.chosen = STATE_IDLE;
-            this.cooldown = 20;
+            this.cooldown = 8;
+            this.idlePressure = 0;
             this.dimi.setAggressive(true);
         }
 
@@ -576,6 +678,8 @@ public class EntityDimi2 extends Monster implements GeoEntity {
             this.dimi.setCombatState(STATE_IDLE);
             this.timer = 0;
             this.chosen = STATE_IDLE;
+            this.bounceCount = 0;
+            this.dimi.setNoGravity(true);
             this.dimi.getNavigation().stop();
         }
 
@@ -594,26 +698,51 @@ public class EntityDimi2 extends Monster implements GeoEntity {
                 return;
             }
 
+            this.dimi.lookAtTarget(target);
+            double dist = this.dimi.distanceTo(target);
+            double dy = this.dimi.getY() - target.getY();
+
+            // Always close distance even during cooldown — don't idle in the sky.
+            if (dist > 6.0D || dy > 3.5D) {
+                double engageY = target.getY() + 1.6D;
+                this.dimi.flyToward(new Vec3(target.getX(), engageY, target.getZ()),
+                        dy > 6.0D ? 1.1D : 0.75D);
+            }
+
             if (this.cooldown > 0) {
                 --this.cooldown;
+                ++this.idlePressure;
+                // Been hovering too long without a skill → force a dive on the ground target.
+                if (this.idlePressure >= 35 && dy > 2.5D) {
+                    this.idlePressure = 0;
+                    this.begin(STATE_DIVE);
+                }
                 return;
             }
 
-            double dist = this.dimi.distanceTo(target);
-            if (dist > 28.0D) {
+            this.idlePressure = 0;
+
+            // Far away: still attack with dive/breath instead of waiting.
+            if (dist > 32.0D) {
+                this.begin(dy > 4.0D ? STATE_DIVE : STATE_BREATH);
                 return;
             }
 
-            // Prefer flyup path when mid/low HP for spectacle.
             float hpRatio = this.dimi.getHealth() / this.dimi.getMaxHealth();
             int roll = this.dimi.getRandom().nextInt(100);
-            if (hpRatio < 0.55F && roll < 18) {
-                this.begin(STATE_FLYUP);
-            } else if (roll < 22) {
+
+            // High above ground target → strongly prefer dive smash.
+            if (dy > 4.5D && roll < 55) {
                 this.begin(STATE_DIVE);
-            } else if (roll < 42) {
+            } else if (dist < 7.0D && roll < 45) {
+                this.begin(STATE_ATTACK2);
+            } else if (hpRatio < 0.55F && roll < 16) {
+                this.begin(STATE_FLYUP);
+            } else if (roll < 30) {
+                this.begin(STATE_DIVE);
+            } else if (roll < 52) {
                 this.begin(STATE_BREATH);
-            } else if (roll < 62) {
+            } else if (roll < 72) {
                 this.begin(STATE_ATTACK3);
             } else {
                 this.begin(STATE_ATTACK2);
@@ -623,14 +752,19 @@ public class EntityDimi2 extends Monster implements GeoEntity {
         private void begin(int state) {
             this.chosen = state;
             this.timer = 0;
+            this.idlePressure = 0;
+            this.bounceCount = 0;
+            this.lastBounceTick = -20;
             this.dimi.setCombatState(state);
             this.dimi.getNavigation().stop();
+            // attack2 needs real gravity so she can touch the ground and bounce.
+            this.dimi.setNoGravity(state != STATE_ATTACK2);
             LivingEntity t = this.dimi.getTarget();
             if (t != null) {
                 this.diveAim = t.position();
-                this.soarY = Math.max(this.dimi.getY(), t.getY()) + 9.0D;
+                this.soarY = Math.max(this.dimi.getY(), t.getY()) + (state == STATE_DIVE ? 6.0D : 8.0D);
             } else {
-                this.soarY = this.dimi.getY() + 9.0D;
+                this.soarY = this.dimi.getY() + 6.0D;
             }
             this.flyupAngle = this.dimi.getYRot() * ((float) Math.PI / 180F);
             this.dimi.playSound(SoundEvents.ENDER_DRAGON_FLAP, 1.5F, 0.9F);
@@ -639,8 +773,10 @@ public class EntityDimi2 extends Monster implements GeoEntity {
         private void finish() {
             this.chosen = STATE_IDLE;
             this.timer = 0;
+            this.bounceCount = 0;
             this.dimi.setCombatState(STATE_IDLE);
-            this.cooldown = 25 + this.dimi.getRandom().nextInt(20);
+            this.dimi.setNoGravity(true);
+            this.cooldown = 8 + this.dimi.getRandom().nextInt(10);
             this.dimi.setDeltaMovement(this.dimi.getDeltaMovement().multiply(0.2, 0.2, 0.2));
         }
 
@@ -655,21 +791,57 @@ public class EntityDimi2 extends Monster implements GeoEntity {
             }
         }
 
-        /** attack2 ~4.0s = 80 ticks — claw flurry with forward hops. */
+        /**
+         * attack2 ~4.0s = 80 ticks — slam to ground, bounce several times.
+         * Gravity is enabled for this skill so she must contact the floor.
+         */
         private void tickAttack2(LivingEntity target) {
-            if (this.timer <= 10) {
-                this.dimi.flyToward(target.position().add(0.0, 2.0, 0.0), 0.35D);
+            this.dimi.setNoGravity(false);
+
+            // Keep chasing the target horizontally while falling/bouncing.
+            Vec3 flat = new Vec3(target.getX() - this.dimi.getX(), 0.0, target.getZ() - this.dimi.getZ());
+            if (flat.lengthSqr() > 0.25D) {
+                Vec3 n = flat.normalize().scale(0.28D);
+                Vec3 v = this.dimi.getDeltaMovement();
+                this.dimi.setDeltaMovement(v.x * 0.55 + n.x, v.y, v.z * 0.55 + n.z);
+                this.dimi.hasImpulse = true;
             }
-            if (this.timer == 18 || this.timer == 36 || this.timer == 54) {
-                this.dimi.flyToward(target.position().add(0.0, 1.5, 0.0), 0.7D);
-                this.dimi.dealConeHit(target, 10.0F, 6.0F, 70.0F);
-                this.dimi.playSound(SoundEvents.PLAYER_ATTACK_SWEEP, 1.5F, 0.6F);
-                this.dimi.level().playSound(null, this.dimi.blockPosition(), SoundEvents.SCULK_VEIN_PLACE, SoundSource.HOSTILE, 1.5F, 1.0F);
+
+            // First phase: force a hard drop onto the ground near the target.
+            if (this.timer <= 12 && !this.dimi.isTouchingGround()) {
+                Vec3 drop = new Vec3(target.getX(), target.getY(), target.getZ());
+                this.dimi.flyToward(drop, 0.55D);
+                this.dimi.setDeltaMovement(this.dimi.getDeltaMovement().x, -1.05D, this.dimi.getDeltaMovement().z);
             }
-            if (this.timer == 54) {
-                this.dimi.spawnFlames(this.dimi.getX(), this.dimi.getZ(), this.dimi.getY() + 4, this.dimi.getY(), 0, 0);
+
+            boolean landed = this.dimi.isTouchingGround();
+            if (landed && this.timer >= 6 && this.timer - this.lastBounceTick >= 10 && this.bounceCount < 4) {
+                this.lastBounceTick = this.timer;
+                this.bounceCount++;
+                this.dimi.groundBounceHit(target);
+
+                // Leap toward target for the next bounce.
+                Vec3 hopDir = flat.lengthSqr() > 0.01D ? flat.normalize() : this.dimi.getLookAngle();
+                double hopY = 0.95D - this.bounceCount * 0.08D;
+                this.dimi.setDeltaMovement(hopDir.x * 0.55D, Math.max(0.55D, hopY), hopDir.z * 0.55D);
+                this.dimi.hasImpulse = true;
+
+                if (this.bounceCount == 2) {
+                    this.dimi.spawnFlames(this.dimi.getX(), this.dimi.getZ(), this.dimi.getY() + 3, this.dimi.getY(), 0, 0);
+                }
+            } else if (!landed && this.timer > 12 && this.bounceCount < 4) {
+                // Keep pulling down between bounces so she actually lands again.
+                Vec3 v = this.dimi.getDeltaMovement();
+                if (v.y > -0.15D) {
+                    this.dimi.setDeltaMovement(v.x, v.y - 0.12D, v.z);
+                }
             }
-            if (this.timer >= 80) {
+
+            // End after 4 bounces, or timeout; final ground slap if somehow never bounced.
+            if (this.bounceCount >= 4 || this.timer >= 80) {
+                if (this.bounceCount == 0 && this.dimi.isTouchingGround()) {
+                    this.dimi.groundBounceHit(target);
+                }
                 this.finish();
             }
         }
