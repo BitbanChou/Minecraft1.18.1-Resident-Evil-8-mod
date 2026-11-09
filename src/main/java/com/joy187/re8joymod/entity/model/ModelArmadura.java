@@ -24,7 +24,7 @@ public class ModelArmadura extends GeoModel<EntityArmadura> {
 
     @Override
     public ResourceLocation getAnimationResource(EntityArmadura animatable) {
-        return new ResourceLocation(Main.MOD_ID, "animations/arma.animation.json");
+        return new ResourceLocation(Main.MOD_ID, "animations/armadura.animation.json");
     }
 
 }
