@@ -54,8 +54,14 @@ public class EntityArmadura extends Ravager implements GeoEntity {
     private static final float MELEE_RANGE = 3.2F;
     private static final float SLASH_RANGE = 3.5F;
     private static final float SLASH_HALF_ANGLE = 60.0F;
-    private static final double CHARGE_SPEED = 1.55D;
-    private static final int ATTACK_COOLDOWN = 35;
+
+    /** 统一移动速度（不再冲锋提速）。 */
+    private static final double MOVE_SPEED = 0.12D;
+    /** 追击时 moveTo 的路径速度倍率。 */
+    private static final double CHASE_PATH_SPEED = 0.9D;
+
+    /** 攻击结束后的冷却 tick（原 35 太长，改为 12）。 */
+    private static final int ATTACK_COOLDOWN = 12;
 
     private final AnimatableInstanceCache factory = GeckoLibUtil.createInstanceCache(this);
 
@@ -72,7 +78,7 @@ public class EntityArmadura extends Ravager implements GeoEntity {
     public static AttributeSupplier.Builder prepareAttributes() {
         return Monster.createMonsterAttributes()
                 .add(Attributes.MAX_HEALTH, 35.0D)
-                .add(Attributes.MOVEMENT_SPEED, 0.12D)
+                .add(Attributes.MOVEMENT_SPEED, MOVE_SPEED)
                 .add(Attributes.ARMOR, 3.5D)
                 .add(Attributes.ATTACK_DAMAGE, 16.0D)
                 .add(Attributes.FOLLOW_RANGE, 32.0D);
@@ -123,88 +129,38 @@ public class EntityArmadura extends Ravager implements GeoEntity {
         return null;
     }
 
+    /** 走路/待机控制器：攻击期间主动让出骨骼控制权。 */
     protected <E extends GeoAnimatable> PlayState predicate(AnimationState<E> event) {
+        int state = this.entityData.get(STATE);
+        if (state == 1 || state == 2 || state == 3) {
+            return PlayState.STOP;
+        }
+
         if (event.isMoving()) {
+            event.getController().setAnimationSpeed(1.0F);
             event.setAndContinue(RawAnimation.begin().thenPlay(this.animWalk()));
             return PlayState.CONTINUE;
         }
 
+        event.getController().setAnimationSpeed(1.0F);
         event.setAndContinue(RawAnimation.begin().thenPlay(this.animIdle()));
         return PlayState.CONTINUE;
     }
 
-    protected <E extends GeoAnimatable> PlayState predicate1(AnimationState<E> event) {
-        if (this.dead || this.getHealth() < 0.01 || this.isDeadOrDying()) {
-            return PlayState.STOP;
-        }
-        int state = this.entityData.get(STATE);
-        if (state == 1) {
-            event.setAndContinue(RawAnimation.begin().thenPlay(this.animAttack()));
-            return PlayState.CONTINUE;
-        }
-        if (state == 2) {
-            event.setAndContinue(RawAnimation.begin().thenPlay(this.animAttack2()));
-            return PlayState.CONTINUE;
-        }
-        if (state == 3 && this.animSpecialAttack() != null) {
-            event.setAndContinue(RawAnimation.begin().thenPlay(this.animSpecialAttack()));
-            return PlayState.CONTINUE;
-        }
-        return PlayState.STOP;
-    }
-
-    /** 1 = normal slash, 2 = heavy slash, 3 = special (subclass). */
-    protected int pickAttackState() {
-        float hp = this.getHealth();
-        float max = this.getMaxHealth();
-        if (hp >= max * 0.85F || hp <= max * 0.25F || (hp >= max * 0.45F && hp <= max * 0.6F)) {
-            return 2;
-        }
-        return 1;
-    }
-
-    /**
-     * Full attack clip length in ticks (20 tps).
-     * Must match animation_length: attack/attack2=1.5s→30, tenta=1.6s→32.
-     */
-    protected int attackDurationTicks(int state) {
-        return state == 3 ? 32 : 30;
-    }
-
-    /**
-     * Damage frame measured from attack start (STATE set at timer=1).
-     * Aligns with anim peaks: attack2≈0.9s→18, attack/tenta≈1.0s→20.
-     */
-    protected int attackHitTick(int state) {
-        if (state == 2) {
-            return 18;
-        }
-        if (state == 1 || state == 3) {
-            return 20;
-        }
-        return -1;
-    }
-
-    protected void onAttackHit(LivingEntity target, int state, float baseDamage) {
-        if (state == 2) {
-            this.dealSlashHit(target, baseDamage * 1.25F, SLASH_RANGE, SLASH_HALF_ANGLE);
-            this.playSound(SoundEvents.PLAYER_ATTACK_SWEEP, 1.2F, 0.85F);
-        } else if (state == 1) {
-            this.dealSlashHit(target, baseDamage, SLASH_RANGE, SLASH_HALF_ANGLE);
-            this.playSound(SoundEvents.PLAYER_ATTACK_SWEEP, 1.1F, 0.9F);
-        }
-    }
-
-    protected void onAttackFinished(int state) {
-    }
-
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
-        data.add(new AnimationController<>(this, "controller",
-                8, this::predicate));
-        // Keep attack blend short so damage frames stay visually synced
-        data.add(new AnimationController<>(this, "controller1",
-                1, this::predicate1));
+        // 攻击控制器：由 triggerAnim 触发一次性动画，默认不播放
+        AnimationController<EntityArmadura> attackController =
+                new AnimationController<>(this, "controller1", 3, state -> PlayState.STOP)
+                        .triggerableAnim("slash", RawAnimation.begin().thenPlay(this.animAttack()))
+                        .triggerableAnim("heavy", RawAnimation.begin().thenPlay(this.animAttack2()));
+        if (this.animSpecialAttack() != null) {
+            attackController.triggerableAnim("special", RawAnimation.begin().thenPlay(this.animSpecialAttack()));
+        }
+        data.add(attackController);
+
+        // 走路/待机控制器
+        data.add(new AnimationController<>(this, "controller", 8, this::predicate));
     }
 
     @Override
@@ -271,6 +227,20 @@ public class EntityArmadura extends Ravager implements GeoEntity {
         return lookFlat.dot(toFlat.normalize()) >= Math.cos(Math.toRadians(halfAngleDeg));
     }
 
+    /** 把实体朝向强制转向某个坐标（用于开打/命中时对齐目标）。 */
+    protected void faceTowards(double tx, double tz) {
+        double dx = tx - this.getX();
+        double dz = tz - this.getZ();
+        if (dx * dx + dz * dz < 1.0E-6) {
+            return;
+        }
+        float yaw = (float) (Mth.atan2(dz, dx) * (180.0D / Math.PI)) - 90.0F;
+        this.setYRot(yaw);
+        this.setYHeadRot(yaw);
+        this.yBodyRot = yaw;
+        this.yHeadRotO = yaw;
+    }
+
     protected void dealSlashHit(LivingEntity prefer, float damage, float range, float halfAngle) {
         AABB box = this.getBoundingBox().inflate(range);
         for (LivingEntity e : this.level().getEntitiesOfClass(LivingEntity.class, box, ARMA_AREA)) {
@@ -280,9 +250,13 @@ public class EntityArmadura extends Ravager implements GeoEntity {
             if (this.distanceTo(e) > range + 0.5F) {
                 continue;
             }
-            if (!this.inFrontCone(e, halfAngle)) {
+
+            // 首选目标放宽到 180°，避免"锁定了却打空"；其它目标保持原半角
+            float effectiveHalfAngle = (e == prefer) ? 180.0F : halfAngle;
+            if (!this.inFrontCone(e, effectiveHalfAngle)) {
                 continue;
             }
+
             e.hurt(this.damageSources().mobAttack(this), damage);
             if (e == prefer || e instanceof Player) {
                 Vec3 push = this.getLookAngle();
@@ -310,6 +284,59 @@ public class EntityArmadura extends Ravager implements GeoEntity {
                 }
             }
         }
+    }
+
+    /** 1 = normal slash, 2 = heavy slash, 3 = special (subclass). */
+    protected int pickAttackState() {
+        float hp = this.getHealth();
+        float max = this.getMaxHealth();
+        if (hp >= max * 0.85F || hp <= max * 0.25F || (hp >= max * 0.45F && hp <= max * 0.6F)) {
+            return 2;
+        }
+        return 1;
+    }
+
+    /**
+     * Full attack clip length in ticks (20 tps).
+     * attack/attack2 = 1.5s -> 30; special (tenta) = 1.6s -> 32.
+     */
+    protected int attackDurationTicks(int state) {
+        return state == 3 ? 32 : 30;
+    }
+
+    /**
+     * Damage frame measured from attack start.
+     * attack2 peak = 0.9s -> 18; attack peak = 0.75s -> 15; special peak = 1.0s -> 20.
+     */
+    protected int attackHitTick(int state) {
+        if (state == 2) {
+            return 18;
+        }
+        if (state == 1) {
+            return 15;
+        }
+        if (state == 3) {
+            return 20;
+        }
+        return -1;
+    }
+
+    protected void onAttackHit(LivingEntity target, int state, float baseDamage) {
+        // 命中瞬间再对齐一次朝向，减少目标绕侧导致的挥空
+        if (target != null && target.isAlive()) {
+            this.faceTowards(target.getX(), target.getZ());
+        }
+
+        if (state == 2) {
+            this.dealSlashHit(target, baseDamage * 1.25F, SLASH_RANGE, SLASH_HALF_ANGLE);
+            this.playSound(SoundEvents.PLAYER_ATTACK_SWEEP, 1.2F, 0.85F);
+        } else if (state == 1) {
+            this.dealSlashHit(target, baseDamage, SLASH_RANGE, SLASH_HALF_ANGLE);
+            this.playSound(SoundEvents.PLAYER_ATTACK_SWEEP, 1.1F, 0.9F);
+        }
+    }
+
+    protected void onAttackFinished(int state) {
     }
 
     static class AttackGoal extends Goal {
@@ -350,36 +377,36 @@ public class EntityArmadura extends Ravager implements GeoEntity {
             double dist = this.parentEntity.distanceTo(target);
             boolean inMelee = dist <= MELEE_RANGE;
 
+            // 1) 攻击进行中：站定并推进攻击帧
             if (this.attackTimer > 0) {
                 this.parentEntity.getNavigation().stop();
                 this.tickAttack(target);
                 return;
             }
 
-            if (!this.parentEntity.hasLineOfSight(target)) {
-                this.parentEntity.getNavigation().moveTo(target, CHARGE_SPEED);
-                this.parentEntity.setAttackingState(0);
-                if (this.attackTimer < 0) {
-                    this.attackTimer++;
-                }
-                return;
-            }
-
-            if (!inMelee) {
-                this.parentEntity.getNavigation().moveTo(target, CHARGE_SPEED);
-                this.parentEntity.setAttackingState(0);
-                if (this.attackTimer < 0) {
-                    this.attackTimer++;
-                }
-                return;
-            }
-
-            this.parentEntity.getNavigation().stop();
+            // 2) 冷却中：推进计时器（不 return，继续走追击/走位逻辑）
             if (this.attackTimer < 0) {
                 this.attackTimer++;
-            } else {
+            }
+
+            // 3) 不在近战范围 / 无视线：靠近目标
+            if (!inMelee || !this.parentEntity.hasLineOfSight(target)) {
+                this.parentEntity.getNavigation().moveTo(target, CHASE_PATH_SPEED);
+                this.parentEntity.setAttackingState(0);
+                return;
+            }
+
+            // 4) 在近战范围：冷却结束才开打，否则站定等冷却
+            this.parentEntity.getNavigation().stop();
+            if (this.attackTimer == 0) {
                 this.attackTimer = 1;
-                this.parentEntity.setAttackingState(this.parentEntity.pickAttackState());
+
+                // 开打瞬间强制面向目标，保证扇形判定对准
+                this.parentEntity.faceTowards(target.getX(), target.getZ());
+
+                int state = this.parentEntity.pickAttackState();
+                this.parentEntity.setAttackingState(state);
+                this.parentEntity.startAttackAnim(state);
             }
         }
 
@@ -400,6 +427,17 @@ public class EntityArmadura extends Ravager implements GeoEntity {
             } else {
                 this.attackTimer++;
             }
+        }
+    }
+
+    /** 根据攻击状态触发对应的一次性动画。 */
+    protected void startAttackAnim(int state) {
+        if (state == 1) {
+            this.triggerAnim("controller1", "slash");
+        } else if (state == 2) {
+            this.triggerAnim("controller1", "heavy");
+        } else if (state == 3 && this.animSpecialAttack() != null) {
+            this.triggerAnim("controller1", "special");
         }
     }
 
@@ -468,6 +506,6 @@ public class EntityArmadura extends Ravager implements GeoEntity {
     }
 
     public int getMaxDeathTime() {
-        return 60;
+        return 32;
     }
 }
