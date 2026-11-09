@@ -366,7 +366,7 @@ public class EntityInit {
 
     public static final RegistryObject<EntityType<EntityArmadura>> ARMADURA = ENTITY_TYPES.register("armadura",
             () -> EntityType.Builder.of(EntityArmadura::new, MobCategory.MONSTER).sized(0.8F, 2F)
-                    .setTrackingRange(40).updateInterval(10).build("armadura"));
+                    .fireImmune().setTrackingRange(40).updateInterval(10).build("armadura"));
 
     public static final RegistryObject<EntityType<EntityZealot>> ZEALOT = ENTITY_TYPES.register("zealot",
             () -> EntityType.Builder.of(EntityZealot::new, MobCategory.MONSTER).sized(1F, 2F)
@@ -390,7 +390,7 @@ public class EntityInit {
 
     public static final RegistryObject<EntityType<EntityPlagasArmadura>> PLAGASARMADURA = ENTITY_TYPES.register("plagasarmadura",
             () -> EntityType.Builder.of(EntityPlagasArmadura::new, MobCategory.MONSTER).sized(0.8F, 2F)
-                    .setTrackingRange(40).updateInterval(10).build("plagasarmadura"));
+                    .fireImmune().setTrackingRange(40).updateInterval(10).build("plagasarmadura"));
 
     public static final RegistryObject<EntityType<EntityZealota>> ZEALOTA = ENTITY_TYPES.register("zealota",
             () -> EntityType.Builder.of(EntityZealota::new, MobCategory.MONSTER).sized(1F, 2F)
