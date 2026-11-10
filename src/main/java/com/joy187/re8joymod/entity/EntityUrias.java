@@ -201,71 +201,59 @@ public class EntityUrias extends Ravager implements GeoEntity {
 
      }
     
-//    private <E extends GeoAnimatable> PlayState predicate(AnimationState<E> event) {
-//        if (event.isMoving()) {
-//            event.setAndContinue(RawAnimation.begin().thenPlay("animation.urias.walk"));
-//            return PlayState.CONTINUE;
-//        }
-//
-//
-//        event.setAndContinue(RawAnimation.begin().thenPlay("animation.urias.idle"));
-//        return PlayState.CONTINUE;
-//    }
-//
-//	private <E extends GeoAnimatable> PlayState predicate1(AnimationState<E> event) {
-//		if (this.entityData.get(STATE) == 1 && !(this.dead || this.getHealth() < 0.01 || this.isDeadOrDying())) {
-//			event.setAndContinue(RawAnimation.begin().thenPlay("animation.urias.attack"));
-//			return PlayState.CONTINUE;
-//		}
-//		if (this.entityData.get(STATE) == 2 && !(this.dead || this.getHealth() < 0.01 || this.isDeadOrDying())) {
-//			event.setAndContinue(RawAnimation.begin().thenPlay("animation.urias.attack2"));
-//			return PlayState.CONTINUE;
-//		}
-//		return PlayState.STOP;
-//	}
-
-	private <E extends GeoAnimatable> PlayState predicate(software.bernie.geckolib.core.animation.AnimationState<E> event) {
-
-		// 检测生物是否死亡
-//		if (this.dead || this.getHealth() < 0.01 || this.isDeadOrDying()) {
-//			event.setAndContinue(RawAnimation.begin().thenPlay("death")); // 播放死亡动画
-//			return PlayState.CONTINUE;
-//		}
-
-		if (event.isMoving()) {
-			event.setAndContinue(RawAnimation.begin().thenPlay("animation.urias.walk"));
-			return PlayState.CONTINUE;
-		}
-
-		event.setAndContinue(RawAnimation.begin().thenPlay("animation.urias.idle"));
-		return PlayState.CONTINUE;
+	protected String animWalk() {
+		return "animation.urias.walk";
 	}
 
-	public static <T extends EntityUrias & GeoAnimatable> AnimationController<T> genericAttackAnimation(T animatable, RawAnimation attackAnimation) {
-		return new AnimationController<>(animatable, "Attack", 0, event -> {
-			if (attackAnimationState.isStarted() && !(animatable.dead || animatable.getHealth() < 0.01 || animatable.isDeadOrDying())) {
-				event.setAndContinue(RawAnimation.begin().thenPlay("animation.urias.attack"));
+	protected String animIdle() {
+		return "animation.urias.idle";
+	}
 
-				return PlayState.CONTINUE;
-			}
-			if (attackAnimationState2.isStarted() && !(animatable.dead || animatable.getHealth() < 0.01 || animatable.isDeadOrDying())) {
-				event.setAndContinue(RawAnimation.begin().thenPlay("animation.urias.attack2"));
+	protected String animRecover() {
+		return "animation.urias.recover";
+	}
 
-				//return PlayState.CONTINUE;
-			}
+	protected String animSlash() {
+		return "animation.urias.attack";
+	}
 
-			event.getController().forceAnimationReset();
+	protected String animHeavy() {
+		return "animation.urias.attack2";
+	}
+
+	protected String animCharge() {
+		return "animation.urias.charge";
+	}
+
+	protected <E extends GeoAnimatable> PlayState predicate(software.bernie.geckolib.core.animation.AnimationState<E> event) {
+		int atk = this.entityData.get(STATE);
+		if (atk == 1 || atk == 2 || atk == 3) {
+			return PlayState.STOP;
+		}
+		// Post-attack recovery / stagger
+		if (this.getDefendingState() == 1 || this.hasEffect(MobEffects.DAMAGE_RESISTANCE)) {
+			event.setAndContinue(RawAnimation.begin().thenLoop(this.animRecover()));
 			return PlayState.CONTINUE;
-		});
+		}
+		if (event.isMoving()) {
+			event.setAndContinue(RawAnimation.begin().thenPlay(this.animWalk()));
+			return PlayState.CONTINUE;
+		}
+		event.setAndContinue(RawAnimation.begin().thenPlay(this.animIdle()));
+		return PlayState.CONTINUE;
 	}
 
 	@Override
 	public void registerControllers(AnimatableManager.ControllerRegistrar data) {
-		data.add(new AnimationController(this, "controller",
-				0, this::predicate));
-		data.add(genericAttackAnimation(this, DefaultAnimations.ATTACK_STRIKE));
-
+		AnimationController<?> attackController =
+				new AnimationController<>(this, "controller1", 3, state -> PlayState.STOP)
+						.triggerableAnim("slash", RawAnimation.begin().thenPlay(this.animSlash()))
+						.triggerableAnim("heavy", RawAnimation.begin().thenPlay(this.animHeavy()))
+						.triggerableAnim("charge", RawAnimation.begin().thenPlay(this.animCharge()));
+		data.add(attackController);
+		data.add(new AnimationController<>(this, "controller", 8, this::predicate));
 	}
+
 
 //    @Override
 //	public void registerControllers(AnimatableManager.ControllerRegistrar data) {
@@ -287,8 +275,24 @@ public class EntityUrias extends Ravager implements GeoEntity {
 		return this.entityData.get(STATE);
 	}
 	
+	
+	/** Trigger one-shot attack animation via GeckoLib triggerAnim. */
+	protected void startAttackAnim(int state) {
+		if (state == 1) {
+			this.triggerAnim("controller1", "slash");
+		} else if (state == 2) {
+			this.triggerAnim("controller1", "heavy");
+		} else if (state == 3) {
+			this.triggerAnim("controller1", "charge");
+		}
+	}
+
 	public void setAttackingState(int time) {
+		int prev = this.entityData.get(STATE);
 		this.entityData.set(STATE, time);
+		if ((time == 1 || time == 2 || time == 3) && prev != time) {
+			this.startAttackAnim(time);
+		}
 	}
 
 	@Override
@@ -361,6 +365,20 @@ public class EntityUrias extends Ravager implements GeoEntity {
 	public void tick() {
 		super.tick();
 
+		// Post-attack recovery: stand still + recover anim for the resistance window
+		if (this.hasEffect(MobEffects.DAMAGE_RESISTANCE)) {
+			this.setDefendingState(1);
+			this.getNavigation().stop();
+			this.setDeltaMovement(this.getDeltaMovement().multiply(0.15D, 1.0D, 0.15D));
+			LivingEntity recoverTarget = this.getTarget();
+			if (recoverTarget != null) {
+				this.lookAt(recoverTarget, 30.0F, 30.0F);
+			}
+			return;
+		} else if (this.getDefendingState() == 1) {
+			this.setDefendingState(0);
+		}
+
 		// 模拟 canUse 逻辑
 		if (this.getTarget() != null) {
 			// 模拟 start 逻辑
@@ -369,11 +387,8 @@ public class EntityUrias extends Ravager implements GeoEntity {
 			LivingEntity livingentity = this.getTarget();
 			if (livingentity != null && this.hasLineOfSight(livingentity)) {
 				Level world = this.level();
-				if (!this.hasEffect(MobEffects.DAMAGE_RESISTANCE)) {
-					++this.attackTimer;
-				} else {
-					this.setDefendingState(0);
-				}
+
+				++this.attackTimer;
 
 				Random rand = new Random();
 				Vec3 vector3d = this.getViewVector(1.0F);
@@ -385,11 +400,27 @@ public class EntityUrias extends Ravager implements GeoEntity {
 				float f = (float) Mth.atan2(livingentity.getZ() - this.getZ(),
 						livingentity.getX() - this.getX());
 
-				this.getNavigation().moveTo(livingentity, 0.8D);
+				int atkState = this.getAttckingState();
+				double dist = this.distanceTo(livingentity);
+
+				// Charge windup: plant feet and face target
+				if (atkState == 3 && this.attackTimer < 18) {
+					this.getNavigation().stop();
+					this.setDeltaMovement(this.getDeltaMovement().multiply(0.2D, 1.0D, 0.2D));
+				} else if (atkState != 3) {
+					this.getNavigation().moveTo(livingentity, 0.8D);
+				}
+
 				if (this.attackTimer == 3) {
 					if (!this.hasEffect(MobEffects.DAMAGE_RESISTANCE)) {
-						if ((this.getHealth() >= (this.getMaxHealth() * 0.40) && this.getHealth() <= (this.getMaxHealth() * 0.60)) ||
-								(this.getHealth() >= (this.getMaxHealth() * 0.10) && this.getHealth() <= (this.getMaxHealth() * 0.30))) {
+						int roll = rand.nextInt(100);
+						// Mid-range: prefer charge rush
+						if (dist >= 7.0D && dist <= 18.0D && roll < 40) {
+							this.setAttackingState(3);
+							this.attr = 3;
+						} else if ((this.getHealth() >= (this.getMaxHealth() * 0.40) && this.getHealth() <= (this.getMaxHealth() * 0.60)) ||
+								(this.getHealth() >= (this.getMaxHealth() * 0.10) && this.getHealth() <= (this.getMaxHealth() * 0.30)) ||
+								roll < 45) {
 							this.setAttackingState(2);
 							attackAnimationState2.start(this.tickCount);
 							this.attr = 2;
@@ -401,6 +432,26 @@ public class EntityUrias extends Ravager implements GeoEntity {
 					}
 				}
 
+				// Charge dash toward target after windup
+				if (atkState == 3 && this.attackTimer >= 18 && this.attackTimer <= 40) {
+					Vec3 to = livingentity.position().subtract(this.position());
+					Vec3 flat = new Vec3(to.x, 0.0D, to.z);
+					if (flat.lengthSqr() > 1.0E-4D) {
+						Vec3 dir = flat.normalize().scale(1.35D);
+						this.setDeltaMovement(dir.x, this.getDeltaMovement().y, dir.z);
+						this.hasImpulse = true;
+					}
+					this.getNavigation().stop();
+					if (this.attackTimer >= 22 && this.attackTimer <= 38) {
+						for (LivingEntity lvt : this.level().getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(1.6D), PIGEON_AREA)) {
+							if (!(lvt instanceof EntityUrias)) {
+								lvt.hurt(this.damageSources().mobAttack(this), (float) this.getAttributeValue(Attributes.ATTACK_DAMAGE) * 1.15F);
+								lvt.knockback(1.1D, this.getX() - lvt.getX(), this.getZ() - lvt.getZ());
+							}
+						}
+					}
+				}
+
 				if ((this instanceof EntityBrute) && this.attackTimer >= 10 && this.attackTimer <= 30 && this.getAttckingState() == 1) {
 					for (LivingEntity lvt : this.level().getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(2.0D), PIGEON_AREA)) {
 						if (!(lvt instanceof EntityBrute))
@@ -408,6 +459,7 @@ public class EntityUrias extends Ravager implements GeoEntity {
 					}
 				}
 
+				// Overhead smash hit
 				if (this.attackTimer == 32 && this.getAttckingState() == 1) {
 					for (int l = 1; l < 10; l++) {
 						this.blockSmashAttack(l, 3F, 1.5F, 150, 2.5F, 0.15F, 1.0F);
@@ -421,6 +473,22 @@ public class EntityUrias extends Ravager implements GeoEntity {
 					}
 				}
 
+				// Horizontal sweep hit
+				if (this.attackTimer == 28 && this.getAttckingState() == 2) {
+					for (LivingEntity lvt : this.level().getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(3.2D, 1.5D, 3.2D), PIGEON_AREA)) {
+						if (!(lvt instanceof EntityUrias)) {
+							lvt.hurt(this.damageSources().mobAttack(this), (float) this.getAttributeValue(Attributes.ATTACK_DAMAGE) * 1.35F);
+							lvt.knockback(0.85D, this.getX() - lvt.getX(), this.getZ() - lvt.getZ());
+						}
+					}
+					for (int i = 0; i < 5; ++i) {
+						float f1 = f + (float) i * (float) Math.PI * 0.4F;
+						EntityFallingBlock fallingBlockEntity = new EntityFallingBlock(this.level(), this.getX() + (double) Mth.cos(f1) * 1.5D, this.getY() + this.random.nextDouble(), this.getZ() + (double) Mth.sin(f1) * 1.5D,
+								BlockInit.DEYE_BLOCK.get().defaultBlockState(), 10);
+						this.level().addFreshEntity(fallingBlockEntity);
+					}
+				}
+
 				if (this.attackTimer == 34 && this.getAttckingState() == 2) {
 					if (this instanceof EntityBrute) {
 						for (LivingEntity lvt : this.level().getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(2.0D), PIGEON_AREA)) {
@@ -428,13 +496,6 @@ public class EntityUrias extends Ravager implements GeoEntity {
 								lvt.hurt(lvt.damageSources().fellOutOfWorld(), lvt.getMaxHealth() * 0.3f + livingentity.getArmorValue());
 						}
 					} else {
-						for (int i = 0; i < 5; ++i) {
-							float f1 = f + (float) i * (float) Math.PI * 0.4F;
-							EntityFallingBlock fallingBlockEntity = new EntityFallingBlock(this.level(), this.getX() + (double) Mth.cos(f1) * 1.5D, this.getY() + this.random.nextDouble(), this.getZ() + (double) Mth.sin(f1) * 1.5D,
-									BlockInit.DEYE_BLOCK.get().defaultBlockState(), 10);
-							this.level().addFreshEntity(fallingBlockEntity);
-						}
-
 						for (int k = 0; k < 8; ++k) {
 							float f2 = f + (float) k * (float) Math.PI * 2.0F / 8.0F + 1.2566371F;
 							EntityFallingBlock fallingBlockEntity = new EntityFallingBlock(this.level(), this.getX() + (double) Mth.cos(f2) * 1.5D, this.getY() + this.random.nextDouble(), this.getZ() + (double) Mth.sin(f2) * 1.5D,
@@ -443,7 +504,6 @@ public class EntityUrias extends Ravager implements GeoEntity {
 						}
 					}
 				}
-
 
 				this.lookAt(livingentity, 30.0F, 30.0F);
 			}
