@@ -1,7 +1,9 @@
 package com.joy187.re8joymod.entity;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 import java.util.function.Predicate;
 
 import com.joy187.re8joymod.init.BlockInit;
@@ -67,6 +69,8 @@ public class EntityUrias extends Ravager implements GeoEntity {
 	public static final EntityDataAccessor<Integer> DEFENDSTATE = SynchedEntityData.defineId(EntityUrias.class,
 			EntityDataSerializers.INT);
 	private int flag=0,attr=0,attackTimer=0;
+	/** Targets already hit by the current charge (for once-per-target % damage). */
+	private final Set<Integer> chargeDamagedIds = new HashSet<>();
 
 	public static final AnimationState attackAnimationState = new AnimationState();
 	public static final AnimationState attackAnimationState2 = new AnimationState();
@@ -415,7 +419,8 @@ public class EntityUrias extends Ravager implements GeoEntity {
 					if (!this.hasEffect(MobEffects.DAMAGE_RESISTANCE)) {
 						int roll = rand.nextInt(100);
 						// Mid-range: prefer charge rush
-						if (dist >= 7.0D && dist <= 18.0D && roll < 40) {
+						if (dist >= this.getChargeMinDist() && dist <= this.getChargeMaxDist() && roll < this.getChargeChance()) {
+							this.chargeDamagedIds.clear();
 							this.setAttackingState(3);
 							this.attr = 3;
 						} else if ((this.getHealth() >= (this.getMaxHealth() * 0.40) && this.getHealth() <= (this.getMaxHealth() * 0.60)) ||
@@ -437,18 +442,13 @@ public class EntityUrias extends Ravager implements GeoEntity {
 					Vec3 to = livingentity.position().subtract(this.position());
 					Vec3 flat = new Vec3(to.x, 0.0D, to.z);
 					if (flat.lengthSqr() > 1.0E-4D) {
-						Vec3 dir = flat.normalize().scale(1.35D);
+						Vec3 dir = flat.normalize().scale(this.getChargeDashSpeed());
 						this.setDeltaMovement(dir.x, this.getDeltaMovement().y, dir.z);
 						this.hasImpulse = true;
 					}
 					this.getNavigation().stop();
 					if (this.attackTimer >= 22 && this.attackTimer <= 38) {
-						for (LivingEntity lvt : this.level().getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(1.6D), PIGEON_AREA)) {
-							if (!(lvt instanceof EntityUrias)) {
-								lvt.hurt(this.damageSources().mobAttack(this), (float) this.getAttributeValue(Attributes.ATTACK_DAMAGE) * 1.15F);
-								lvt.knockback(1.1D, this.getX() - lvt.getX(), this.getZ() - lvt.getZ());
-							}
-						}
+						this.applyChargeHits();
 					}
 				}
 
@@ -516,6 +516,7 @@ public class EntityUrias extends Ravager implements GeoEntity {
 		if (this.attackTimer >= 50) {
 			this.setAttackingState(0);
 			this.attackTimer = -10;
+			this.chargeDamagedIds.clear();
 			this.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 20 * 2, 10, true, true));
 			this.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 20 * 2, 10, true, true));
 			this.setDefendingState(1);
@@ -664,6 +665,69 @@ public class EntityUrias extends Ravager implements GeoEntity {
 //	   }
 	   
 
+	/** Mid-range charge selection chance (0-100). */
+	protected int getChargeChance() {
+		return 40;
+	}
+
+	protected double getChargeMinDist() {
+		return 7.0D;
+	}
+
+	protected double getChargeMaxDist() {
+		return 18.0D;
+	}
+
+	protected double getChargeDashSpeed() {
+		return 1.35D;
+	}
+
+	/** Flat mob-attack damage dealt during the charge hit window. */
+	protected float getChargeAttackDamage(LivingEntity target) {
+		return (float) this.getAttributeValue(Attributes.ATTACK_DAMAGE) * 1.15F;
+	}
+
+	protected double getChargeKnockback() {
+		return 1.1D;
+	}
+
+	/** When true, charge hit ticks also fire blockSmashAttack sweeps. */
+	protected boolean chargeUsesBlockSmash() {
+		return false;
+	}
+
+	/** When true, getChargeAttackDamage applies at most once per target per charge. */
+	protected boolean chargeDamageOncePerTarget() {
+		return false;
+	}
+
+	protected void applyChargeHits() {
+		for (LivingEntity lvt : this.level().getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(1.6D), PIGEON_AREA)) {
+			if (lvt instanceof EntityUrias) {
+				continue;
+			}
+			if (this.chargeDamageOncePerTarget() && !this.chargeDamagedIds.add(lvt.getId())) {
+				continue;
+			}
+			lvt.hurt(this.damageSources().mobAttack(this), this.getChargeAttackDamage(lvt));
+			lvt.knockback(this.getChargeKnockback(), this.getX() - lvt.getX(), this.getZ() - lvt.getZ());
+		}
+		if (this.chargeUsesBlockSmash() && this.attackTimer % 4 == 0) {
+			this.performChargeBlockSmash();
+		}
+	}
+
+	/** Forward smash pulses used by brutal charge variants. */
+	protected void performChargeBlockSmash() {
+		for (int l = 1; l < 8; l++) {
+			this.blockSmashAttack(l, 3.5F, 0.0F, 160, 1.8F, 0.08F, 1.15F);
+			this.blockSmashAttack(l, 3.5F, 1.8F, 160, 1.5F, 0.06F, 1.0F);
+			this.blockSmashAttack(l, 3.5F, -1.8F, 160, 1.5F, 0.06F, 1.0F);
+			this.blockSmashAttack(l, 3.5F, 3.2F, 160, 1.35F, 0.05F, 0.9F);
+			this.blockSmashAttack(l, 3.5F, -3.2F, 160, 1.35F, 0.05F, 0.9F);
+		}
+	}
+
 	   public boolean doHurtTarget(Entity p_33328_) {
 		   if(this.attr==1 || this.attr==2)
 		   {
@@ -675,7 +739,7 @@ public class EntityUrias extends Ravager implements GeoEntity {
 		   return false;
 	    }
 
-	private void blockSmashAttack(int distance, float mxy, float math, int shieldbreakticks, float damage, float hpdamage, float airborne) {
+	protected void blockSmashAttack(int distance, float mxy, float math, int shieldbreakticks, float damage, float hpdamage, float airborne) {
 		double minY = this.getY() - 2.0;
 		double maxY = this.getY() + (double)mxy;
 		float angle = (float)Math.PI / 180 * this.yBodyRot;
