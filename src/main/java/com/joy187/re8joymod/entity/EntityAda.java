@@ -172,8 +172,13 @@ public class EntityAda extends EntityChris {
     }
 
     private void fireBullet() {
+        LivingEntity target = this.getTarget();
         EntityBOWShoot bullet = new EntityBOWShoot(this.level(), this);
-        bullet.shootFromRotation(this, this.getXRot(), this.getYRot(), 0.0F, 2.4F, 0.8F);
+        if (target != null) {
+            AerialCombatHelper.aimBowShot(this, bullet, target, 2.4F, 0.8F);
+        } else {
+            bullet.shootFromRotation(this, this.getXRot(), this.getYRot(), 0.0F, 2.4F, 0.8F);
+        }
         bullet.damage = 5.5D;
         this.level().addFreshEntity(bullet);
         this.playSound(SoundEvents.CROSSBOW_SHOOT, 1.0F, 1.2F);
@@ -367,6 +372,18 @@ public class EntityAda extends EntityChris {
 
             this.ada.getLookControl().setLookAt(target, 30.0F, 30.0F);
             double dist = this.ada.distanceTo(target);
+            boolean aerial = AerialCombatHelper.isAerialTarget(this.ada, target);
+
+            // Air targets: hold shoot distance and stay in ranged — no chase / melee.
+            if (aerial) {
+                AerialCombatHelper.holdShootDistance(this.ada, target);
+                if (this.chosenState != STATE_RANGED) {
+                    this.beginSkill(STATE_RANGED);
+                }
+                ++this.timer;
+                this.tickRangedAir(target);
+                return;
+            }
 
             // Continue active skill
             if (this.chosenState != STATE_IDLE) {
@@ -509,6 +526,20 @@ public class EntityAda extends EntityChris {
             }
             if (this.timer >= 14) {
                 this.finishSkill();
+            }
+        }
+
+        /** Continuous anti-air ranged: hold band, fire on loop, restart anim. */
+        private void tickRangedAir(LivingEntity target) {
+            this.ada.getNavigation().stop();
+            AerialCombatHelper.holdShootDistance(this.ada, target);
+            if (this.timer == 6 || this.timer == 12) {
+                this.ada.fireBullet();
+            }
+            if (this.timer >= 16) {
+                this.ada.setAttackingState(STATE_IDLE);
+                this.ada.setAttackingState(STATE_RANGED);
+                this.timer = 0;
             }
         }
 
