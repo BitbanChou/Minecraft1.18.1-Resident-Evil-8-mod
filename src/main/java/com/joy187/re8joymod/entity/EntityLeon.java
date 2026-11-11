@@ -61,8 +61,32 @@ public class EntityLeon extends EntityChris{
     protected void registerGoals() {
 		this.goalSelector.addGoal(1, new AttackGoal(this));
         this.goalSelector.addGoal(0, new FloatGoal(this));
-        this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.0D,true));
-        this.goalSelector.addGoal(2, new MoveTowardsTargetGoal(this, 0.9D, 32.0F));
+        this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.0D, true) {
+            @Override
+            public boolean canUse() {
+                LivingEntity t = EntityLeon.this.getTarget();
+                return super.canUse() && !AerialCombatHelper.isAerialTarget(EntityLeon.this, t);
+            }
+
+            @Override
+            public boolean canContinueToUse() {
+                LivingEntity t = EntityLeon.this.getTarget();
+                return super.canContinueToUse() && !AerialCombatHelper.isAerialTarget(EntityLeon.this, t);
+            }
+        });
+        this.goalSelector.addGoal(2, new MoveTowardsTargetGoal(this, 0.9D, 32.0F) {
+            @Override
+            public boolean canUse() {
+                LivingEntity t = EntityLeon.this.getTarget();
+                return super.canUse() && !AerialCombatHelper.isAerialTarget(EntityLeon.this, t);
+            }
+
+            @Override
+            public boolean canContinueToUse() {
+                LivingEntity t = EntityLeon.this.getTarget();
+                return super.canContinueToUse() && !AerialCombatHelper.isAerialTarget(EntityLeon.this, t);
+            }
+        });
         this.goalSelector.addGoal(2, new MoveBackToVillageGoal(this, 0.6D, false));
         this.goalSelector.addGoal(4, new GolemRandomStrollInVillageGoal(this, 0.6D));
         this.goalSelector.addGoal(5, new OfferFlowerGoal(this));
@@ -143,6 +167,11 @@ public class EntityLeon extends EntityChris{
     }
 
     private <E extends GeoAnimatable> PlayState predicate(AnimationState<E> event) {
+        int atk = this.entityData.get(STATE);
+        if (atk == 1 || atk == 2 || atk == 3 || atk == 4) {
+            return PlayState.STOP;
+        }
+
     	
     	if (event.isMoving()) {
             event.setAndContinue(RawAnimation.begin().thenPlay("animation.leon.walk"));
@@ -153,29 +182,41 @@ public class EntityLeon extends EntityChris{
         return PlayState.CONTINUE;
     }
     
-	private <E extends GeoAnimatable> PlayState predicate1(AnimationState<E> event) {
-		if (this.entityData.get(STATE) == 1 && !(this.dead || this.getHealth() < 0.01 || this.isDeadOrDying())) {
-			event.setAndContinue(RawAnimation.begin().thenPlay("animation.leon.attack"));
-			return PlayState.CONTINUE;
-		}
-		if (this.entityData.get(STATE) == 2 && !(this.dead || this.getHealth() < 0.01 || this.isDeadOrDying())) {
-			event.setAndContinue(RawAnimation.begin().thenPlay("animation.leon.attack2"));
-			return PlayState.CONTINUE;
-		}
-        if (this.entityData.get(STATE) == 3 && !(this.dead || this.getHealth() < 0.01 || this.isDeadOrDying())) {
-            event.setAndContinue(RawAnimation.begin().thenPlay("animation.leon.shoot"));
-            return PlayState.CONTINUE;
-        }
-		return PlayState.CONTINUE;
+	
+	
+    	@Override
+	public void registerControllers(AnimatableManager.ControllerRegistrar data) {
+		AnimationController<?> attackController =
+				new AnimationController<>(this, "controller1", 3, state -> PlayState.STOP)
+						.triggerableAnim("slash", RawAnimation.begin().thenPlay("animation.leon.attack"))
+						.triggerableAnim("heavy", RawAnimation.begin().thenPlay("animation.leon.attack2"))
+						.triggerableAnim("special", RawAnimation.begin().thenPlay("animation.leon.shoot"));
+		data.add(attackController);
+		data.add(new AnimationController<>(this, "controller", 8, this::predicate));
 	}
 	
-    @Override
-	public void registerControllers(AnimatableManager.ControllerRegistrar data) {
-        data.add(new AnimationController(this, "controller",
-                0, this::predicate));
-        data.add(new AnimationController(this, "controller1",
-                0, this::predicate1));
+	/** Trigger one-shot attack animation via GeckoLib triggerAnim. */
+	protected void startAttackAnim(int state) {
+		if (state == 1) {
+			this.triggerAnim("controller1", "slash");
+		} else if (state == 2) {
+			this.triggerAnim("controller1", "heavy");
+		} else if (state == 3) {
+			this.triggerAnim("controller1", "special");
+		}
 	}
+
+	public void setAttackingState(int time) {
+		int prev = this.entityData.get(STATE);
+		this.entityData.set(STATE, time);
+		if ((time == 1 || time == 2 || time == 3) && prev != time) {
+			this.startAttackAnim(time);
+		}
+	}
+
+
+
+
 
 	@Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
@@ -209,41 +250,51 @@ public class EntityLeon extends EntityChris{
 
         public void tick() {
             LivingEntity livingentity = this.parentEntity.getTarget();
-            if (livingentity!=null && this.parentEntity.hasLineOfSight(livingentity)) {
-                Level world = this.parentEntity.level();
+            if (livingentity != null && this.parentEntity.hasLineOfSight(livingentity)) {
                 ++this.attackTimer;
-                Random rand = new Random();
-                Vec3 vector3d = this.parentEntity.getViewVector(1.0F);
-                double d0 = Math.min(livingentity.getY(), livingentity.getY());
-                double d1 = Math.max(livingentity.getY(), livingentity.getY()) + 1.0D;
-                double d2 = livingentity.getX() - (this.parentEntity.getX() + vector3d.x * 2.0D);
-                double d3 = livingentity.getY(0.5D) - (0.5D + this.parentEntity.getY(0.5D));
-                double d4 = livingentity.getZ() - (this.parentEntity.getZ() + vector3d.z * 2.0D);
-                float f = (float) Mth.atan2(livingentity.getZ() - parentEntity.getZ(),
-                        livingentity.getX() - parentEntity.getX());
+                boolean aerial = AerialCombatHelper.isAerialTarget(this.parentEntity, livingentity);
+
+                if (aerial) {
+                    AerialCombatHelper.holdShootDistance(this.parentEntity, livingentity);
+                    // Stay in shoot stance vs air units; never melee-chase underneath.
+                    if (this.attackTimer == 1 || this.parentEntity.getAttckingState() != 3) {
+                        this.parentEntity.setAttackingState(3);
+                    }
+                    if (this.attackTimer == 8 || this.attackTimer == 16 || this.attackTimer == 24) {
+                        EntityBOWShoot shot = new EntityBOWShoot(this.parentEntity.level(), this.parentEntity);
+                        AerialCombatHelper.aimBowShot(this.parentEntity, shot, livingentity, 15.5F, 0.75F);
+                        shot.level().addParticle(ParticleTypes.FLAME, shot.getX(), shot.getY(), shot.getZ(),
+                                shot.getDeltaMovement().x, shot.getDeltaMovement().y, shot.getDeltaMovement().z);
+                        shot.playSound(SoundInit.M1851.get(), 1.5F, 1.5F);
+                        shot.damage *= 1.2;
+                        this.parentEntity.level().addFreshEntity(shot);
+                    }
+                    if (this.attackTimer >= 30) {
+                        this.parentEntity.setAttackingState(0);
+                        this.parentEntity.setAttackingState(3);
+                        this.attackTimer = 0;
+                    }
+                    return;
+                }
 
                 this.parentEntity.getNavigation().moveTo(livingentity, 1.5D);
-                if (this.attackTimer==16) {
-                    if(this.parentEntity.getHealth() < 5 ||
-                            (this.parentEntity.getHealth() > 26 && this.parentEntity.getHealth()<30) ||
-                            (this.parentEntity.getHealth() > 13 && this.parentEntity.getHealth()<18) )
-                    {
+                if (this.attackTimer == 16) {
+                    if (this.parentEntity.getHealth() < 5
+                            || (this.parentEntity.getHealth() > 26 && this.parentEntity.getHealth() < 30)
+                            || (this.parentEntity.getHealth() > 13 && this.parentEntity.getHealth() < 18)) {
                         this.parentEntity.setAttackingState(2);
-                        this.parentEntity.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 20,10,true,true));
-                    }
-                    else{
+                        this.parentEntity.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 20, 10, true, true));
+                    } else {
                         this.parentEntity.setAttackingState(3);
                         EntityBOWShoot abstractarrowentity = new EntityBOWShoot(this.parentEntity.level(), this.parentEntity);
-                        abstractarrowentity.shootFromRotation(this.parentEntity, this.parentEntity.getXRot(), this.parentEntity.getYRot(), 0.0F, 15.5F, 0.75F);
-
-                        abstractarrowentity.level().addParticle(ParticleTypes.FLAME, abstractarrowentity.getX(), abstractarrowentity.getY(), abstractarrowentity.getZ(), abstractarrowentity.position().x, abstractarrowentity.position().y, abstractarrowentity.position().z);
+                        AerialCombatHelper.aimBowShot(this.parentEntity, abstractarrowentity, livingentity, 15.5F, 0.75F);
+                        abstractarrowentity.level().addParticle(ParticleTypes.FLAME, abstractarrowentity.getX(), abstractarrowentity.getY(), abstractarrowentity.getZ(),
+                                abstractarrowentity.getDeltaMovement().x, abstractarrowentity.getDeltaMovement().y, abstractarrowentity.getDeltaMovement().z);
                         abstractarrowentity.playSound(SoundInit.M1851.get(), 1.5F, 1.5F);
-                        abstractarrowentity.damage*=1.2;
-
+                        abstractarrowentity.damage *= 1.2;
                         this.parentEntity.level().addFreshEntity(abstractarrowentity);
                     }
-                }
-                else if(this.attackTimer == 1){
+                } else if (this.attackTimer == 1) {
                     this.parentEntity.setAttackingState(1);
                 }
                 if (this.attackTimer == 30) {
@@ -251,9 +302,7 @@ public class EntityLeon extends EntityChris{
                     this.attackTimer = -5;
                 }
                 this.parentEntity.lookAt(livingentity, 30.0F, 30.0F);
-
-            }
-            else if (this.attackTimer > 0) {
+            } else if (this.attackTimer > 0) {
                 --this.attackTimer;
             }
         }
