@@ -36,7 +36,6 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ToolActions;
 
 import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.constant.DefaultAnimations;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.RawAnimation;
@@ -55,12 +54,11 @@ public class EntityKrauser extends Monster implements GeoEntity {
     private AnimatableInstanceCache factory = GeckoLibUtil.createInstanceCache(this);
     public static final EntityDataAccessor<Integer> STATE = SynchedEntityData.defineId(EntityKrauser.class,
             EntityDataSerializers.INT);
+    public static final EntityDataAccessor<Integer> DEFENDSTATE = SynchedEntityData.defineId(EntityKrauser.class,
+            EntityDataSerializers.INT);
     private int attackTimer = 0;
     private int preatt = 0;
-    public static final AnimationState attackAnimationState = new AnimationState();
-    public static final AnimationState attackAnimationState2 = new AnimationState();
-    public static final AnimationState attackAnimationState3 = new AnimationState();
-    
+
     private static final Predicate<LivingEntity> LIVING_ENTITY_SELECTOR = (p_31504_) -> {
         return p_31504_.getMobType() != MobType.UNDEAD && p_31504_.attackable() && !(p_31504_ instanceof EntityKrauser) && !(p_31504_ instanceof EntityKrauser2) && !(p_31504_ instanceof EntitySalazar);
     };
@@ -142,77 +140,44 @@ public class EntityKrauser extends Monster implements GeoEntity {
 
 
 
-//    private <E extends GeoAnimatable> PlayState predicate1(AnimationState<E> event) {
-//        if (this.entityData.get(STATE) == 1 && !(this.dead || this.getHealth() < 0.01 || this.isDeadOrDying())) {
-//            event.setAndContinue(RawAnimation.begin().thenPlay("animation.krauser.attack"));
-//            return PlayState.CONTINUE;
-//        }
-//        if (this.entityData.get(STATE) == 2 && !(this.dead || this.getHealth() < 0.01 || this.isDeadOrDying())) {
-//            event.setAndContinue(RawAnimation.begin().thenPlay("animation.krauser.attack2"));
-//            return PlayState.CONTINUE;
-//        }
-//        if (this.entityData.get(STATE) == 3 && !(this.dead || this.getHealth() < 0.01 || this.isDeadOrDying())) {
-//            event.setAndContinue(RawAnimation.begin().thenPlay("animation.krauser.attack3"));
-//            return PlayState.CONTINUE;
-//        }
-//        return PlayState.STOP;
-//    }
-
+    /** 走路/待机/硬直：攻击期间让出骨骼；硬直播 recover。 */
     private <E extends GeoAnimatable> PlayState predicate(software.bernie.geckolib.core.animation.AnimationState<E> event) {
-
-        // 检测生物是否死亡
-//		if (this.dead || this.getHealth() < 0.01 || this.isDeadOrDying()) {
-//			event.setAndContinue(RawAnimation.begin().thenPlay("death")); // 播放死亡动画
-//			return PlayState.CONTINUE;
-//		}
-
-        if (event.isMoving()) {
-            event.setAndContinue(RawAnimation.begin().thenPlay("animation.krauser.walk"));
+        int atk = this.entityData.get(STATE);
+        if (atk == 1 || atk == 2 || atk == 3) {
+            return PlayState.STOP;
+        }
+        if (this.getDefendingState() == 1) {
+            event.setAndContinue(RawAnimation.begin().thenLoop("animation.krauser.recover"));
             return PlayState.CONTINUE;
         }
-
-        event.setAndContinue(RawAnimation.begin().thenPlay("animation.krauser.idle"));
+        if (event.isMoving()) {
+            event.setAndContinue(RawAnimation.begin().thenLoop("animation.krauser.walk"));
+            return PlayState.CONTINUE;
+        }
+        event.setAndContinue(RawAnimation.begin().thenLoop("animation.krauser.idle"));
         return PlayState.CONTINUE;
     }
 
-    public static <T extends EntityKrauser & GeoAnimatable> AnimationController<T> genericAttackAnimation(T animatable, RawAnimation attackAnimation) {
-        return new AnimationController<>(animatable, "Attack", 0, event -> {
-            if (attackAnimationState.isStarted() && !(animatable.dead || animatable.getHealth() < 0.01 || animatable.isDeadOrDying())) {
-                event.setAndContinue(RawAnimation.begin().thenPlay("animation.krauser.attack"));
-
-                return PlayState.CONTINUE;
-            }
-            if (attackAnimationState2.isStarted() && !(animatable.dead || animatable.getHealth() < 0.01 || animatable.isDeadOrDying())) {
-                event.setAndContinue(RawAnimation.begin().thenPlay("animation.krauser.attack2"));
-
-                //return PlayState.CONTINUE;
-            }
-            if (attackAnimationState3.isStarted() && !(animatable.dead || animatable.getHealth() < 0.01 || animatable.isDeadOrDying())) {
-                event.setAndContinue(RawAnimation.begin().thenPlay("animation.krauser.attack3"));
-
-                //return PlayState.CONTINUE;
-            }
-
-            event.getController().forceAnimationReset();
-            return PlayState.CONTINUE;
-        });
+    protected void startAttackAnim(int state) {
+        if (state == 1) {
+            this.triggerAnim("controller1", "slash");
+        } else if (state == 2) {
+            this.triggerAnim("controller1", "heavy");
+        } else if (state == 3) {
+            this.triggerAnim("controller1", "slam");
+        }
     }
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
-        data.add(new AnimationController(this, "controller",
-                0, this::predicate));
-        data.add(genericAttackAnimation(this, DefaultAnimations.ATTACK_STRIKE));
-
+        AnimationController<?> attackController =
+                new AnimationController<>(this, "controller1", 3, state -> PlayState.STOP)
+                        .triggerableAnim("slash", RawAnimation.begin().thenPlay("animation.krauser.attack"))
+                        .triggerableAnim("heavy", RawAnimation.begin().thenPlay("animation.krauser.attack2"))
+                        .triggerableAnim("slam", RawAnimation.begin().thenPlay("animation.krauser.attack3"));
+        data.add(attackController);
+        data.add(new AnimationController<>(this, "controller", 8, this::predicate));
     }
-
-//    @Override
-//    public void registerControllers(AnimatableManager.ControllerRegistrar data) {
-//        data.add(new AnimationController(this, "controller",
-//                0, this::predicate));
-//        data.add(new AnimationController(this, "controller1",
-//                0, this::predicate1));
-//    }
 
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
@@ -224,13 +189,60 @@ public class EntityKrauser extends Monster implements GeoEntity {
     }
 
     public void setAttackingState(int time) {
+        int prev = this.entityData.get(STATE);
         this.entityData.set(STATE, time);
+        if ((time == 1 || time == 2 || time == 3) && prev != time) {
+            this.startAttackAnim(time);
+        }
+    }
+
+    public int getDefendingState() {
+        return this.entityData.get(DEFENDSTATE);
+    }
+
+    public void setDefendingState(int time) {
+        this.entityData.set(DEFENDSTATE, time);
+    }
+
+    /** Impulse dash toward target on XZ; optional vertical boost. */
+    private void dashToward(LivingEntity target, double horizontalSpeed, double verticalBoost) {
+        Vec3 flat;
+        if (target != null) {
+            Vec3 to = target.position().subtract(this.position());
+            flat = new Vec3(to.x, 0.0D, to.z);
+        } else {
+            Vec3 look = this.getLookAngle();
+            flat = new Vec3(look.x, 0.0D, look.z);
+        }
+        if (flat.lengthSqr() < 1.0E-4D) {
+            return;
+        }
+        Vec3 dir = flat.normalize().scale(horizontalSpeed);
+        this.setDeltaMovement(dir.x, this.getDeltaMovement().y + verticalBoost, dir.z);
+        this.hasImpulse = true;
+    }
+
+    private void leapUp(double vy) {
+        Vec3 m = this.getDeltaMovement();
+        this.setDeltaMovement(m.x * 0.2D, vy, m.z * 0.2D);
+        this.hasImpulse = true;
+    }
+
+    private void beginRecover() {
+        this.setAttackingState(0);
+        this.attackTimer = -10;
+        this.preatt = 0;
+        this.setDefendingState(1);
+        this.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 20 * 2, 5, true, true));
+        this.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 20 * 2, 2, true, true));
+        this.getNavigation().stop();
     }
 
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
         this.entityData.define(STATE, 0);
+        this.entityData.define(DEFENDSTATE, 0);
     }
     @Override
     protected SoundEvent getAmbientSound() {
@@ -267,191 +279,185 @@ public class EntityKrauser extends Monster implements GeoEntity {
     @Override
     public void tick() {
         super.tick();
-        LivingEntity target = this.getTarget();
-        if (target != null && this.hasLineOfSight(target)) {
-            Level world = this.level();
-            ++attackTimer;
-            Random rand = new Random();
-            Vec3 vector3d = this.getViewVector(1.0F);
-            double d0 = Math.min(target.getY(), target.getY());
-            double d1 = Math.max(target.getY(), target.getY()) + 1.0D;
-            double d2 = target.getX() - (this.getX() + vector3d.x * 2.0D);
-            double d3 = target.getY(0.5D) - (0.5D + this.getY(0.5D));
-            double d4 = target.getZ() - (this.getZ() + vector3d.z * 2.0D);
-            float f = (float) Mth.atan2(target.getZ() - this.getZ(),
-                    target.getX() - this.getZ());
 
-            if (attackTimer == 5) {
+        // Post-attack recover / stagger window
+        if (this.getDefendingState() == 1 && this.hasEffect(MobEffects.DAMAGE_RESISTANCE)) {
+            this.getNavigation().stop();
+            this.setDeltaMovement(this.getDeltaMovement().multiply(0.15D, 1.0D, 0.15D));
+            LivingEntity recoverTarget = this.getTarget();
+            if (recoverTarget != null) {
+                this.lookAt(recoverTarget, 30.0F, 30.0F);
+            }
+            return;
+        } else if (this.getDefendingState() == 1) {
+            this.setDefendingState(0);
+        }
+
+        LivingEntity target = this.getTarget();
+        // Losing target/LOS must clear skill STATE so locomotion can resume
+        if (target == null) {
+            if (this.getAttckingState() != 0) {
+                this.setAttackingState(0);
+                this.attackTimer = 0;
+                this.preatt = 0;
+            }
+        } else if (!this.hasLineOfSight(target) && this.getAttckingState() != 0) {
+            this.setAttackingState(0);
+            this.preatt = 0;
+        }
+
+        if (target != null && this.hasLineOfSight(target)) {
+            ++this.attackTimer;
+            Random rand = new Random();
+            float f = (float) Mth.atan2(target.getZ() - this.getZ(), target.getX() - this.getX());
+            int atk = this.getAttckingState();
+
+            // Hold feet during skill windup / aerial beats so nav doesn't cancel impulse
+            if (atk == 2 || atk == 3) {
+                this.getNavigation().stop();
+            } else if (atk != 1) {
+                this.getNavigation().moveTo(target, 1.0D);
+            }
+
+            if (this.attackTimer == 5) {
                 int randomSkill = rand.nextInt(3);
                 switch (randomSkill) {
                     case 0:
                         if (this.preatt != 1) {
                             this.getNavigation().moveTo(target, 1.2D);
-                            //this.getNavigation().stop();
                             this.preatt = 1;
                             this.setAttackingState(1);
-                            attackAnimationState.start(this.tickCount);
-                        }
-                        else{
-                            // 获取生物面向的方向向量
-                            Vec3 lookAngle = this.getLookAngle();
-                            // 设置俯冲的速度，这里可以根据需要调整
-                            double speed = 1;
-                            // 给生物施加向前的动量
-                            this.getDeltaMovement().add(lookAngle.x * speed, lookAngle.y * speed, lookAngle.z * speed);
+                        } else {
                             this.preatt = 2;
                             this.getNavigation().stop();
                             this.setAttackingState(2);
-                            attackAnimationState2.start(this.tickCount);
                         }
                         break;
                     case 1:
                         if (this.preatt != 2) {
                             this.getNavigation().stop();
                             this.setAttackingState(2);
-                            attackAnimationState2.start(this.tickCount);
                             this.preatt = 2;
-                        }
-                        else {
-                            // 获取生物面向的方向向量
-                            Vec3 lookAngle = this.getLookAngle();
-                            // 设置俯冲的速度，这里可以根据需要调整
-                            double speed = 1.5;
-                            // 给生物施加向前的动量
-                            this.getDeltaMovement().add(lookAngle.x * speed, lookAngle.y * speed, lookAngle.z * speed);
+                        } else {
                             this.preatt = 1;
                             this.setAttackingState(1);
-                            attackAnimationState.start(this.tickCount);
                         }
                         break;
                     case 2:
                         this.getNavigation().stop();
                         this.setAttackingState(3);
-                        attackAnimationState3.start(this.tickCount);
                         this.preatt = 3;
                         break;
                 }
+                atk = this.getAttckingState();
             }
 
-            if (attackTimer == 13 && this.getAttckingState() == 1) {
-                if (target != null && target.isAlive() && this.distanceTo(target) < 2.75f) {
+            // ===== STATE 1 slash: anim ~1.17s, small forward lunge at ~0.58s =====
+            if (atk == 1) {
+                if (this.attackTimer >= 16 && this.attackTimer <= 18) {
+                    this.dashToward(target, 0.55D, 0.0D);
+                }
+                if (this.attackTimer == 13 && target.isAlive() && this.distanceTo(target) < 2.75f) {
                     if (target instanceof Player && ((Player) target).getUseItem().canPerformAction(ToolActions.SHIELD_BLOCK)) {
                         this.disableShield(target, 20);
                     } else {
                         this.heal(this.getMaxHealth() * 0.02f);
-                        target.hurt(target.damageSources().mobAttack(this), (float) this.getAttributeValue(Attributes.ATTACK_DAMAGE) + (float) this.random.nextInt(4));
+                        target.hurt(this.damageSources().mobAttack(this), (float) this.getAttributeValue(Attributes.ATTACK_DAMAGE) + (float) this.random.nextInt(4));
                     }
                 }
-            }
-
-            if (attackTimer == 18 && this.getAttckingState() == 1) {
-                if (target != null && target.isAlive() && this.distanceTo(target) < 2.75f) {
+                if (this.attackTimer == 18 && target.isAlive() && this.distanceTo(target) < 2.75f) {
                     if (target instanceof Player && ((Player) target).getUseItem().canPerformAction(ToolActions.SHIELD_BLOCK)) {
                         this.disableShield(target, 20);
                     } else {
-                        target.hurt(target.damageSources().mobAttack(this), (float) this.getAttributeValue(Attributes.ATTACK_DAMAGE) + target.getArmorValue());
+                        target.hurt(this.damageSources().mobAttack(this), (float) this.getAttributeValue(Attributes.ATTACK_DAMAGE) + target.getArmorValue());
                         this.heal(this.getMaxHealth() * 0.02f);
                         target.knockback(0.25, this.getX() - target.getX(), this.getZ() - target.getZ());
                     }
                 }
-            }
-
-            if (attackTimer == 15 && this.getAttckingState() == 2) {
-                this.getNavigation().moveTo(this.getX(), this.getY() + 1.5, this.getZ(), 2);
-            }
-
-            if (attackTimer == 19 && this.getAttckingState() == 2) {
-                this.getNavigation().moveTo(this.getX(), this.getY() - 1, this.getZ(), 2);
-                for (LivingEntity lvt : this.level().getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(4.0D), KRAUSER_AREA)) {
-                    if (lvt instanceof Player && ((Player) lvt).getUseItem().canPerformAction(ToolActions.SHIELD_BLOCK)) {
-                        this.disableShield(lvt, 20);
-                    } else {
-                        lvt.hurt(lvt.damageSources().mobAttack(this), lvt.getMaxHealth() * 0.25F + lvt.getArmorValue());
-                    }
+                if (this.attackTimer == 35) {
+                    EntityBOWShoot arrow = new EntityBOWShoot(this.level(), this);
+                    arrow.shootFromRotation(this, this.getXRot(), this.getYRot(), 0.0F, 15.5F, 0.75F);
+                    arrow.level().addParticle(ParticleTypes.FLAME, arrow.getX(), arrow.getY(), arrow.getZ(), 0, 0, 0);
+                    arrow.playSound(SoundInit.M1851.get(), 1.5F, 1.5F);
+                    arrow.damage *= 1.2;
+                    this.level().addFreshEntity(arrow);
                 }
             }
 
-            if (attackTimer == 13 && this.getAttckingState() == 3) {
-                this.getNavigation().moveTo(this.getX(), this.getY() + 1.5, this.getZ(), 2);
-                this.setDeltaMovement(0, 1, 0);
-            }
-
-            if (attackTimer == 21 && this.getAttckingState() == 3) {
-                this.getNavigation().moveTo(this.getX(), this.getY() - 1.2, this.getZ(), 2);
-            }
-
-            if (attackTimer == 25 && this.getAttckingState() == 3) {
-                this.getNavigation().stop();
-
-                for (int i = 0; i < 2; ++i) {
-                    float f1 = f + (float) i * (float) Math.PI * 0.4F;
-                    this.blockSmashAttack(i, f1, 1.5F, 150, 1.5F, 0.15F, 1.0F);
-                    this.blockSmashAttack(i, f1, -1.5F, 150, 1.5F, 0.15F, 1.0F);
-                    this.blockSmashAttack(i, f1, 2F, 150, 1.5F, 0.15F, 1.0F);
-                    this.blockSmashAttack(i, f1, 2F, 150, 1.5F, 0.15F, 1.0F);
-                    this.blockSmashAttack(i, f1, 0.5F, 150, 1.5F, 0.15F, 1.0F);
-                    this.blockSmashAttack(i, f1, -0.5F, 150, 1.5F, 0.15F, 1.0F);
+            // ===== STATE 2 leap-smash: crouch→jump Y@0.5s → slam+Z@0.67s =====
+            if (atk == 2) {
+                if (this.attackTimer == 15) {
+                    this.leapUp(0.68D);
                 }
-
-                for (int k = 0; k < 3; ++k) {
-                    float f2 = f + (float) k * (float) Math.PI * 2.0F / 8.0F + 1.2566371F;
-                    this.blockSmashAttack(k, f2, 1.5F, 150, 1.5F, 0.15F, 1.0F);
-                    this.blockSmashAttack(k, f2, -1.5F, 150, 1.5F, 0.15F, 1.0F);
-                    this.blockSmashAttack(k, f2, 2F, 150, 1.5F, 0.15F, 1.0F);
-                    this.blockSmashAttack(k, f2, 2F, 150, 1.5F, 0.15F, 1.0F);
-                    this.blockSmashAttack(k, f2, 0.5F, 150, 1.5F, 0.15F, 1.0F);
-                    this.blockSmashAttack(k, f2, -0.5F, 150, 1.5F, 0.15F, 1.0F);
+                if (this.attackTimer >= 18 && this.attackTimer <= 22) {
+                    this.dashToward(target, 1.35D, this.attackTimer == 18 ? -0.15D : 0.0D);
                 }
-            }
-
-            if (attackTimer == 35 && this.getAttckingState() == 3) {
-                this.getNavigation().moveTo(target, 2);
-            }
-
-            if (attackTimer == 35 && this.getAttckingState() == 1) {
-                EntityBOWShoot abstractarrowentity = new EntityBOWShoot(this.level(), this);
-                abstractarrowentity.shootFromRotation(this, this.getXRot(), this.getYRot(), 0.0F, 15.5F, 0.75F);
-
-                abstractarrowentity.level().addParticle(ParticleTypes.FLAME, abstractarrowentity.getX(), abstractarrowentity.getY(), abstractarrowentity.getZ(), abstractarrowentity.position().x, abstractarrowentity.position().y, abstractarrowentity.position().z);
-                abstractarrowentity.playSound(SoundInit.M1851.get(), 1.5F, 1.5F);
-                abstractarrowentity.damage *= 1.2;
-
-                this.level().addFreshEntity(abstractarrowentity);
-            }
-
-            if (attackTimer == 40) {
-                if (this.distanceTo(target) < 5f && target.isAlive() && this.getAttckingState() == 3) {
-                    this.getNavigation().moveTo(this.getX() + this.random.nextInt(7), this.getY(), this.getZ() + this.random.nextInt(7), 2);
-                    if (target != null && target.isAlive() && this.distanceTo(target) < 3f) {
-                        if (target instanceof Player && ((Player) target).getUseItem().canPerformAction(ToolActions.SHIELD_BLOCK)) {
-                            this.disableShield(target, 20);
+                if (this.attackTimer == 19) {
+                    for (LivingEntity lvt : this.level().getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(4.0D), KRAUSER_AREA)) {
+                        if (lvt instanceof Player && ((Player) lvt).getUseItem().canPerformAction(ToolActions.SHIELD_BLOCK)) {
+                            this.disableShield(lvt, 20);
                         } else {
-                            target.hurt(target.damageSources().mobAttack(this), (float) this.getAttributeValue(Attributes.ATTACK_DAMAGE) + target.getArmorValue());
-                            target.addEffect(new MobEffectInstance(EffectInit.PLAGAS.get(), 200, 0, true, true));
-                            target.knockback(0.25, this.getX() - target.getX(), this.getZ() - target.getZ());
+                            lvt.hurt(this.damageSources().mobAttack(this), lvt.getMaxHealth() * 0.25F + lvt.getArmorValue());
                         }
                     }
                 }
-                this.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 20, 5));
-                this.setAttackingState(0);
-                attackTimer = -5;
             }
+
+            // ===== STATE 3 high leap + late dash: Y@0.5s, smash~1.0s, Z dash@1.58s =====
+            if (atk == 3) {
+                if (this.attackTimer == 15) {
+                    this.leapUp(0.95D);
+                }
+                if (this.attackTimer == 28) {
+                    this.getNavigation().stop();
+                    for (int i = 0; i < 2; ++i) {
+                        float f1 = f + (float) i * (float) Math.PI * 0.4F;
+                        this.blockSmashAttack(i, f1, 1.5F, 150, 1.5F, 0.15F, 1.0F);
+                        this.blockSmashAttack(i, f1, -1.5F, 150, 1.5F, 0.15F, 1.0F);
+                        this.blockSmashAttack(i, f1, 2F, 150, 1.5F, 0.15F, 1.0F);
+                        this.blockSmashAttack(i, f1, 0.5F, 150, 1.5F, 0.15F, 1.0F);
+                        this.blockSmashAttack(i, f1, -0.5F, 150, 1.5F, 0.15F, 1.0F);
+                    }
+                    for (int k = 0; k < 3; ++k) {
+                        float f2 = f + (float) k * (float) Math.PI * 2.0F / 8.0F + 1.2566371F;
+                        this.blockSmashAttack(k, f2, 1.5F, 150, 1.5F, 0.15F, 1.0F);
+                        this.blockSmashAttack(k, f2, -1.5F, 150, 1.5F, 0.15F, 1.0F);
+                        this.blockSmashAttack(k, f2, 2F, 150, 1.5F, 0.15F, 1.0F);
+                        this.blockSmashAttack(k, f2, 0.5F, 150, 1.5F, 0.15F, 1.0F);
+                        this.blockSmashAttack(k, f2, -0.5F, 150, 1.5F, 0.15F, 1.0F);
+                    }
+                }
+                if (this.attackTimer >= 32 && this.attackTimer <= 38) {
+                    this.dashToward(target, 1.85D, 0.0D);
+                }
+                if (this.attackTimer == 40 && target.isAlive() && this.distanceTo(target) < 3.5f) {
+                    if (target instanceof Player && ((Player) target).getUseItem().canPerformAction(ToolActions.SHIELD_BLOCK)) {
+                        this.disableShield(target, 20);
+                    } else {
+                        target.hurt(this.damageSources().mobAttack(this), (float) this.getAttributeValue(Attributes.ATTACK_DAMAGE) + target.getArmorValue());
+                        target.addEffect(new MobEffectInstance(EffectInit.PLAGAS.get(), 200, 0, true, true));
+                        target.knockback(0.35, this.getX() - target.getX(), this.getZ() - target.getZ());
+                    }
+                }
+            }
+
+            // End skill → recover (attack3 anim is 2s → ~tick 45)
+            int endTick = (atk == 3) ? 48 : 42;
+            if (this.attackTimer >= endTick && atk != 0) {
+                this.beginRecover();
+            }
+
             this.lookAt(target, 30.0F, 30.0F);
         }
 
-//        else if (attackTimer > 0) {
-//            --attackTimer;
-//        }
-        this.attackTimer++;
-        if (this.attackTimer >= 60) {
-            this.setAttackingState(0);
-            this.attackTimer = -5;
-            // 停止所有动画状态
-            attackAnimationState.stop();
-            attackAnimationState2.stop();
-            attackAnimationState3.stop();
+        if (target == null || !this.hasLineOfSight(target)) {
+            if (this.attackTimer > 0) {
+                ++this.attackTimer;
+            }
         }
-
+        if (this.attackTimer >= 70 && this.getAttckingState() != 0) {
+            this.beginRecover();
+        }
     }
 
 //    static class AttackGoal extends Goal {
