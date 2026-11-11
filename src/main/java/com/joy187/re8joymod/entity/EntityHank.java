@@ -38,27 +38,24 @@ import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
+import java.util.EnumSet;
 import java.util.Random;
 import java.util.function.Predicate;
 
 /**
- * Hunk (EntityHank) — shoot / kick / close-range melee knife slash.
- * STATE 1 shoot ({@code animation.hank.attack}),
- * STATE 2 kick ({@code animation.hank.attack2}),
- * STATE 3 melee ({@code animation.hank.attack3}).
+ * Hunk (EntityHank) — shoot / kick / melee.
+ * Animations use triggerAnim (same pattern as Leon/Krauser) so client actually plays them.
+ * STATE 1 shoot, 2 kick, 3 melee; air targets stay on shoot + hold distance.
  */
 public class EntityHank extends EntityEthan implements GeoEntity {
 	private final AnimatableInstanceCache factory = GeckoLibUtil.createInstanceCache(this);
 	public static final EntityDataAccessor<Integer> STATE = SynchedEntityData.defineId(EntityHank.class,
 			EntityDataSerializers.INT);
 
-	private static final int STATE_IDLE = 0;
-	private static final int STATE_SHOOT = 1;
-	private static final int STATE_KICK = 2;
-	private static final int STATE_MELEE = 3;
-
-	private int attackTimer;
-	private int lastSkill;
+	public static final int STATE_IDLE = 0;
+	public static final int STATE_SHOOT = 1;
+	public static final int STATE_KICK = 2;
+	public static final int STATE_MELEE = 3;
 
 	private static final Predicate<LivingEntity> AREA_HIT = (e) ->
 			e.isAlive() && !(e instanceof IronGolem) && !(e instanceof EntityHank);
@@ -66,8 +63,6 @@ public class EntityHank extends EntityEthan implements GeoEntity {
 	public EntityHank(EntityType<? extends IronGolem> type, Level worldIn) {
 		super(type, worldIn);
 		this.xpReward = 100;
-		this.attackTimer = 0;
-		this.lastSkill = 0;
 	}
 
 	public static AttributeSupplier.Builder prepareAttributes() {
@@ -82,24 +77,12 @@ public class EntityHank extends EntityEthan implements GeoEntity {
 	@Override
 	protected void registerGoals() {
 		this.goalSelector.addGoal(0, new FloatGoal(this));
-		// Pathing only when target is grounded — combat tick handles air targets.
-		this.goalSelector.addGoal(1, new MoveTowardsTargetGoal(this, 1.05D, 32.0F) {
-			@Override
-			public boolean canUse() {
-				LivingEntity t = EntityHank.this.getTarget();
-				return super.canUse() && !AerialCombatHelper.isAerialTarget(EntityHank.this, t);
-			}
-
-			@Override
-			public boolean canContinueToUse() {
-				LivingEntity t = EntityHank.this.getTarget();
-				return super.canContinueToUse() && !AerialCombatHelper.isAerialTarget(EntityHank.this, t);
-			}
-		});
-		this.goalSelector.addGoal(2, new MoveBackToVillageGoal(this, 0.6D, false));
-		this.goalSelector.addGoal(4, new GolemRandomStrollInVillageGoal(this, 0.6D));
+		this.goalSelector.addGoal(1, new HankCombatGoal(this));
+		this.goalSelector.addGoal(5, new MoveBackToVillageGoal(this, 0.6D, false));
+		this.goalSelector.addGoal(6, new GolemRandomStrollInVillageGoal(this, 0.6D));
 		this.goalSelector.addGoal(7, new LookAtPlayerGoal(this, Player.class, 6.0F));
 		this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
+
 		this.targetSelector.addGoal(1, new DefendVillageTargetGoal(this));
 		this.targetSelector.addGoal(2, new HurtByTargetGoal(this));
 		this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Mob.class, 5, false, false,
@@ -113,7 +96,26 @@ public class EntityHank extends EntityEthan implements GeoEntity {
 	}
 
 	public void setAttackingState(int time) {
+		int prev = this.entityData.get(STATE);
 		this.entityData.set(STATE, time);
+		if ((time == STATE_SHOOT || time == STATE_KICK || time == STATE_MELEE) && prev != time) {
+			this.startAttackAnim(time);
+		}
+	}
+
+	protected void startAttackAnim(int state) {
+		if (state == STATE_SHOOT) {
+			this.triggerAnim("combat", "shoot");
+		} else if (state == STATE_KICK) {
+			this.triggerAnim("combat", "kick");
+		} else if (state == STATE_MELEE) {
+			this.triggerAnim("combat", "melee");
+		}
+	}
+
+	/** Force-restart shoot anim (anti-air volleys). */
+	public void retriggerShootAnim() {
+		this.triggerAnim("combat", "shoot");
 	}
 
 	@Override
@@ -152,31 +154,14 @@ public class EntityHank extends EntityEthan implements GeoEntity {
 		return PlayState.CONTINUE;
 	}
 
-	private <E extends GeoAnimatable> PlayState predicateCombat(AnimationState<E> event) {
-		if (this.dead || this.getHealth() < 0.01 || this.isDeadOrDying()) {
-			return PlayState.STOP;
-		}
-		return switch (this.getAttckingState()) {
-			case STATE_SHOOT -> {
-				event.setAndContinue(RawAnimation.begin().thenPlay("animation.hank.attack"));
-				yield PlayState.CONTINUE;
-			}
-			case STATE_KICK -> {
-				event.setAndContinue(RawAnimation.begin().thenPlay("animation.hank.attack2"));
-				yield PlayState.CONTINUE;
-			}
-			case STATE_MELEE -> {
-				event.setAndContinue(RawAnimation.begin().thenPlay("animation.hank.attack3"));
-				yield PlayState.CONTINUE;
-			}
-			default -> PlayState.STOP;
-		};
-	}
-
 	@Override
 	public void registerControllers(AnimatableManager.ControllerRegistrar data) {
+		// Attack controller: idle STOP + triggerable one-shots (reliable client playback)
+		data.add(new AnimationController<>(this, "combat", 3, state -> PlayState.STOP)
+				.triggerableAnim("shoot", RawAnimation.begin().thenPlay("animation.hank.attack"))
+				.triggerableAnim("kick", RawAnimation.begin().thenPlay("animation.hank.attack2"))
+				.triggerableAnim("melee", RawAnimation.begin().thenPlay("animation.hank.attack3")));
 		data.add(new AnimationController<>(this, "controller", 4, this::predicate));
-		data.add(new AnimationController<>(this, "combat", 2, this::predicateCombat));
 	}
 
 	@Override
@@ -234,40 +219,6 @@ public class EntityHank extends EntityEthan implements GeoEntity {
 		this.hasImpulse = true;
 	}
 
-	/** Prefer melee/kick up close; shoot at mid-far range. Air targets always shoot. */
-	private int pickSkill(LivingEntity target) {
-		if (AerialCombatHelper.isAerialTarget(this, target)) {
-			return STATE_SHOOT;
-		}
-		double dist = this.distanceTo(target);
-		if (dist < 3.4D) {
-			if (this.lastSkill == STATE_MELEE) {
-				return this.random.nextBoolean() ? STATE_KICK : STATE_MELEE;
-			}
-			if (this.lastSkill == STATE_KICK) {
-				return this.random.nextDouble() < 0.65D ? STATE_MELEE : STATE_KICK;
-			}
-			return this.random.nextDouble() < 0.58D ? STATE_MELEE : STATE_KICK;
-		}
-		if (dist < 7.5D) {
-			int roll = this.random.nextInt(100);
-			if (roll < 35) {
-				return STATE_KICK;
-			}
-			if (roll < 55) {
-				return STATE_MELEE;
-			}
-			return STATE_SHOOT;
-		}
-		return STATE_SHOOT;
-	}
-
-	private void endSkill() {
-		this.setAttackingState(STATE_IDLE);
-		this.attackTimer = -12;
-		this.getNavigation().stop();
-	}
-
 	private void fireBurstShot(LivingEntity target) {
 		EntityBOWShoot shot = new EntityBOWShoot(this.level(), this);
 		AerialCombatHelper.aimBowShot(this, shot, target, 15.5F, 0.75F);
@@ -278,117 +229,189 @@ public class EntityHank extends EntityEthan implements GeoEntity {
 		this.level().addFreshEntity(shot);
 	}
 
-	@Override
-	public void tick() {
-		super.tick();
+	static class HankCombatGoal extends Goal {
+		private final EntityHank hank;
+		private int timer;
+		private int chosen;
+		private int lastSkill;
 
-		LivingEntity target = this.getTarget();
-		if (target == null || !target.isAlive()) {
-			if (this.getAttckingState() != STATE_IDLE) {
-				this.endSkill();
-			}
-			return;
+		HankCombatGoal(EntityHank hank) {
+			this.hank = hank;
+			this.setFlags(EnumSet.of(Flag.MOVE, Flag.LOOK));
 		}
 
-		boolean aerial = AerialCombatHelper.isAerialTarget(this, target);
+		@Override
+		public boolean canUse() {
+			LivingEntity t = this.hank.getTarget();
+			return t != null && t.isAlive();
+		}
 
-		if (!this.hasLineOfSight(target)) {
-			if (this.getAttckingState() != STATE_IDLE) {
-				this.endSkill();
+		@Override
+		public boolean canContinueToUse() {
+			return this.canUse() || this.hank.getAttckingState() != STATE_IDLE;
+		}
+
+		@Override
+		public void start() {
+			this.timer = 0;
+			this.chosen = STATE_IDLE;
+			this.hank.setAggressive(true);
+		}
+
+		@Override
+		public void stop() {
+			this.timer = 0;
+			this.chosen = STATE_IDLE;
+			this.hank.setAttackingState(STATE_IDLE);
+			this.hank.setAggressive(false);
+			this.hank.getNavigation().stop();
+		}
+
+		@Override
+		public void tick() {
+			LivingEntity target = this.hank.getTarget();
+			if (target == null || !target.isAlive()) {
+				this.finish();
+				return;
 			}
-			if (!aerial) {
-				this.getNavigation().moveTo(target, 1.05D);
+
+			boolean aerial = AerialCombatHelper.isAerialTarget(this.hank, target);
+			boolean los = this.hank.hasLineOfSight(target);
+
+			if (aerial) {
+				AerialCombatHelper.holdShootDistance(this.hank, target);
 			} else {
-				AerialCombatHelper.holdShootDistance(this, target);
+				this.hank.getLookControl().setLookAt(target, 30.0F, 30.0F);
 			}
-			return;
+
+			if (!los) {
+				if (!aerial) {
+					this.hank.getNavigation().moveTo(target, 1.1D);
+				}
+				if (this.chosen != STATE_IDLE) {
+					this.finish();
+				}
+				return;
+			}
+
+			++this.timer;
+
+			if (this.chosen == STATE_IDLE) {
+				if (!aerial) {
+					this.hank.getNavigation().moveTo(target, 1.15D);
+				}
+				if (this.timer >= (aerial ? 3 : 6)) {
+					this.begin(this.pick(target, aerial));
+				}
+				return;
+			}
+
+			this.hank.getNavigation().stop();
+			switch (this.chosen) {
+				case STATE_SHOOT -> this.tickShoot(target, aerial);
+				case STATE_KICK -> this.tickKick(target);
+				case STATE_MELEE -> this.tickMelee(target);
+				default -> this.finish();
+			}
 		}
 
-		++this.attackTimer;
-		this.setAggressive(true);
-		if (aerial) {
-			AerialCombatHelper.holdShootDistance(this, target);
-		} else {
-			this.lookAt(target, 30.0F, 30.0F);
+		private int pick(LivingEntity target, boolean aerial) {
+			if (aerial) {
+				return STATE_SHOOT;
+			}
+			double dist = this.hank.distanceTo(target);
+			if (dist < 3.4D) {
+				if (this.lastSkill == STATE_MELEE) {
+					return this.hank.getRandom().nextBoolean() ? STATE_KICK : STATE_MELEE;
+				}
+				if (this.lastSkill == STATE_KICK) {
+					return this.hank.getRandom().nextDouble() < 0.65D ? STATE_MELEE : STATE_KICK;
+				}
+				return this.hank.getRandom().nextDouble() < 0.58D ? STATE_MELEE : STATE_KICK;
+			}
+			if (dist < 7.5D) {
+				int roll = this.hank.getRandom().nextInt(100);
+				if (roll < 35) {
+					return STATE_KICK;
+				}
+				if (roll < 55) {
+					return STATE_MELEE;
+				}
+				return STATE_SHOOT;
+			}
+			return STATE_SHOOT;
 		}
 
-		int atk = this.getAttckingState();
-		if (atk == STATE_IDLE) {
-			if (!aerial) {
-				this.getNavigation().moveTo(target, 1.1D);
-			}
-			if (this.attackTimer >= (aerial ? 2 : 5)) {
-				int skill = this.pickSkill(target);
-				this.lastSkill = skill;
-				this.setAttackingState(skill);
-				this.getNavigation().stop();
-				this.attackTimer = 0;
-				atk = skill;
-			}
-		} else if (!aerial) {
-			this.getNavigation().stop();
+		private void begin(int state) {
+			this.chosen = state;
+			this.lastSkill = state;
+			this.timer = 0;
+			this.hank.getNavigation().stop();
+			this.hank.setAttackingState(state);
 		}
 
-		// STATE 1 — rifle burst (anim ~1.375s); loops while target stays airborne
-		if (atk == STATE_SHOOT) {
-			if (this.attackTimer == 6 || this.attackTimer == 12 || this.attackTimer == 18) {
-				this.fireBurstShot(target);
+		private void finish() {
+			this.chosen = STATE_IDLE;
+			this.timer = 0;
+			this.hank.setAttackingState(STATE_IDLE);
+		}
+
+		private void tickShoot(LivingEntity target, boolean aerial) {
+			if (aerial) {
+				AerialCombatHelper.holdShootDistance(this.hank, target);
 			}
-			if (this.attackTimer >= 30) {
+			if (this.timer == 6 || this.timer == 12 || this.timer == 18) {
+				this.hank.fireBurstShot(target);
+			}
+			if (this.timer >= 28) {
 				if (aerial) {
-					// Pulse state so shoot anim restarts, stay in anti-air mode.
-					this.setAttackingState(STATE_IDLE);
-					this.setAttackingState(STATE_SHOOT);
-					this.attackTimer = 0;
+					// Keep shoot state; re-trigger anim for the next volley.
+					AerialCombatHelper.ensureShootState(this.hank::getAttckingState, this.hank::setAttackingState, STATE_SHOOT);
+					this.hank.retriggerShootAnim();
+					this.timer = 0;
 				} else {
-					this.endSkill();
+					this.finish();
 				}
 			}
 		}
 
-		// STATE 2 — kick (anim ~1.5s, impact ~0.5s)
-		if (atk == STATE_KICK) {
-			if (this.attackTimer >= 8 && this.attackTimer <= 11) {
-				this.dashToward(target, 0.55D);
+		private void tickKick(LivingEntity target) {
+			if (this.timer >= 8 && this.timer <= 11) {
+				this.hank.dashToward(target, 0.55D);
 			}
-			if (this.attackTimer == 12) {
-				for (LivingEntity lvt : this.level().getEntitiesOfClass(LivingEntity.class,
-						this.getBoundingBox().inflate(2.6D), AREA_HIT)) {
-					lvt.hurt(this.damageSources().mobAttack(this),
-							(float) this.getAttributeValue(Attributes.ATTACK_DAMAGE) * 0.95F
+			if (this.timer == 12) {
+				for (LivingEntity lvt : this.hank.level().getEntitiesOfClass(LivingEntity.class,
+						this.hank.getBoundingBox().inflate(2.6D), AREA_HIT)) {
+					lvt.hurt(this.hank.damageSources().mobAttack(this.hank),
+							(float) this.hank.getAttributeValue(Attributes.ATTACK_DAMAGE) * 0.95F
 									+ lvt.getArmorValue() * 0.25F);
-					lvt.knockback(0.55D, this.getX() - lvt.getX(), this.getZ() - lvt.getZ());
+					lvt.knockback(0.55D, this.hank.getX() - lvt.getX(), this.hank.getZ() - lvt.getZ());
 				}
 			}
-			if (this.attackTimer >= 34) {
-				this.endSkill();
+			if (this.timer >= 34) {
+				this.finish();
 			}
 		}
 
-		// STATE 3 — melee knife slash (anim ~1.05s)
-		if (atk == STATE_MELEE) {
-			if (this.attackTimer >= 5 && this.attackTimer <= 9) {
-				this.dashToward(target, 0.7D);
+		private void tickMelee(LivingEntity target) {
+			if (this.timer >= 5 && this.timer <= 9) {
+				this.hank.dashToward(target, 0.7D);
 			}
-			if (this.attackTimer == 10 && target.isAlive() && this.distanceTo(target) < 3.0F) {
-				target.hurt(this.damageSources().mobAttack(this),
-						(float) this.getAttributeValue(Attributes.ATTACK_DAMAGE)
-								+ this.random.nextInt(3));
-				target.knockback(0.35D, this.getX() - target.getX(), this.getZ() - target.getZ());
+			if (this.timer == 10 && target.isAlive() && this.hank.distanceTo(target) < 3.0F) {
+				target.hurt(this.hank.damageSources().mobAttack(this.hank),
+						(float) this.hank.getAttributeValue(Attributes.ATTACK_DAMAGE)
+								+ this.hank.getRandom().nextInt(3));
+				target.knockback(0.35D, this.hank.getX() - target.getX(), this.hank.getZ() - target.getZ());
 			}
-			if (this.attackTimer == 16 && target.isAlive() && this.distanceTo(target) < 3.0F) {
-				target.hurt(this.damageSources().mobAttack(this),
-						(float) this.getAttributeValue(Attributes.ATTACK_DAMAGE) * 0.85F
+			if (this.timer == 16 && target.isAlive() && this.hank.distanceTo(target) < 3.0F) {
+				target.hurt(this.hank.damageSources().mobAttack(this.hank),
+						(float) this.hank.getAttributeValue(Attributes.ATTACK_DAMAGE) * 0.85F
 								+ target.getArmorValue() * 0.2F);
-				target.knockback(0.4D, this.getX() - target.getX(), this.getZ() - target.getZ());
+				target.knockback(0.4D, this.hank.getX() - target.getX(), this.hank.getZ() - target.getZ());
 			}
-			if (this.attackTimer >= 24) {
-				this.endSkill();
+			if (this.timer >= 24) {
+				this.finish();
 			}
-		}
-
-		if (this.attackTimer >= 70 && atk != STATE_IDLE) {
-			this.endSkill();
 		}
 	}
 }
