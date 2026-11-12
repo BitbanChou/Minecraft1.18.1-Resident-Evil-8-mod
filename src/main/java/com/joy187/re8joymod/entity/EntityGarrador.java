@@ -1,6 +1,5 @@
 package com.joy187.re8joymod.entity;
 
-import com.joy187.re8joymod.init.EffectInit;
 import com.joy187.re8joymod.init.ParticleInit;
 import com.joy187.re8joymod.init.SoundInit;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -80,10 +79,20 @@ public class EntityGarrador extends Ravager implements GeoEntity, VibrationSyste
             EntityDataSerializers.BOOLEAN);
 
     protected int attackTimer = 0;
+    private int phaseStart;
 
     private static final int HEAR_MEMORY = 100;
     private static final int HEAR_RADIUS = 16;
-    private static final int COMBO_END = 75;
+    /** 挥爪动画 0.91667 秒。第 10 tick（0.50 秒）身体前冲到 z=-17，这一帧出伤。 */
+    private static final int SLASH_HIT_TICK = 10;
+    private static final int SLASH_END_TICK = 18;
+    /** 转圈动画 1.25 秒。boss 骨骼在 0.1667–0.9167 秒转到 -360。 */
+    private static final int SPIN_END_TICK = 25;
+    private static final float SPIN_HIT_START = 0.1667F;
+    private static final float SPIN_HIT_END = 0.9167F;
+    /** 冲撞动画 0.6 秒。0.15 秒前倾到位后才位移。 */
+    private static final int CHARGE_MOVE_START = 3;
+    private static final int CHARGE_END_TICK = 12;
     private static final int COMBO_COOLDOWN = -15;
 
     /** 连招结束后摇/硬直窗口（tick）。期间冻结 AI、不推进攻击、优先播 recover 动画。 */
@@ -657,66 +666,107 @@ public class EntityGarrador extends Ravager implements GeoEntity, VibrationSyste
 
         ++this.attackTimer;
         if (this.attackTimer == 1) {
+            this.phaseStart = this.attackTimer;
             this.spinBaseYaw = this.getYRot();
+            this.spinHit.clear();
+            this.chargeHit.clear();
             this.setAttackingState(1);
         }
         int state = this.getAttckingState();
-        if (state == 4 && this.attackTimer >= 31 && this.attackTimer <= 50) {
-            this.tickCharge();
-        } else {
-            this.holdStill(state == 2);
-        }
+        int elapsed = this.attackTimer - this.phaseStart;
 
-        if (this.attackTimer == 10 && state == 1) {
-            for (LivingEntity living : this.level().getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(6.0D), PIGEON_AREA)) {
-                living.hurt(living.damageSources().cactus(), living.getMaxHealth() * 0.15F + this.getAttackDamage());
+        if (state == 1) {
+            this.holdStill(true);
+            if (elapsed == SLASH_HIT_TICK) {
+                this.tickSlash();
             }
-        }
-
-        if (this.attackTimer == 20 && state == 1) {
-            this.setAttackingState(0);
-        }
-
-        if (this.attackTimer == 30) {
-            this.spinHit.clear();
-            this.chargeHit.clear();
-            this.spinBaseYaw = this.getYRot();
-
-            // 再次校验目标：目标可能在 1~29 tick 之间死亡
-            if (this.getTarget() == null || !this.canHear(this.getTarget())) {
-                this.abortComboAndRecover();
+            if (elapsed < SLASH_END_TICK) {
                 return;
             }
-
-            if (this.wantsHeavy()) {
-                this.heavyArmorFactor = this.random.nextInt(2) + 1;
-                this.setAttackingState(2);
-                this.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 20, 10, true, true));
-            } else {
-                this.lookAt(this.getTarget(), 180.0F, 180.0F);
-                this.spinBaseYaw = this.getYRot();
-                this.setAttackingState(4);
+            this.beginFollowUp();
+            if (!this.isAttacking()) {
+                return;
             }
             state = this.getAttckingState();
+            elapsed = 0;
         }
 
         if (state == 2) {
-            this.tickSpin();
+            this.holdStill(true);
+            this.tickSpin(elapsed / 20.0F);
+            if (elapsed >= SPIN_END_TICK) {
+                this.finishCombo();
+            }
+            return;
         }
 
-        if (this.attackTimer == 42 && state == 3) {
-            for (LivingEntity living : this.level().getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(6.0D), PIGEON_AREA)) {
-                living.addEffect(new MobEffectInstance(EffectInit.EROSION.get(), 10 * 20, 2, true, true));
+        if (state == 4) {
+            if (elapsed >= CHARGE_MOVE_START && elapsed < CHARGE_END_TICK) {
+                this.tickCharge();
+            } else {
+                this.holdStill(true);
+            }
+            if (elapsed >= CHARGE_END_TICK) {
+                this.finishCombo();
             }
         }
+    }
 
-        // 统一由 COMBO_END 收尾并进入 recover（移除 55 的提前归零，避免 recover 起点错乱）
-        if (this.attackTimer >= COMBO_END) {
-            this.setAttackingState(0);
-            this.attackTimer = COMBO_COOLDOWN;
-            this.spinHit.clear();
-            this.chargeHit.clear();
-            this.startRecover();
+    /** 挥爪结束后立刻接转圈或冲撞，中间不再把状态清零，避免插进待机。 */
+    private void beginFollowUp() {
+        if (this.getTarget() == null || !this.canHear(this.getTarget())) {
+            this.abortComboAndRecover();
+            return;
+        }
+        this.phaseStart = this.attackTimer;
+        this.spinHit.clear();
+        this.chargeHit.clear();
+        if (this.wantsHeavy()) {
+            this.heavyArmorFactor = this.random.nextInt(2) + 1;
+            this.spinBaseYaw = this.getYRot();
+            this.setAttackingState(2);
+            this.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, SPIN_END_TICK, 10, true, true));
+        } else {
+            this.lookAt(this.getTarget(), 180.0F, 180.0F);
+            this.spinBaseYaw = this.getYRot();
+            this.setAttackingState(4);
+        }
+    }
+
+    private void finishCombo() {
+        this.setAttackingState(0);
+        this.attackTimer = COMBO_COOLDOWN;
+        this.spinHit.clear();
+        this.chargeHit.clear();
+        this.stopAttackAnims();
+        this.startRecover();
+    }
+
+    /** 出伤对准前冲的那一帧：身前约 70°、1 到 4.5 格，不再用四周 6 格的方块。 */
+    private void tickSlash() {
+        Vec3 look = this.getLookAngle();
+        Vec3 forward = new Vec3(look.x, 0.0D, look.z);
+        if (forward.lengthSqr() < 1.0E-4D) {
+            return;
+        }
+        forward = forward.normalize();
+        AABB box = this.getBoundingBox().inflate(4.5D, 1.2D, 4.5D);
+        for (LivingEntity living : this.level().getEntitiesOfClass(LivingEntity.class, box, PIGEON_AREA)) {
+            double dy = living.getY() - this.getY();
+            if (dy > 2.5D || dy < -2.0D) {
+                continue;
+            }
+            double dx = living.getX() - this.getX();
+            double dz = living.getZ() - this.getZ();
+            double dist = Math.sqrt(dx * dx + dz * dz);
+            if (dist < 0.8D || dist > 4.5D) {
+                continue;
+            }
+            Vec3 toward = new Vec3(dx / dist, 0.0D, dz / dist);
+            if (forward.dot(toward) < Math.cos(Math.toRadians(70.0D))) {
+                continue;
+            }
+            living.hurt(this.damageSources().mobAttack(this), living.getMaxHealth() * 0.15F + this.getAttackDamage());
         }
     }
 
@@ -750,9 +800,8 @@ public class EntityGarrador extends Ravager implements GeoEntity, VibrationSyste
         return box.getXsize() * box.getYsize() * box.getZsize();
     }
 
-    private void tickSpin() {
-        float animTime = (this.attackTimer - 30) / 20.0F;
-        if (animTime < 0.2F || animTime > 0.95F) {
+    private void tickSpin(float animTime) {
+        if (animTime < SPIN_HIT_START || animTime > SPIN_HIT_END) {
             return;
         }
         float facingDeg = this.spinBaseYaw - spinBoneYaw(animTime);
