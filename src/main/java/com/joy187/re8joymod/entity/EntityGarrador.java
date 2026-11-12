@@ -49,7 +49,7 @@ import net.minecraftforge.common.ToolActions;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.AnimationState;;
+import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.animation.AnimationController;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
@@ -68,21 +68,33 @@ public class EntityGarrador extends Ravager implements GeoEntity, VibrationSyste
 
     private AnimatableInstanceCache factory = GeckoLibUtil.createInstanceCache(this);
 
-    public int explosionPower = 5, attr = 0,pre=0;
+    public int explosionPower = 5, attr = 0, pre = 0;
     public boolean isaoe = false;
-    private final ServerBossEvent bossInfo = (ServerBossEvent)(new ServerBossEvent(this.getDisplayName(), BossEvent.BossBarColor.PURPLE, BossEvent.BossBarOverlay.PROGRESS)).setDarkenScreen(true);
-    //private static final EntityDataAccessor<Integer> DATA_ID_INV = SynchedEntityData.defineId(EntityChief2.class, EntityDataSerializers.INT);
+    private final ServerBossEvent bossInfo = (ServerBossEvent) (new ServerBossEvent(this.getDisplayName(), BossEvent.BossBarColor.PURPLE, BossEvent.BossBarOverlay.PROGRESS)).setDarkenScreen(true);
+
     public static final EntityDataAccessor<Integer> STATE = SynchedEntityData.defineId(EntityGarrador.class,
             EntityDataSerializers.INT);
     public static final EntityDataAccessor<Integer> DEFENDSTATE = SynchedEntityData.defineId(EntityGarrador.class,
             EntityDataSerializers.INT);
     public static final EntityDataAccessor<Boolean> PLAGA = SynchedEntityData.defineId(EntityGarrador.class,
             EntityDataSerializers.BOOLEAN);
+
     protected int attackTimer = 0;
+
     private static final int HEAR_MEMORY = 100;
     private static final int HEAR_RADIUS = 16;
     private static final int COMBO_END = 75;
     private static final int COMBO_COOLDOWN = -15;
+
+    /** 连招结束后摇/硬直窗口（tick）。期间冻结 AI、不推进攻击、优先播 recover 动画。 */
+    private static final int RECOVER_TICKS = 30;
+    private int recoverTimer = 0;
+
+    /** 受击硬直（可选）：单次伤害 >= 该值时触发短暂硬直，并打断当前连招。 */
+    private static final float STUN_MIN_DAMAGE = 6.0F;
+    private static final int STUN_TICKS = 8;
+    private int stunTicks = 0;
+
     private final DynamicGameEventListener<VibrationSystem.Listener> dynamicGameEventListener;
     private final VibrationSystem.User vibrationUser;
     private final VibrationSystem.Data vibrationData = new VibrationSystem.Data();
@@ -116,22 +128,17 @@ public class EntityGarrador extends Ravager implements GeoEntity, VibrationSyste
         super.aiStep();
         Random ran = new Random();
         int co = ran.nextInt(4);
-        if(co==1 && this.attr!=2 && this.attr!=3)
-        {
-            //this.level().addParticle(ParticleTypes.ASH, this.getX(), this.getY(), this.getZ(), this.position().x, this.position().y, this.position().z);
-            for (int i = 0; i < 30; i++)
-            {
-                float deltaOmega = 1.0f * i;//ModConfig.DEBUG_CONF.HALO_OMEGA;
-                Vec3 pos = new Vec3(this.position().x + 1 * Math.sin(0 + deltaOmega),  this.position().y + 0.1f * this.random.nextFloat(), this.position().z + 1 * Math.cos(0 + deltaOmega));
-                //this.level().spawnParticle(particleTypes, pos.x, pos.y, pos.z, 0,0,0);
-                this.level().addParticle(ParticleTypes.FLAME, pos.x, pos.y, pos.z, 0,0,0);
+        if (co == 1 && this.attr != 2 && this.attr != 3) {
+            for (int i = 0; i < 30; i++) {
+                float deltaOmega = 1.0f * i;
+                Vec3 pos = new Vec3(this.position().x + 1 * Math.sin(0 + deltaOmega), this.position().y + 0.1f * this.random.nextFloat(), this.position().z + 1 * Math.cos(0 + deltaOmega));
+                this.level().addParticle(ParticleTypes.FLAME, pos.x, pos.y, pos.z, 0, 0, 0);
             }
         }
 
-        if(this.entityData.get(STATE) == 3) {
+        if (this.entityData.get(STATE) == 3) {
             this.defend();
         }
-
     }
 
     public static AttributeSupplier.Builder prepareAttributes() {
@@ -150,16 +157,14 @@ public class EntityGarrador extends Ravager implements GeoEntity, VibrationSyste
     }
 
     private float getAttackDamage() {
-        return (float)this.getAttributeValue(Attributes.ATTACK_DAMAGE);
+        return (float) this.getAttributeValue(Attributes.ATTACK_DAMAGE);
     }
-
-
 
     @Override
     protected SoundEvent getAmbientSound() {
         Random ran = new Random();
         int co = ran.nextInt(3);
-        if(co==0) return SoundEvents.RAVAGER_AMBIENT;
+        if (co == 0) return SoundEvents.RAVAGER_AMBIENT;
         return SoundEvents.RAVAGER_ROAR;
     }
 
@@ -167,10 +172,9 @@ public class EntityGarrador extends Ravager implements GeoEntity, VibrationSyste
     protected SoundEvent getHurtSound(DamageSource source) {
         Random ran = new Random();
         int co = ran.nextInt(2);
-        if(co==0) return SoundEvents.RAVAGER_HURT;
+        if (co == 0) return SoundEvents.RAVAGER_HURT;
         return SoundInit.ENTITY_HESEN_HURT2.get();
     }
-
 
     public int getInvulnerableTicks() {
         return 200;
@@ -192,7 +196,6 @@ public class EntityGarrador extends Ravager implements GeoEntity, VibrationSyste
         if (this.hasCustomName()) {
             this.bossInfo.setName(this.getDisplayName());
         }
-
     }
 
     @Override
@@ -210,45 +213,37 @@ public class EntityGarrador extends Ravager implements GeoEntity, VibrationSyste
         super.customServerAiStep();
 
         Random ran = new Random();
-        if(this.getHealth()<200.F){
-            this.level().addParticle(ParticleTypes.SMOKE, this.position().x + this.random.nextGaussian() * (double)0.3F, this.position().y + this.random.nextGaussian() * (double)0.3F, this.position().z + this.random.nextGaussian() * (double)0.3F, 0.0D, 0.0D, 0.0D);
+        if (this.getHealth() < 200.F) {
+            this.level().addParticle(ParticleTypes.SMOKE, this.position().x + this.random.nextGaussian() * (double) 0.3F, this.position().y + this.random.nextGaussian() * (double) 0.3F, this.position().z + this.random.nextGaussian() * (double) 0.3F, 0.0D, 0.0D, 0.0D);
         }
 
-        if(this.getHealth() >= 20.0F && this.getHealth()<=30.0F)
-        {
-            for(int i=0;i<5;i++)
-                this.heal(1.0F*ran.nextFloat());
+        if (this.getHealth() >= 20.0F && this.getHealth() <= 30.0F) {
+            for (int i = 0; i < 5; i++)
+                this.heal(1.0F * ran.nextFloat());
         }
 
-        if(this.getHealth() >= 60.0F && this.getHealth()<=65.0F)
-        {
-            for(int i=0;i<4;i++)
-                this.heal(2F*ran.nextFloat());
+        if (this.getHealth() >= 60.0F && this.getHealth() <= 65.0F) {
+            for (int i = 0; i < 4; i++)
+                this.heal(2F * ran.nextFloat());
         }
-
 
         this.bossInfo.setProgress(this.getHealth() / this.getMaxHealth());
     }
 
     private void defend() {
         if (this.isAlive()) {
-
             Vec3 vec3 = this.getBoundingBox().getCenter();
 
-            for(int j=0;j<3;j++)
-            {
-                for (int i = 0; i < 10; i++)
-                {
-                    float deltaOmega = 1.0f * i;//ModConfig.DEBUG_CONF.HALO_OMEGA;
-                    Vec3 pos = new Vec3(vec3.x + 3 * Math.sin(0 + deltaOmega),  vec3.y + j, vec3.z + 3 * Math.cos(0 + deltaOmega));
-                    //this.level().spawnParticle(particleTypes, pos.x, pos.y, pos.z, 0,0,0);
-                    this.level().addParticle(ParticleInit.DEFEND_PARTICLE.get(), pos.x, pos.y, pos.z, 0,0,0);
+            for (int j = 0; j < 3; j++) {
+                for (int i = 0; i < 10; i++) {
+                    float deltaOmega = 1.0f * i;
+                    Vec3 pos = new Vec3(vec3.x + 3 * Math.sin(0 + deltaOmega), vec3.y + j, vec3.z + 3 * Math.cos(0 + deltaOmega));
+                    this.level().addParticle(ParticleInit.DEFEND_PARTICLE.get(), pos.x, pos.y, pos.z, 0, 0, 0);
                 }
             }
 
             this.level().gameEvent(this, GameEvent.ENTITY_ROAR, this.getEyePosition());
         }
-
     }
 
     public void makeInvulnerable() {
@@ -257,9 +252,7 @@ public class EntityGarrador extends Ravager implements GeoEntity, VibrationSyste
         this.setHealth(this.getMaxHealth() / 3.0F);
     }
 
-
-    public boolean isNonBoss()
-    {
+    public boolean isNonBoss() {
         return false;
     }
 
@@ -275,47 +268,42 @@ public class EntityGarrador extends Ravager implements GeoEntity, VibrationSyste
 
     private <E extends GeoAnimatable> PlayState predicate(AnimationState<E> event) {
         int atk = this.entityData.get(STATE);
+        // 攻击中：让攻击控制器独占骨骼
         if (atk == 1 || atk == 2 || atk == 3 || atk == 4) {
             return PlayState.STOP;
+        }
+        // recover 后摇优先于 walk/idle
+        if (this.getDefendingState() == 1) {
+            event.setAndContinue(RawAnimation.begin().thenLoop("animation.garrador.recover"));
+            return PlayState.CONTINUE;
         }
 
         if (event.isMoving()) {
             event.setAndContinue(RawAnimation.begin().thenPlay("animation.chief2.walk"));
             return PlayState.CONTINUE;
         }
-//        Random ran = new Random();
-//        int co = ran.nextInt(30);
-//        if(co==1) {
-//        	event.setAndContinue(RawAnimation.begin().thenPlay("animation.dimi.idle2"));
-//            return PlayState.CONTINUE;
-//        }
 
         event.setAndContinue(RawAnimation.begin().thenPlay("animation.chief2.idle"));
         return PlayState.CONTINUE;
     }
 
-    
-
-
-    	@Override
-	public void registerControllers(AnimatableManager.ControllerRegistrar data) {
-		AnimationController<?> attackController =
-				new AnimationController<>(this, "controller1", 3, state -> PlayState.STOP)
-						.triggerableAnim("slash", RawAnimation.begin().thenPlay("animation.chief2.attack"))
-						.triggerableAnim("heavy", RawAnimation.begin().thenPlay("animation.chief2.attack2"))
-						.triggerableAnim("charge", RawAnimation.begin().thenPlay("animation.garrador.charge"));
-		data.add(attackController);
-		data.add(new AnimationController<>(this, "controller", 8, this::predicate));
-		data.add(new AnimationController<>(this, "plaga", 4, state -> {
-			if (!this.isPlagaIntact()) {
-				return PlayState.STOP;
-			}
-			state.setAndContinue(RawAnimation.begin().thenLoop("animation.garrador.plaga"));
-			return PlayState.CONTINUE;
-		}));
-	}
-
-
+    @Override
+    public void registerControllers(AnimatableManager.ControllerRegistrar data) {
+        AnimationController<?> attackController =
+                new AnimationController<>(this, "controller1", 3, state -> PlayState.STOP)
+                        .triggerableAnim("slash", RawAnimation.begin().thenPlay("animation.chief2.attack"))
+                        .triggerableAnim("heavy", RawAnimation.begin().thenPlay("animation.chief2.attack2"))
+                        .triggerableAnim("charge", RawAnimation.begin().thenPlay("animation.garrador.charge"));
+        data.add(attackController);
+        data.add(new AnimationController<>(this, "controller", 8, this::predicate));
+        data.add(new AnimationController<>(this, "plaga", 4, state -> {
+            if (!this.isPlagaIntact()) {
+                return PlayState.STOP;
+            }
+            state.setAndContinue(RawAnimation.begin().thenLoop("animation.garrador.plaga"));
+            return PlayState.CONTINUE;
+        }));
+    }
 
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
@@ -326,26 +314,25 @@ public class EntityGarrador extends Ravager implements GeoEntity, VibrationSyste
         return this.entityData.get(STATE);
     }
 
-    	
-	/** Trigger one-shot attack animation via GeckoLib triggerAnim. */
-	protected void startAttackAnim(int state) {
-		if (state == 1) {
-			this.triggerAnim("controller1", "slash");
-		} else if (state == 2) {
-			this.triggerAnim("controller1", "heavy");
-		} else if (state == 4) {
-			this.triggerAnim("controller1", "charge");
-		}
-	}
+    /** Trigger one-shot attack animation via GeckoLib triggerAnim. */
+    protected void startAttackAnim(int state) {
+        if (state == 1) {
+            this.triggerAnim("controller1", "slash");
+        } else if (state == 2) {
+            this.triggerAnim("controller1", "heavy");
+        } else if (state == 4) {
+            this.triggerAnim("controller1", "charge");
+        }
+    }
 
-	public void setAttackingState(int time) {
-		int prev = this.entityData.get(STATE);
-		this.entityData.set(STATE, time);
-		if ((time == 1 || time == 2 || time == 4) && prev != time) {
-			this.startAttackAnim(time);
-		}
-	}
 
+    public void setAttackingState(int time) {
+        int prev = this.entityData.get(STATE);
+        this.entityData.set(STATE, time);
+        if ((time == 1 || time == 2 || time == 4) && prev != time) {
+            this.startAttackAnim(time);
+        }
+    }
 
     public int getDefendingState() {
         return this.entityData.get(DEFENDSTATE);
@@ -373,7 +360,7 @@ public class EntityGarrador extends Ravager implements GeoEntity, VibrationSyste
 
     @Override
     protected void updateControlFlags() {
-        if (this.isAttacking()) {
+        if (this.isAttacking() || this.recoverTimer > 0 || this.stunTicks > 0) {
             this.goalSelector.setControlFlag(Goal.Flag.MOVE, false);
             this.goalSelector.setControlFlag(Goal.Flag.JUMP, false);
             this.goalSelector.setControlFlag(Goal.Flag.LOOK, false);
@@ -418,6 +405,19 @@ public class EntityGarrador extends Ravager implements GeoEntity, VibrationSyste
                 }
             }
         }
+
+        // 受击硬直（可选）：打断攻击 + 短暂冻结，保留击退位移
+        if (hurt && !this.level().isClientSide && amount >= STUN_MIN_DAMAGE) {
+            this.stunTicks = Math.max(this.stunTicks, STUN_TICKS);
+            if (this.isAttacking()) {
+                this.setAttackingState(0);
+                this.attackTimer = COMBO_COOLDOWN;
+                this.spinHit.clear();
+                this.chargeHit.clear();
+                this.stopAttackAnims();
+            }
+        }
+
         if (hurt && !this.level().isClientSide && source.getEntity() instanceof LivingEntity living) {
             this.noticeEntity(living, living.blockPosition());
         }
@@ -442,104 +442,6 @@ public class EntityGarrador extends Ravager implements GeoEntity, VibrationSyste
         return entity.isAlive() && !(entity instanceof EntityGarrador);
     };
 
-//    static class AttackGoal extends Goal {
-//        private final EntityGarrador parentEntity;
-//        protected int attackTimer = 0;
-//
-//        public AttackGoal(EntityGarrador ghast) {
-//            this.parentEntity = ghast;
-//        }
-//
-//        public boolean canUse() {
-//            return this.parentEntity.getTarget() != null;
-//        }
-//
-//        public void start() {
-//            super.start();
-//            this.parentEntity.setAggressive(true);
-//        }
-//
-//        @Override
-//        public void stop() {
-//            super.stop();
-//            this.parentEntity.setAggressive(false);
-//            this.parentEntity.setAttackingState(0);
-//            this.attackTimer = -1;
-//        }
-//
-//        public void tick() {
-//            LivingEntity livingentity = this.parentEntity.getTarget();
-//            if (livingentity!=null && (livingentity.getSoundSource()==SoundSource.HOSTILE || livingentity.getSoundSource()==SoundSource.PLAYERS || livingentity.getSoundSource()==SoundSource.NEUTRAL)) {
-//                Level world = this.parentEntity.level();
-//                ++this.attackTimer;
-//                Random rand = new Random();
-//                Vec3 vector3d = this.parentEntity.getViewVector(1.0F);
-//                double d0 = Math.min(livingentity.getY(), livingentity.getY());
-//                double d1 = Math.max(livingentity.getY(), livingentity.getY()) + 1.0D;
-//                double d2 = livingentity.getX() - (this.parentEntity.getX() + vector3d.x * 2.0D);
-//                double d3 = livingentity.getY(0.5D) - (0.5D + this.parentEntity.getY(0.5D));
-//                double d4 = livingentity.getZ() - (this.parentEntity.getZ() + vector3d.z * 2.0D);
-//                float f = (float) Mth.atan2(livingentity.getZ() - parentEntity.getZ(),
-//                        livingentity.getX() - parentEntity.getX());
-//
-//                if (this.attackTimer==13) {
-//                    if(this.parentEntity.getHealth() < 5 || this.parentEntity.getHealth() > 135 ||
-//                            (this.parentEntity.getHealth() > 90 && this.parentEntity.getHealth()<101) ||
-//                            (this.parentEntity.getHealth() > 66 && this.parentEntity.getHealth()<81) ||
-//                            (this.parentEntity.getHealth() > 26 && this.parentEntity.getHealth()<39) ||
-//                            (this.parentEntity.getHealth() > 10 && this.parentEntity.getHealth()<18) )
-//                    {
-//                        this.parentEntity.getNavigation().moveTo(livingentity, 1.5D);
-//                        this.parentEntity.setAttackingState(2);
-//                        this.parentEntity.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 20,10,true,true));
-//                    }
-//                    else{
-//                        this.parentEntity.getNavigation().stop();
-//                        this.parentEntity.setAttackingState(3);
-//                    }
-//                }
-//                else if(this.attackTimer == 1){
-//                    this.parentEntity.getNavigation().moveTo(livingentity, 1.2D);
-//                    this.parentEntity.setAttackingState(1);
-//                }
-//
-//                if(this.attackTimer==10 && this.parentEntity.getAttckingState()==1){
-//                    for (LivingEntity lvt : this.parentEntity.level().getEntitiesOfClass(LivingEntity.class, this.parentEntity.getBoundingBox().inflate(6.0D), PIGEON_AREA)) {
-//                        lvt.hurt(lvt.damageSources().cactus(),lvt.getMaxHealth()*0.15f+this.parentEntity.getAttackDamage());
-//                    }
-//                }
-//
-//                if(this.attackTimer==25 && this.parentEntity.getAttckingState()==3){
-//                    for (LivingEntity lvt : this.parentEntity.level().getEntitiesOfClass(LivingEntity.class, this.parentEntity.getBoundingBox().inflate(6.0D), PIGEON_AREA)) {
-//                        lvt.addEffect(new MobEffectInstance(EffectInit.EROSION.get(), 10 * 20, 2, true,true));
-//                    }
-//                }
-//
-//                if(this.attackTimer==22 && this.parentEntity.getAttckingState()==2){
-//                    for (LivingEntity lvt : this.parentEntity.level().getEntitiesOfClass(LivingEntity.class, this.parentEntity.getBoundingBox().inflate(6.0D), PIGEON_AREA)) {
-//                        int val=lvt.getArmorValue();
-//                        if (lvt instanceof Player && ((Player)lvt).getUseItem().canPerformAction(ToolActions.SHIELD_BLOCK)) {
-//                            this.parentEntity.disableShield(lvt, 150);
-//                        }
-//                        else{
-//                            lvt.hurt(lvt.damageSources().cactus(),val*(rand.nextInt(2)+1)+lvt.getMaxHealth()*0.2f);
-//                        }
-//                    }
-//                }
-//
-//                if (this.attackTimer == 35) {
-//                    this.parentEntity.setAttackingState(0);
-//                    this.attackTimer = -5;
-//                }
-//            }
-//            else if (this.attackTimer > 0) {
-//                --this.attackTimer;
-//            }
-//            this.parentEntity.lookAt(livingentity, 30.0F, 30.0F);
-//        }
-//
-//    }
-
     @Override
     public void tick() {
         super.tick();
@@ -547,12 +449,42 @@ public class EntityGarrador extends Ravager implements GeoEntity, VibrationSyste
             return;
         }
         VibrationSystem.Ticker.tick(this.level(), this.vibrationData, this.vibrationUser);
+
+        // 受击硬直：冻结 AI、不推进攻击，但保留击退位移（不清零 delta）
+        if (this.stunTicks > 0) {
+            --this.stunTicks;
+            this.getNavigation().stop();
+            this.setSpeed(0.0F);
+            this.tickHearing();
+            return;
+        }
+
+        // recover 后摇：冻结水平移动、只转头、不推进攻击
+        if (this.recoverTimer > 0) {
+            --this.recoverTimer;
+            this.setDefendingState(1);
+            this.getNavigation().stop();
+            this.setSpeed(0.0F);
+            Vec3 motion = this.getDeltaMovement();
+            this.setDeltaMovement(0.0D, motion.y, 0.0D);
+            LivingEntity recoverTarget = this.getTarget();
+            if (recoverTarget != null) {
+                this.lookAt(recoverTarget, 30.0F, 30.0F);
+            }
+            if (this.recoverTimer == 0) {
+                this.setDefendingState(0);
+            }
+            this.tickHearing();
+            return;
+        }
+        // 防御粒子状态（STATE==3）在 aiStep 中处理，这里不动
+
         this.tickHearing();
         this.tickAttack();
     }
 
     private boolean isAttacking() {
-        return this.getAttckingState() != 0 || this.attackTimer > 0;
+        return this.getAttckingState() != 0;
     }
 
     private boolean canHear(LivingEntity living) {
@@ -653,7 +585,9 @@ public class EntityGarrador extends Ravager implements GeoEntity, VibrationSyste
     }
 
     private boolean inAttackRange(LivingEntity target) {
-        return this.distanceToSqr(target) <= 36.0D;
+        // 收紧到更贴近体型的接触距离（约 2.0~2.5 格），避免远距离就挥
+        double reach = (this.getBbWidth() + target.getBbWidth()) * 0.5D + 1.5D;
+        return this.distanceToSqr(target) <= reach * reach;
     }
 
     private boolean wantsHeavy() {
@@ -677,8 +611,33 @@ public class EntityGarrador extends Ravager implements GeoEntity, VibrationSyste
         }
     }
 
+    /** 进入 recover 后摇窗口。 */
+    private void startRecover() {
+        this.recoverTimer = RECOVER_TICKS;
+        this.setDefendingState(1);
+        this.getNavigation().stop();
+        this.setSpeed(0.0F);
+    }
+
+    /** 立即结束当前连招并进入 recover（用于目标死亡/丢失中断）。 */
+    private void abortComboAndRecover() {
+        this.setAttackingState(0);
+        this.attackTimer = COMBO_COOLDOWN;
+        this.spinHit.clear();
+        this.chargeHit.clear();
+        this.stopAttackAnims();
+        this.startRecover();
+    }
+
     private void tickAttack() {
         LivingEntity target = this.getTarget();
+
+        // 攻击中但目标已失效 → 立即中断连招，进入 recover，不再"打空气"
+        if (this.isAttacking() && (target == null || !this.canHear(target))) {
+            this.abortComboAndRecover();
+            return;
+        }
+
         boolean audible = target != null && this.canHear(target)
                 && (target.getSoundSource() == SoundSource.HOSTILE
                 || target.getSoundSource() == SoundSource.PLAYERS
@@ -722,16 +681,21 @@ public class EntityGarrador extends Ravager implements GeoEntity, VibrationSyste
             this.spinHit.clear();
             this.chargeHit.clear();
             this.spinBaseYaw = this.getYRot();
+
+            // 再次校验目标：目标可能在 1~29 tick 之间死亡
+            if (this.getTarget() == null || !this.canHear(this.getTarget())) {
+                this.abortComboAndRecover();
+                return;
+            }
+
             if (this.wantsHeavy()) {
                 this.heavyArmorFactor = this.random.nextInt(2) + 1;
                 this.setAttackingState(2);
                 this.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 20, 10, true, true));
-            } else if (this.getTarget() != null) {
+            } else {
                 this.lookAt(this.getTarget(), 180.0F, 180.0F);
                 this.spinBaseYaw = this.getYRot();
                 this.setAttackingState(4);
-            } else {
-                this.setAttackingState(3);
             }
             state = this.getAttckingState();
         }
@@ -746,15 +710,13 @@ public class EntityGarrador extends Ravager implements GeoEntity, VibrationSyste
             }
         }
 
-        if (this.attackTimer == 55) {
-            this.setAttackingState(0);
-        }
-
+        // 统一由 COMBO_END 收尾并进入 recover（移除 55 的提前归零，避免 recover 起点错乱）
         if (this.attackTimer >= COMBO_END) {
             this.setAttackingState(0);
             this.attackTimer = COMBO_COOLDOWN;
             this.spinHit.clear();
             this.chargeHit.clear();
+            this.startRecover();
         }
     }
 
@@ -793,7 +755,6 @@ public class EntityGarrador extends Ravager implements GeoEntity, VibrationSyste
         if (animTime < 0.2F || animTime > 0.95F) {
             return;
         }
-        // Bone yaw runs 0 -> -360. Subtracting it turns the arc clockwise with the claws.
         float facingDeg = this.spinBaseYaw - spinBoneYaw(animTime);
         float facingRad = facingDeg * ((float) Math.PI / 180F);
         Vec3 forward = new Vec3(-Mth.sin(facingRad), 0.0D, Mth.cos(facingRad));
@@ -920,11 +881,20 @@ public class EntityGarrador extends Ravager implements GeoEntity, VibrationSyste
     }
 
     public static void disableShield(LivingEntity livingEntity, int ticks) {
-        ((Player)livingEntity).getCooldowns().addCooldown(livingEntity.getUseItem().getItem(), ticks);
-        livingEntity.getUseItem().hurtAndBreak(4+livingEntity.getRandom().nextInt(2), livingEntity, (p_220009_1_) -> {
+        ((Player) livingEntity).getCooldowns().addCooldown(livingEntity.getUseItem().getItem(), ticks);
+        livingEntity.getUseItem().hurtAndBreak(4 + livingEntity.getRandom().nextInt(2), livingEntity, (p_220009_1_) -> {
             p_220009_1_.broadcastBreakEvent(livingEntity.getUsedItemHand());
         });
         livingEntity.stopUsingItem();
-        livingEntity.level().broadcastEntityEvent(livingEntity, (byte)30);
+        livingEntity.level().broadcastEntityEvent(livingEntity, (byte) 30);
+    }
+
+    protected void stopAttackAnims() {
+        // 获取 controller1 并直接停止它
+        this.getAnimatableInstanceCache()
+                .getManagerForId(this.getId())
+                .getAnimationControllers()
+                .get("controller1")
+                .stop();
     }
 }
