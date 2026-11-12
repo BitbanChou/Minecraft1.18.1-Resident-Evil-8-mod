@@ -460,6 +460,93 @@
 						"vector": [0, 0, 0]}					}
 				}
 			}
+		},
+		"animation.garrador.plaga": {
+			"loop": true,
+			"animation_length": 1.6,
+			"bones": {
+				"parasite": {
+					"rotation": {
+						"vector": ["math.sin(query.anim_time * 220) * 6", 0, "math.cos(query.anim_time * 180) * 4"]
+					}
+				},
+				"plaga_tail": {
+					"rotation": {
+						"vector": ["math.cos(query.anim_time * 280) * 18", "math.sin(query.anim_time * 160) * 8", 0]
+					}
+				},
+				"plaga_tenta": {
+					"rotation": {
+						"vector": ["math.sin(query.anim_time * 300) * 14", 0, "math.cos(query.anim_time * 240) * 10"]
+					}
+				},
+				"plaga_tenta2": {
+					"rotation": {
+						"vector": ["math.cos(query.anim_time * 300) * 14", 0, "math.sin(query.anim_time * 240) * -10"]
+					}
+				},
+				"plaga_tenta3": {
+					"rotation": {
+						"vector": ["math.sin(query.anim_time * 260) * -12", 0, 0]
+					}
+				}
+			}
+		},
+		"animation.garrador.charge": {
+			"loop": true,
+			"animation_length": 0.6,
+			"bones": {
+				"boss": {
+					"rotation": {
+						"0.0": {"vector": [0, 0, 0]},
+						"0.15": {"vector": [28, 0, 0]},
+						"0.45": {"vector": [18, 0, 0]},
+						"0.6": {"vector": [28, 0, 0]}
+					},
+					"position": {
+						"0.0": {"vector": [0, 0, 0]},
+						"0.15": {"vector": [0, -1, 2]},
+						"0.6": {"vector": [0, -1, 2]}
+					}
+				},
+				"leftarm": {
+					"rotation": {
+						"0.0": {"vector": [0, 0, 0]},
+						"0.15": {"vector": [-70, 0, -20]},
+						"0.6": {"vector": [-70, 0, -20]}
+					}
+				},
+				"rightarm": {
+					"rotation": {
+						"0.0": {"vector": [0, 0, 0]},
+						"0.15": {"vector": [-70, 0, 20]},
+						"0.6": {"vector": [-70, 0, 20]}
+					}
+				},
+				"leftleg": {
+					"rotation": {
+						"vector": ["math.sin(query.anim_time * 720) * 35", 0, 0]
+					}
+				},
+				"rightleg": {
+					"rotation": {
+						"vector": ["math.sin(query.anim_time * 720) * -35", 0, 0]
+					}
+				},
+				"parasite": {
+					"rotation": {
+						"vector": ["math.sin(query.anim_time * 500) * 10", 0, 0]
+					},
+					"scale": {
+						"vector": [1.15, 1.15, 1.15]
+					}
+				},
+				"plaga_tail": {
+					"rotation": {
+						"vector": ["math.cos(query.anim_time * 640) * 28", 0, 0]
+					}
+				}
+			}
 		}
 	},
 	"geckolib_format_version": 2
