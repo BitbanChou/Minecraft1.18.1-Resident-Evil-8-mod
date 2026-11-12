@@ -28,6 +28,10 @@ public class RenderGarrador extends GeoEntityRenderer<EntityGarrador>{
     public void render(EntityGarrador animatable,float entityYaw, float partialTick, PoseStack stack, MultiBufferSource bufferSource, int packedLight) {
 
     	stack.scale(1.2F, 1.2F, 1.2F);
+        boolean showPlaga = animatable.isPlagaIntact();
+        for (String boneName : new String[]{"parasite", "plaga_tail", "plaga_tenta", "plaga_tenta2", "plaga_tenta3"}) {
+            this.getGeoModel().getBone(boneName).ifPresent(bone -> bone.setHidden(!showPlaga));
+        }
 
         this.animatable = animatable;
         defaultRender(stack, animatable, bufferSource, null, null, entityYaw, partialTick, packedLight);
