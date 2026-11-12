@@ -953,6 +953,308 @@
 					}
 				}
 			}
+		},
+		"animation.miranda2.spike": {
+			"animation_length": 1.2,
+			"bones": {
+				"Body": {
+					"rotation": {
+						"0.0": {"vector": [0, 0, 0]},
+						"0.25": {"vector": [18, 0, 0]},
+						"0.45": {"vector": [32, 0, 0]},
+						"0.8": {"vector": [8, 0, 0]},
+						"1.2": {"vector": [0, 0, 0]}
+					}
+				},
+				"Head": {
+					"rotation": {
+						"0.2": {"vector": [10, 0, 0]},
+						"0.45": {"vector": [22, 0, 0]},
+						"1.2": {"vector": [0, 0, 0]}
+					}
+				},
+				"LeftArm": {
+					"rotation": {
+						"0.15": {"vector": [-30, 0, -12]},
+						"0.4": {"vector": [70, 0, -8]},
+						"0.7": {"vector": [20, 0, 0]},
+						"1.2": {"vector": [0, 0, 0]}
+					}
+				},
+				"RightArm": {
+					"rotation": {
+						"0.15": {"vector": [-30, 0, 12]},
+						"0.4": {"vector": [70, 0, 8]},
+						"0.7": {"vector": [20, 0, 0]},
+						"1.2": {"vector": [0, 0, 0]}
+					}
+				},
+				"wing": {
+					"rotation": {
+						"0.3": {"vector": [0, 18, -10]},
+						"0.7": {"vector": [0, 0, 0]},
+						"1.2": {"vector": [0, 0, 0]}
+					}
+				},
+				"wing2": {
+					"rotation": {
+						"0.3": {"vector": [0, -18, 10]},
+						"0.7": {"vector": [0, 0, 0]},
+						"1.2": {"vector": [0, 0, 0]}
+					}
+				}
+			}
+		},
+		"animation.miranda2.sweep": {
+			"animation_length": 0.8,
+			"bones": {
+				"Body": {
+					"rotation": {
+						"0.0": {"vector": [0, -18, 0]},
+						"0.3": {"vector": [6, 28, 0]},
+						"0.55": {"vector": [0, -8, 0]},
+						"0.8": {"vector": [0, 0, 0]}
+					}
+				},
+				"LeftArm": {
+					"rotation": {
+						"0.0": {"vector": [-20, 0, 40]},
+						"0.3": {"vector": [15, 0, -55]},
+						"0.8": {"vector": [0, 0, 0]}
+					}
+				},
+				"RightArm": {
+					"rotation": {
+						"0.0": {"vector": [-20, 0, -40]},
+						"0.3": {"vector": [15, 0, 55]},
+						"0.8": {"vector": [0, 0, 0]}
+					}
+				},
+				"wing": {
+					"rotation": {
+						"0.0": {"vector": [0, 0, 25]},
+						"0.3": {"vector": [0, 0, -40]},
+						"0.8": {"vector": [0, 0, 0]}
+					}
+				},
+				"wing2": {
+					"rotation": {
+						"0.0": {"vector": [0, 0, -25]},
+						"0.3": {"vector": [0, 0, 40]},
+						"0.8": {"vector": [0, 0, 0]}
+					}
+				},
+				"wing3": {
+					"rotation": {
+						"0.15": {"vector": [20, 0, 0]},
+						"0.35": {"vector": [-25, 0, 0]},
+						"0.8": {"vector": [0, 0, 0]}
+					}
+				},
+				"wing4": {
+					"rotation": {
+						"0.15": {"vector": [-20, 0, 0]},
+						"0.35": {"vector": [25, 0, 0]},
+						"0.8": {"vector": [0, 0, 0]}
+					}
+				},
+				"wingDown": {
+					"rotation": {
+						"0.25": {"vector": [0, 0, 30]},
+						"0.5": {"vector": [0, 0, -20]},
+						"0.8": {"vector": [0, 0, 0]}
+					}
+				},
+				"wingDown2": {
+					"rotation": {
+						"0.25": {"vector": [0, 0, -30]},
+						"0.5": {"vector": [0, 0, 20]},
+						"0.8": {"vector": [0, 0, 0]}
+					}
+				}
+			}
+		},
+		"animation.miranda2.shock": {
+			"animation_length": 1.0,
+			"bones": {
+				"Body": {
+					"rotation": {
+						"0.15": {"vector": [-12, 8, 0]},
+						"0.4": {"vector": [16, -6, 0]},
+						"1.0": {"vector": [0, 0, 0]}
+					}
+				},
+				"RightArm": {
+					"rotation": {
+						"0.0": {"vector": [0, 0, 0]},
+						"0.25": {"vector": [-85, 10, 15]},
+						"0.45": {"vector": [40, -8, -10]},
+						"1.0": {"vector": [0, 0, 0]}
+					}
+				},
+				"LeftArm": {
+					"rotation": {
+						"0.2": {"vector": [-20, 0, -15]},
+						"0.5": {"vector": [10, 0, 0]},
+						"1.0": {"vector": [0, 0, 0]}
+					}
+				},
+				"wing": {
+					"rotation": {
+						"0.25": {"vector": [0, 22, -8]},
+						"0.5": {"vector": [0, -10, 6]},
+						"1.0": {"vector": [0, 0, 0]}
+					}
+				},
+				"wing2": {
+					"rotation": {
+						"0.25": {"vector": [0, -12, 6]},
+						"1.0": {"vector": [0, 0, 0]}
+					}
+				}
+			}
+		},
+		"animation.miranda2.mold": {
+			"animation_length": 1.1,
+			"bones": {
+				"Body": {
+					"rotation": {
+						"0.0": {"vector": [4, -20, 0]},
+						"0.4": {"vector": [8, 24, 0]},
+						"0.75": {"vector": [2, -6, 0]},
+						"1.1": {"vector": [0, 0, 0]}
+					}
+				},
+				"LeftArm": {
+					"rotation": {
+						"0.0": {"vector": [-15, 0, 50]},
+						"0.4": {"vector": [25, 0, -60]},
+						"1.1": {"vector": [0, 0, 0]}
+					}
+				},
+				"RightArm": {
+					"rotation": {
+						"0.0": {"vector": [-15, 0, -50]},
+						"0.4": {"vector": [25, 0, 60]},
+						"1.1": {"vector": [0, 0, 0]}
+					}
+				},
+				"wingDown": {
+					"rotation": {
+						"0.2": {"vector": [12, 0, 18]},
+						"0.5": {"vector": [-8, 0, -16]},
+						"1.1": {"vector": [0, 0, 0]}
+					}
+				},
+				"wingDown2": {
+					"rotation": {
+						"0.2": {"vector": [12, 0, -18]},
+						"0.5": {"vector": [-8, 0, 16]},
+						"1.1": {"vector": [0, 0, 0]}
+					}
+				}
+			}
+		},
+		"animation.miranda2.tree": {
+			"animation_length": 3.2,
+			"bones": {
+				"Body": {
+					"rotation": {
+						"0.0": {"vector": [0, 0, 0]},
+						"0.35": {"vector": [48, 0, 0]},
+						"0.6": {"vector": [70, 0, 0]},
+						"2.4": {"vector": [70, 0, 0]},
+						"2.7": {"vector": [-12, 0, 0]},
+						"3.2": {"vector": [0, 0, 0]}
+					},
+					"position": {
+						"0.4": {"vector": [0, -6, 0]},
+						"0.7": {"vector": [0, -16, 0]},
+						"2.4": {"vector": [0, -16, 0]},
+						"2.8": {"vector": [0, 2, 0]},
+						"3.2": {"vector": [0, 0, 0]}
+					}
+				},
+				"LeftArm": {
+					"rotation": {
+						"0.3": {"vector": [40, 0, -20]},
+						"0.7": {"vector": [80, 0, -10]},
+						"2.5": {"vector": [20, 0, 0]},
+						"3.2": {"vector": [0, 0, 0]}
+					}
+				},
+				"RightArm": {
+					"rotation": {
+						"0.3": {"vector": [40, 0, 20]},
+						"0.7": {"vector": [80, 0, 10]},
+						"2.5": {"vector": [20, 0, 0]},
+						"3.2": {"vector": [0, 0, 0]}
+					}
+				},
+				"wing": {
+					"rotation": {
+						"0.4": {"vector": [0, 30, -20]},
+						"2.6": {"vector": [0, -8, 6]},
+						"3.2": {"vector": [0, 0, 0]}
+					}
+				},
+				"wing2": {
+					"rotation": {
+						"0.4": {"vector": [0, -30, 20]},
+						"2.6": {"vector": [0, 8, -6]},
+						"3.2": {"vector": [0, 0, 0]}
+					}
+				}
+			}
+		},
+		"animation.miranda2.stagger": {
+			"animation_length": 2.0,
+			"bones": {
+				"Body": {
+					"rotation": {
+						"0.0": {"vector": [0, 0, 0]},
+						"0.1": {"vector": [-22, 8, 6]},
+						"0.35": {"vector": [-8, -4, -3]},
+						"1.2": {"vector": [6, 0, 0]},
+						"2.0": {"vector": [0, 0, 0]}
+					}
+				},
+				"Head": {
+					"rotation": {
+						"0.1": {"vector": [18, -10, 0]},
+						"1.2": {"vector": [6, 6, 0]},
+						"2.0": {"vector": [0, 0, 0]}
+					}
+				},
+				"LeftArm": {
+					"rotation": {
+						"0.1": {"vector": [-35, 0, -28]},
+						"1.2": {"vector": [-10, 0, -8]},
+						"2.0": {"vector": [0, 0, 0]}
+					}
+				},
+				"RightArm": {
+					"rotation": {
+						"0.1": {"vector": [-40, 0, 32]},
+						"1.2": {"vector": [-12, 0, 10]},
+						"2.0": {"vector": [0, 0, 0]}
+					}
+				},
+				"wing": {
+					"rotation": {
+						"0.1": {"vector": [12, 16, -18]},
+						"1.4": {"vector": [0, 0, 0]},
+						"2.0": {"vector": [0, 0, 0]}
+					}
+				},
+				"wing2": {
+					"rotation": {
+						"0.1": {"vector": [12, -16, 18]},
+						"1.4": {"vector": [0, 0, 0]},
+						"2.0": {"vector": [0, 0, 0]}
+					}
+				}
+			}
 		}
 	},
 	"geckolib_format_version": 2
