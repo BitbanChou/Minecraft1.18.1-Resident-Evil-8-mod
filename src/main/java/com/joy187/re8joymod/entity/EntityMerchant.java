@@ -116,14 +116,54 @@ public class EntityMerchant extends WanderingTrader implements GeoEntity {
 //                    new ItemsForLei2(ItemInit.CIOR.get(), 1, 1, 6, 1),
 //                    new ItemsForLei2(BlockInit.FANTOM_BLOCK.get(), 8, 1, 2, 1),
                     new ItemsForLei2(BlockInit.MUCUS_BLOCK.get(), 1, 1, 16, 1),
-                    new ItemsForLei2(ItemInit.HERB3.get(), 1, 1, 4, 2)
+                    new ItemsForLei2(ItemInit.HERB3.get(), 1, 1, 4, 2),
 //                            new ItemsForLei2(ItemInit.GE.get(), 2, 1, 6, 3),
 //                            new ItemsForLei2(ItemInit.ROSEGENE.get(), 3, 1, 6, 1)
+                    new ItemsForCost(ItemInit.LEI.get(), 32, ItemInit.CROSSBOW1.get(), 1, 4, 2),
+                    new ItemsForCost(ItemInit.LEI2.get(), 2, ItemInit.SAMPLE.get(), 1, 4, 2),
+                    new ItemsForCost(ItemInit.RESOURCESM.get(), 5, ItemInit.GE.get(), 1, 8, 2),
+                    new ItemsForCost(Items.GOLD_BLOCK, 5, BlockInit.EXAMPLE_BLOCK.get(), 1, 4, 2)
                     }));
 
 
     private static Int2ObjectMap<VillagerTrades.ItemListing[]> toIntMap(ImmutableMap<Integer, VillagerTrades.ItemListing[]> p_35631_) {
         return new Int2ObjectOpenHashMap<>(p_35631_);
+    }
+
+    static class ItemsForCost implements VillagerTrades.ItemListing {
+        private final Item costItem;
+        private final int costCount;
+        private final ItemStack result;
+        private final int resultCount;
+        private final int maxUses;
+        private final int villagerXp;
+        private final float priceMultiplier;
+
+        public ItemsForCost(Item costItem, int costCount, Item result, int resultCount, int maxUses, int villagerXp) {
+            this(costItem, costCount, new ItemStack(result), resultCount, maxUses, villagerXp, 0.05F);
+        }
+
+        public ItemsForCost(Item costItem, int costCount, Block result, int resultCount, int maxUses, int villagerXp) {
+            this(costItem, costCount, new ItemStack(result), resultCount, maxUses, villagerXp, 0.05F);
+        }
+
+        public ItemsForCost(Item costItem, int costCount, ItemStack result, int resultCount, int maxUses, int villagerXp, float priceMultiplier) {
+            this.costItem = costItem;
+            this.costCount = costCount;
+            this.result = result;
+            this.resultCount = resultCount;
+            this.maxUses = maxUses;
+            this.villagerXp = villagerXp;
+            this.priceMultiplier = priceMultiplier;
+        }
+
+        @Override
+        public MerchantOffer getOffer(Entity trader, RandomSource random) {
+            return new MerchantOffer(
+                    new ItemStack(this.costItem, this.costCount),
+                    new ItemStack(this.result.getItem(), this.resultCount),
+                    this.maxUses, this.villagerXp, this.priceMultiplier);
+        }
     }
 
     static class ItemsForEmeralds implements VillagerTrades.ItemListing {
@@ -209,13 +249,8 @@ public class EntityMerchant extends WanderingTrader implements GeoEntity {
         if (avillagertrades$itemlisting != null && avillagertrades$itemlisting1 != null) {
             MerchantOffers merchantoffers = this.getOffers();
             this.addOffersFromItemListings(merchantoffers, avillagertrades$itemlisting, 5);
-            int i = this.random.nextInt(avillagertrades$itemlisting1.length);
-            VillagerTrades.ItemListing villagertrades$itemlisting = avillagertrades$itemlisting1[i];
-            MerchantOffer merchantoffer = villagertrades$itemlisting.getOffer(this, this.random);
-            if (merchantoffer != null) {
-                merchantoffers.add(merchantoffer);
-            }
-
+            // Level 2: pick several offers so the expanded pool is visible
+            this.addOffersFromItemListings(merchantoffers, avillagertrades$itemlisting1, 4);
         }
     }
 
