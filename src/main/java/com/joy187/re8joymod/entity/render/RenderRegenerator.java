@@ -45,9 +45,21 @@ public class RenderRegenerator extends GeoEntityRenderer<EntityRegenerator> {
     public void render(EntityRegenerator animatable,float entityYaw, float partialTick, PoseStack stack, MultiBufferSource bufferSource, int packedLight) {
 
     	stack.scale(2.7F, 2.7F, 2.7F);
+        hidePlagaBones(animatable.hasPlaga(EntityRegenerator.PLAGA_HEAD),
+                "plaga_head", "plaga_head_tenta", "plaga_head_tenta2");
+        hidePlagaBones(animatable.hasPlaga(EntityRegenerator.PLAGA_BACK),
+                "plaga_back", "plaga_back_tenta", "plaga_back_tenta2");
+        hidePlagaBones(animatable.hasPlaga(EntityRegenerator.PLAGA_LEG),
+                "plaga_leg", "plaga_leg_tenta", "plaga_leg_tenta2");
 
         this.animatable = animatable;
         defaultRender(stack, animatable, bufferSource, null, null, entityYaw, partialTick, packedLight);
+    }
+
+    private void hidePlagaBones(boolean show, String... boneNames) {
+        for (String boneName : boneNames) {
+            this.getGeoModel().getBone(boneName).ifPresent(bone -> bone.setHidden(!show));
+        }
     }
    
 }
