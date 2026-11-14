@@ -1,14 +1,7 @@
 package com.joy187.re8joymod.entity;
 
-import com.google.common.collect.ImmutableList;
-import com.joy187.re8joymod.entity.variant.LycanVariant;
 import com.joy187.re8joymod.entity.variant.RegeneratorVariant;
-import com.joy187.re8joymod.init.EffectInit;
 import com.joy187.re8joymod.init.EntityInit;
-import com.joy187.re8joymod.init.SoundInit;
-import com.joy187.re8joymod.items.ItemShield;
-import net.minecraft.Util;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -16,12 +9,18 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
+import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.SpawnGroupData;
+import net.minecraft.world.level.ServerLevelAccessor;
+
+import javax.annotation.Nullable;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
@@ -49,18 +48,23 @@ import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.util.GeckoLibUtil;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 
-import java.util.Comparator;
-import java.util.List;
 import java.util.Random;
 import java.util.function.Predicate;
-import java.util.stream.Stream;
 
 public class EntityRegenerator extends EntityDund2 implements GeoEntity{
+
+    /** 头 / 背 / 腿 寄生虫掩码。 */
+    public static final int PLAGA_HEAD = 1;
+    public static final int PLAGA_BACK = 2;
+    public static final int PLAGA_LEG = 4;
 
     private AnimatableInstanceCache factory = GeckoLibUtil.createInstanceCache(this);
     private static final EntityDataAccessor<Integer> DATA_ID_TYPE_VARIANT =
             SynchedEntityData.defineId(EntityRegenerator.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> PLAGA_MASK =
+            SynchedEntityData.defineId(EntityRegenerator.class, EntityDataSerializers.INT);
     protected int attackTimer = 0;
+    private boolean plagasRolled;
 
 	public EntityRegenerator(EntityType<? extends Monster> type, Level worldIn) {
 		super(type, worldIn);
@@ -112,6 +116,11 @@ public class EntityRegenerator extends EntityDund2 implements GeoEntity{
     }
     
     private <E extends GeoAnimatable> PlayState predicate(AnimationState<E> event) {
+        int atk = this.entityData.get(STATE);
+        if (atk == 1 || atk == 2 || atk == 3 || atk == 4) {
+            return PlayState.STOP;
+        }
+
         if(this.dead || this.getHealth() < 0.01 || this.isDeadOrDying())
         {
             event.setAndContinue(RawAnimation.begin().thenPlay("animation.dund.death"));
@@ -134,25 +143,45 @@ public class EntityRegenerator extends EntityDund2 implements GeoEntity{
         return PlayState.CONTINUE;
     }
     
-	private <E extends GeoAnimatable> PlayState predicate1(AnimationState<E> event) {
-		if (this.entityData.get(STATE) == 1 && !(this.dead || this.getHealth() < 0.01 || this.isDeadOrDying())) {
-			event.setAndContinue(RawAnimation.begin().thenPlay("animation.dund.attack"));
-			return PlayState.CONTINUE;
-		}
-		if (this.entityData.get(STATE) == 2 && !(this.dead || this.getHealth() < 0.01 || this.isDeadOrDying())) {
-			event.setAndContinue(RawAnimation.begin().thenPlay("animation.dund.attack2"));
-			return PlayState.CONTINUE;
-		}
-		return PlayState.STOP;
-	}
+	
 	
 	@Override
 	public void registerControllers(AnimatableManager.ControllerRegistrar data) {
-        data.add(new AnimationController(this, "controller",
-                0, this::predicate));
-        data.add(new AnimationController(this, "controller1",
-                0, this::predicate1));        
+		AnimationController<?> attackController =
+				new AnimationController<>(this, "controller1", 3, state -> PlayState.STOP)
+						.triggerableAnim("slash", RawAnimation.begin().thenPlay("animation.dund.attack"))
+						.triggerableAnim("heavy", RawAnimation.begin().thenPlay("animation.dund.attack2"));
+		data.add(attackController);
+		data.add(new AnimationController<>(this, "controller", 8, this::predicate));
+		data.add(new AnimationController<>(this, "plaga", 4, state -> {
+			if (this.getPlagaMask() == 0) {
+				return PlayState.STOP;
+			}
+			state.setAndContinue(RawAnimation.begin().thenLoop("animation.regenerator.plaga"));
+			return PlayState.CONTINUE;
+		}));
 	}
+	
+	/** Trigger one-shot attack animation via GeckoLib triggerAnim. */
+	protected void startAttackAnim(int state) {
+		if (state == 1) {
+			this.triggerAnim("controller1", "slash");
+		} else if (state == 2) {
+			this.triggerAnim("controller1", "heavy");
+		}
+	}
+
+	public void setAttackingState(int time) {
+		int prev = this.entityData.get(STATE);
+		this.entityData.set(STATE, time);
+		if ((time == 1 || time == 2) && prev != time) {
+			this.startAttackAnim(time);
+		}
+	}
+
+
+
+
 	
 	@Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
@@ -177,18 +206,39 @@ public class EntityRegenerator extends EntityDund2 implements GeoEntity{
     }
 
 	@Override
-    public boolean hurt(DamageSource p_37849_, float p_37850_)
-    {
-        if (!level().isClientSide()) {
-            boolean isHurt = true;
-            if (p_37849_ != damageSources().fellOutOfWorld() && p_37850_ > 1.0F) {
-                this.hurt(p_37849_,1F);
-            }
-            //System.out.println(isHurt);
-            if(isHurt)
-                return super.hurt(p_37849_,1);
+    public boolean hurt(DamageSource source, float amount) {
+        if (this.level().isClientSide) {
+            return false;
         }
-        return false;
+
+        LivingEntity attacker = null;
+        if (source.getEntity() instanceof LivingEntity living && living != this) {
+            attacker = living;
+        }
+
+        int plagaHit = attacker == null ? -1 : this.resolvePlagaHit(attacker);
+        if (plagaHit > 0) {
+            float want = this.getMaxHealth() * 0.4F;
+            float before = this.getHealth();
+            boolean hurt = super.hurt(source, want);
+            if (hurt) {
+                this.clearPlaga(plagaHit);
+                if (before - this.getHealth() < want - 0.5F) {
+                    this.setHealth(Math.max(0.0F, before - want));
+                    if (this.getHealth() <= 0.0F) {
+                        this.die(source);
+                    }
+                }
+                this.playSound(SoundEvents.SLIME_HURT, 1.2F, 0.7F);
+            }
+            return hurt;
+        }
+
+        if (source == this.damageSources().fellOutOfWorld()) {
+            return super.hurt(source, amount);
+        }
+        // 本体极耐打：普通伤害压到 1
+        return super.hurt(source, 1.0F);
     }
 
     private static final Predicate<Entity> PIGEON_AREA = (entity) -> {
@@ -199,12 +249,121 @@ public class EntityRegenerator extends EntityDund2 implements GeoEntity{
     protected void defineSynchedData() {
         super.defineSynchedData();
         this.entityData.define(DATA_ID_TYPE_VARIANT, 0);
+        this.entityData.define(PLAGA_MASK, 0);
+    }
+
+    @Override
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType reason,
+                                        @Nullable SpawnGroupData spawnData, @Nullable CompoundTag dataTag) {
+        spawnData = super.finalizeSpawn(level, difficulty, reason, spawnData, dataTag);
+        if (!this.plagasRolled) {
+            this.rollPlagas();
+        }
+        return spawnData;
     }
 
     @Override
     public void readAdditionalSaveData(CompoundTag tag) {
         super.readAdditionalSaveData(tag);
         this.entityData.set(DATA_ID_TYPE_VARIANT, tag.getInt("Variant"));
+        if (tag.contains("PlagaMask")) {
+            this.setPlagaMask(tag.getInt("PlagaMask"));
+            this.plagasRolled = true;
+        } else if (!this.level().isClientSide) {
+            this.rollPlagas();
+        }
+    }
+
+    @Override
+    public void addAdditionalSaveData(CompoundTag tag) {
+        super.addAdditionalSaveData(tag);
+        tag.putInt("Variant", this.getTypeVariant());
+        tag.putInt("PlagaMask", this.getPlagaMask());
+    }
+
+    public int getPlagaMask() {
+        return this.entityData.get(PLAGA_MASK);
+    }
+
+    public void setPlagaMask(int mask) {
+        this.entityData.set(PLAGA_MASK, mask & 7);
+    }
+
+    public boolean hasPlaga(int flag) {
+        return (this.getPlagaMask() & flag) != 0;
+    }
+
+    public void clearPlaga(int flag) {
+        this.setPlagaMask(this.getPlagaMask() & ~flag);
+    }
+
+    /** 随机生成 1~2 个寄生虫（头/背/腿）。 */
+    public void rollPlagas() {
+        int[] slots = {PLAGA_HEAD, PLAGA_BACK, PLAGA_LEG};
+        for (int i = slots.length - 1; i > 0; --i) {
+            int j = this.random.nextInt(i + 1);
+            int tmp = slots[i];
+            slots[i] = slots[j];
+            slots[j] = tmp;
+        }
+        int count = 1 + this.random.nextInt(2);
+        int mask = 0;
+        for (int i = 0; i < count; ++i) {
+            mask |= slots[i];
+        }
+        this.setPlagaMask(mask);
+        this.plagasRolled = true;
+    }
+
+    private boolean isBackHit(Entity attacker) {
+        Vec3 look = this.getLookAngle();
+        Vec3 to = attacker.position().subtract(this.position());
+        to = new Vec3(to.x, 0.0D, to.z);
+        if (to.lengthSqr() < 1.0E-4D) {
+            return false;
+        }
+        Vec3 flatLook = new Vec3(look.x, 0.0D, look.z);
+        if (flatLook.lengthSqr() < 1.0E-4D) {
+            return false;
+        }
+        return flatLook.normalize().dot(to.normalize()) < -0.5D;
+    }
+
+    /**
+     * 根据攻击者相对位置/朝向判断打中了哪只寄生虫。
+     * 背：身后；头：偏高或仰视；腿：偏低或俯视。
+     */
+    private int resolvePlagaHit(LivingEntity attacker) {
+        int mask = this.getPlagaMask();
+        if (mask == 0) {
+            return -1;
+        }
+        boolean back = this.isBackHit(attacker);
+        double relY = (attacker.getEyeY() - this.getY()) / Math.max(0.1D, this.getBbHeight());
+        float pitch = attacker.getXRot();
+
+        if (this.hasPlaga(PLAGA_BACK) && back) {
+            return PLAGA_BACK;
+        }
+        if (this.hasPlaga(PLAGA_HEAD) && !back && (relY > 0.7D || pitch < -12.0F)) {
+            return PLAGA_HEAD;
+        }
+        if (this.hasPlaga(PLAGA_LEG) && !back && (relY < 0.45D || pitch > 30.0F)) {
+            return PLAGA_LEG;
+        }
+        // 只剩一只时稍微放宽对应部位
+        if (Integer.bitCount(mask) == 1) {
+            if (this.hasPlaga(PLAGA_BACK) && back) {
+                return PLAGA_BACK;
+            }
+            if (this.hasPlaga(PLAGA_HEAD) && relY > 0.55D) {
+                return PLAGA_HEAD;
+            }
+            if (this.hasPlaga(PLAGA_LEG) && (relY < 0.55D || pitch > 18.0F)) {
+                return PLAGA_LEG;
+            }
+        }
+        return -1;
     }
 
     public RegeneratorVariant getVariant() {
@@ -222,6 +381,9 @@ public class EntityRegenerator extends EntityDund2 implements GeoEntity{
     @Override
     public void tick() {
         super.tick();
+        if (!this.level().isClientSide && !this.plagasRolled && this.tickCount == 1) {
+            this.rollPlagas();
+        }
         LivingEntity livingentity = this.getTarget();
         if (livingentity != null && this.hasLineOfSight(livingentity)) {
             Level world = this.level();
